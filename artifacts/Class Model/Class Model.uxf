@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1140</x>
+      <y>480</y>
+      <w>290</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Event
+--
+OccuredOn: Date
+OccuredRange: Number
+OccuredDuration: Number
+OccuredUnit: ENUM('SECOND', 'YEAR', ...)
+--
+Responsibilities
+-- An atomic event in the system</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>140</x>
+      <y>500</y>
+      <w>210</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>User
+--
+Email: String
+Pseudonym: String
+IsAdministrator: boolean
+--
+Responsibilities
+-- Identifies a logged in user.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>910</x>
+      <y>340</y>
+      <w>110</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Tag
+--
+Content: String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>570</x>
+      <y>880</y>
+      <w>360</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>Permission
+--
+UserUpdatedBy: Number
+OccuredOn: Date
+IsArchived: Boolean
+IsLocked: Boolean
+IsGalleryLoaded: Boolean
+Journal: String
+--
+Responsibilites
+-- Manages the access permissions for all given records.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1640</x>
+      <y>670</y>
+      <w>270</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Concept
+--
+Id: Number
+--
+Responsibilities
+-- Identifies a core Concept in the system</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1140</x>
+      <y>850</y>
+      <w>210</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Location
+--
+Id: Number
+Lat: Number
+Long: Number
+Icon: Number
+--
+Responsibilities
+-- Identifies a logged in user.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>690</x>
+      <y>670</y>
+      <w>240</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Timeline
+--
+Id: Number
+Title: String
+Content: String
+--
+Responsibilities
+-- Collects all events in one system</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>460</x>
+      <y>500</y>
+      <w>240</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>View
+--
+Id: Number
+Title: String
+Content: String
+--
+Responsibilities
+-- Collects all events in one system</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>140</x>
+      <y>670</y>
+      <w>320</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Group
+--
+Id: Number
+Title: String
+Content: String
+--
+Responsibilities
+-- A collection of Users with similar permissions</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>670</x>
+      <y>450</y>
+      <w>318</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+contains&gt;</panel_attributes>
+    <additional_attributes>30;50;260;50;260;220</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>70</x>
+      <y>590</y>
+      <w>122</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+belongs to</panel_attributes>
+    <additional_attributes>70;30;70;80</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>430</x>
+      <y>620</y>
+      <w>280</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+owns &gt; </panel_attributes>
+    <additional_attributes>260;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>320</x>
+      <y>450</y>
+      <w>160</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+sees &gt;</panel_attributes>
+    <additional_attributes>140;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1140</x>
+      <y>670</y>
+      <w>330</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>Person
+--
+Id: Number
+BirthLocation: Location
+BirthEvent: Event
+DeathLocation: Location
+DeathEvent: Event
+--
+Responsibilities
+-- Manages the raw biographical facts of a person</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>900</x>
+      <y>620</y>
+      <w>260</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+
+contains&gt;</panel_attributes>
+    <additional_attributes>240;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>900</x>
+      <y>540</y>
+      <w>260</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>240;30;180;30;180;130;30;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>900</x>
+      <y>640</y>
+      <w>260</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>240;210;180;210;180;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1320</x>
+      <y>640</y>
+      <w>340</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>320;30;270;30;270;210;30;210</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1440</x>
+      <y>620</y>
+      <w>220</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+
+applies to &gt;</panel_attributes>
+    <additional_attributes>200;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1400</x>
+      <y>450</y>
+      <w>260</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>240;220;190;220;190;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>390</x>
+      <y>760</y>
+      <w>200</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;
+
+&lt; manages</panel_attributes>
+    <additional_attributes>180;120;70;120;70;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>860</x>
+      <y>760</y>
+      <w>128</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+
+&lt; manages </panel_attributes>
+    <additional_attributes>70;30;70;120</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>900</x>
+      <y>940</y>
+      <w>260</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+manages &gt;</panel_attributes>
+    <additional_attributes>240;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>900</x>
+      <y>790</y>
+      <w>626</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+
+manages &gt;</panel_attributes>
+    <additional_attributes>570;30;570;240;30;240</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>900</x>
+      <y>450</y>
+      <w>260</w>
+      <h>500</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+
+manages &gt;</panel_attributes>
+    <additional_attributes>240;30;110;30;110;480;30;480</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>900</x>
+      <y>730</y>
+      <w>796</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+
+manages &gt;</panel_attributes>
+    <additional_attributes>740;30;740;330;30;330</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>600</x>
+      <y>590</y>
+      <w>50</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;290</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>990</x>
+      <y>290</y>
+      <w>662</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+tags &gt;
+&lt; tagged by</panel_attributes>
+    <additional_attributes>30;50;600;50;600;190</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>390</x>
+      <y>290</y>
+      <w>540</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+&lt; tags 
+tagged by &gt;</panel_attributes>
+    <additional_attributes>520;50;70;50;70;210</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>860</x>
+      <y>160</y>
+      <w>270</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>WikiPage
+--
+Title:String
+--
+Responsibilites:
+-- Central Management of Wiki Behaviors</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>0</x>
+      <y>130</y>
+      <w>880</w>
+      <h>900</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;
+
+&lt; manages</panel_attributes>
+    <additional_attributes>570;880;60;880;70;30;860;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>890</x>
+      <y>220</y>
+      <w>132</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;
+tags &gt;
+&lt; tagged by</panel_attributes>
+    <additional_attributes>70;30;70;120</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1320</x>
+      <y>160</y>
+      <w>270</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>WikiPageRevision
+--
+Content: String
+--
+Responsibilites:
+-- Contains the texual data for the Page</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1100</x>
+      <y>110</y>
+      <w>240</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+owns &gt;</panel_attributes>
+    <additional_attributes>220;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1660</x>
+      <y>30</y>
+      <w>240</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Gallery
+--
+Responsibilities:
+-- Contains Gallery Items for Objects</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1100</x>
+      <y>0</y>
+      <w>580</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>560;30;30;30;30;160</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1870</x>
+      <y>70</y>
+      <w>60</w>
+      <h>620</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;40;600</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1560</x>
+      <y>70</y>
+      <w>120</w>
+      <h>290</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>100;30;100;270;30;270</additional_attributes>
+  </element>
+</diagram>
