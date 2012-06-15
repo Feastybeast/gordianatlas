@@ -63,5 +63,56 @@ class Atlas extends CI_Controller
 		 */
 		$this->load->view('atlas/maintenance', $data);
 	}
+	
+	function unconfigured()
+	{
+		/*
+		 * Assets that need to be loaded for this page.
+		 */
+		$data['assets'] = array(
+			'stylesheets' => array(
+				'/css/gordian.css'
+			)
+		);		
+		
+		/*
+		 * Display Contents
+		 */
+		$this->load->view('atlas/unconfigured', $data);
+	}
+	
+	function configuration()
+	{
+		/*
+		 * Assets that need to be loaded for this page.
+		 */
+		$data['assets'] = array(
+			'stylesheets' => array(
+				'/css/gordian.css'
+			)
+		);		
+		
+		/*
+		 * Display Contents
+		 */		
+		$this->load->view('atlas/configuration', $data);		
+	}
+	
+	function configured()
+	{
+		/*
+		 * Assets that need to be loaded for this page.
+		 */
+		$data['assets'] = array(
+			'stylesheets' => array(
+				'/css/gordian.css'
+			)
+		);		
+		
+		/*
+		 * Display Contents
+		 */
+		$this->load->view('atlas/configured', $data);
+	}
 } 
 ?>

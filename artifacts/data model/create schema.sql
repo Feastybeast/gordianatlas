@@ -929,7 +929,7 @@ CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Permissions` (
   `OccuredOn` TIMESTAMP NULL ,
   `IsArchived` TINYINT(1)  NULL DEFAULT 0 ,
   `IsLocked` TINYINT(1)  NULL ,
-  `IsGalleryLocked` VARCHAR(45) NULL ,
+  `IsGalleryLocked` TINYINT(1) NULL ,
   `Journal` TINYTEXT NULL ,
   PRIMARY KEY (`IdPermissions`) )
 ENGINE = InnoDB;
