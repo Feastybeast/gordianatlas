@@ -6,7 +6,6 @@ class GordianHooks extends CI_Controller
 	const UNCONFIGURED_PAGE = "atlas/unconfigured";
 	const CONFIGURATION_PAGE = "atlas/configuration";
 	const CONFIGURED_PAGE = "atlas/configured";
-	const MAINTENANCE_FILE_PATH = "../maintenancenotice.txt";
 	
 	static private $configurationPages =  array(
 		GordianHooks::UNCONFIGURED_PAGE, 

@@ -56,7 +56,17 @@ class Atlas extends CI_Controller
 			)
 		);
 		
-		$data['maintenance_message'] = "Stuff";
+		 $online = $this->db->get('GordianConfig', 1);
+		 
+		 if ($online->num_rows() == 0)
+		 {
+		 	$data['maintenanceMessage'] = "The System is currently unavailable.";
+		 }
+		 else 
+		 {
+		 	$status = $online->row();
+		 	$data['maintenanceMessage'] = $status->MaintenanceNotice;
+		 }
 		
 		/*
 		 * Display Contents
