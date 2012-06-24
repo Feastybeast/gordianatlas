@@ -1,6 +1,6 @@
 <?php
 /**
- * The main User view UI for the application.
+ * A reusable user registration component displayed via popup and landing page registration.
  * 
  * @author Jay Ripley <riplja@metrostate.edu>
  * @since Elaboration 3
@@ -12,5 +12,6 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-print_r($this);
+echo form_open('user/register_process');
+echo form_close();
 ?>

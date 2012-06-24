@@ -226,20 +226,13 @@ td { vertical-align: top; }
 	padding: 0px;
 }
 
-#badgingRow 
-{
-	background: #575026;
-	background-image: url("../images/header_backdrop.png");
-	height: 6%;
-}
-
 #mapInfoRow 
 {
 	min-height: 400px;
 	border-top: 3px solid #B8AD69;	
 	border-bottom: 3px solid #B8AD69;	
 	position: relative;
-	background: #fff;
+	background: #EBF5C4;
 }
 
 #timelineRow 
@@ -248,23 +241,45 @@ td { vertical-align: top; }
 	min-height: 500px;
 }
 
-/* Badging Row Details */
+/* Superbar Config Details */
 
-#headerPane 
+#superBar
 {
-	font-size: 120%;
-	text-align: right;
-	color: white;
-	padding-top: 5px;
-	padding-right: 10px;
+	color: #111;
+	background-color: #fff;
+	border-bottom: 1px solid black;
+	position: relative;
+	clear: both;
+	height: 30px;
 }
 
-#headerPane .header {
+#superBar FORM {
+	display: inline;
+}
+
+
+#siteTitle {
 	font-weight: bold;
+	color: #705522;
+	width: 15%;
+	float: left; 
 }
 
-#headerPane .sub {
-	font-size: 50%;
+
+#contextBar {
+	font-weight: bold;
+	color: #705522;
+	width: 45%;
+	margin: 0px;
+}
+
+#userWidget {
+	width: 40%;
+	float: right;
+}
+
+.sub {
+	font-size: 60%;
 }
 
 /*

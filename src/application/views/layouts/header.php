@@ -1,34 +1,36 @@
+<?php
+/**
+ * Main Layout header file for the application.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 2
+ * @license GPL 3
+ */
+
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+?>
 <!DOCTYPE HTML SYSTEM>
 <html>
 	<head>
 		<title>The Gordian Atlas:</title>
 <?php 
-	if(isset($assets))
+	foreach ($this->gordian_assets->getMetaTags() as $k => $v)
 	{
-		if (isset($assets['meta']))
-		{
-			foreach ($assets['meta'] as $k => $v)
-			{
 				
-			}			
-		}
+	}			
 		
-		if (isset($assets['headerscripts']))
-		{
-			foreach ($assets['headerscripts'] as $k => $v)
-			{
-				echo '<script src="'.$v.'" type="text/javascript"></script>' . "\n";
-				
-			}			
-		}
+	foreach ($this->gordian_assets->getHeaderScripts() as $k => $v)
+	{
+		echo '<script src="'.$v.'" type="text/javascript"></script>' . "\n";
 		
-		if (isset($assets['stylesheets']))
-		{
-			foreach ($assets['stylesheets'] as $k => $v)
-			{
-				echo '<link rel="stylesheet" href="'.$v.'">' . "\n";
-			}
-		}
+	}			
+		
+	foreach ($this->gordian_assets->getStyleSheets() as $k => $v)
+	{
+		echo '<link rel="stylesheet" href="'.$v.'">' . "\n";
 	}
 ?>		
 	</head>

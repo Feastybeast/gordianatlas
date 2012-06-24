@@ -1,10 +1,16 @@
 <?php
-/*
- * Created on Jun 15, 2012
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+/**
+ * Configuration Management Interface: Conclusion View.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 2
+ * @license GPL 3
  */
+
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
  
 $this->load->view('layouts/header');
 echo 'Your system has been configured.';

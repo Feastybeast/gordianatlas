@@ -1,10 +1,18 @@
 <?php
-/*
- * Created on Jun 15, 2012
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+/**
+ * This controller manages administrative aspects of the Gordian Atlas.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 2
+ * @license GPL 3
  */
+
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+ 
+ 
  
 class Administration extends CI_Controller
 {

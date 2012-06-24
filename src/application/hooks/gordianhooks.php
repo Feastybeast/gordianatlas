@@ -1,4 +1,17 @@
 <?php
+/**
+ * This component acts vaugely as a Pre-Processing / Application Wide Controller
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 2
+ * @license GPL 3
+ */
+
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+
 class GordianHooks extends CI_Controller
 {
 	const MAINTENANCE_PAGE = "atlas/maintenance";

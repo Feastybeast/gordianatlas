@@ -1,43 +1,46 @@
 <?php
-/*
- * Created on Jun 14, 2012
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+/**
+ * This controller manages the main "page" of the Gordian Atlas.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 2
+ * @license GPL 3
  */
+
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
  
 class Atlas extends CI_Controller 
 {
 	function __construct()
 	{
 		parent::__construct();
+		
+		/*
+		 * Anything under Atlas will always use this stylesheet...
+		 */
+		$this->gordian_assets->addStyleSheet('/css/gordian.css');		
 	}
 	
 	function view()
-	{
+	{	
 		/*
 		 * Assets that need to be loaded for this page.
 		 */
-		$data['assets'] = array(
-			'headerscripts' => array(
-				'http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true'
-			),
-			'footerscripts' => array(
-				'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
-				'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js',	
-				'http://maps.google.com/maps/api/js?sensor=false',
-				'/js/lib/gmap3.min.js',
-				'/js/atlas/view.js'
-			),
-			'stylesheets' => array(
-				'/css/gordian.css'
-			)
-		);
+		$this->gordian_assets->addHeaderScript('http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true');
+
+		$this->gordian_assets->addFooterScript('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
+		$this->gordian_assets->addFooterScript('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js');
+		$this->gordian_assets->addFooterScript('http://maps.google.com/maps/api/js?sensor=false');
+		$this->gordian_assets->addFooterScript('/js/lib/gmap3.min.js');
+		$this->gordian_assets->addFooterScript('/js/atlas/view.js');
 		
 		/*
 		 * Display Contents
 		 */
-		$this->load->view('atlas/view', $data);
+		$this->load->view('atlas/view');
 	}
 	
 	function index()
@@ -47,15 +50,6 @@ class Atlas extends CI_Controller
 	
 	function maintenance()
 	{		
-		/*
-		 * Assets that need to be loaded for this page.
-		 */
-		$data['assets'] = array(
-			'stylesheets' => array(
-				'/css/gordian.css'
-			)
-		);
-		
 		 $online = $this->db->get('GordianConfig', 1);
 		 
 		 if ($online->num_rows() == 0)
@@ -71,58 +65,31 @@ class Atlas extends CI_Controller
 		/*
 		 * Display Contents
 		 */
-		$this->load->view('atlas/maintenance', $data);
+		$this->load->view('atlas/maintenance');
 	}
 	
 	function unconfigured()
 	{
 		/*
-		 * Assets that need to be loaded for this page.
-		 */
-		$data['assets'] = array(
-			'stylesheets' => array(
-				'/css/gordian.css'
-			)
-		);		
-		
-		/*
 		 * Display Contents
 		 */
-		$this->load->view('atlas/unconfigured', $data);
+		$this->load->view('atlas/unconfigured');
 	}
 	
 	function configuration()
-	{
-		/*
-		 * Assets that need to be loaded for this page.
-		 */
-		$data['assets'] = array(
-			'stylesheets' => array(
-				'/css/gordian.css'
-			)
-		);		
-		
+	{		
 		/*
 		 * Display Contents
 		 */		
-		$this->load->view('atlas/configuration', $data);		
+		$this->load->view('atlas/configuration');		
 	}
 	
 	function configured()
 	{
 		/*
-		 * Assets that need to be loaded for this page.
-		 */
-		$data['assets'] = array(
-			'stylesheets' => array(
-				'/css/gordian.css'
-			)
-		);		
-		
-		/*
 		 * Display Contents
 		 */
-		$this->load->view('atlas/configured', $data);
+		$this->load->view('atlas/configured');
 	}
 } 
 ?>
