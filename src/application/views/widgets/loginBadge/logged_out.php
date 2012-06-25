@@ -27,5 +27,7 @@ echo form_close();
 ?>
 
 <div id="dialog-RegisterAccount">
-<?php $this->load->view('user/register_form'); ?>
+<?php 
+// $this->load->view('user/user_info_form'); 
+?>
 </div>
