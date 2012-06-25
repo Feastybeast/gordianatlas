@@ -19,7 +19,7 @@ if (!defined('BASEPATH'))
 <?php 
 	foreach ($this->gordian_assets->getMetaTags() as $k => $v)
 	{
-				
+		echo meta($k, $v);	
 	}			
 		
 	foreach ($this->gordian_assets->getHeaderScripts() as $k => $v)

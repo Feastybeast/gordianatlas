@@ -16,11 +16,25 @@ if (!defined('BASEPATH'))
 
 class User extends CI_Controller 
 {
+	const DEFAULT_REGISTER_LABEL = "Register Account";
+	const DEFAULT_UPDATE_LABEL = "Update Account";
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->gordian_assets->addStyleSheet('/css/gordian.css');
+		$this->load->model('User_model');
+	}
+	
 	public function view()
 	{
-		$this->load->model('User_model');
-		$page_data = array();		
-		$this->load->view('user/view', $page_data);
+		$data = array();		
+		$this->load->view('user/view', $data);
+	}
+	
+	public function index()
+	{
+		redirect('user/view');
 	}
 	
 	/**
@@ -28,20 +42,59 @@ class User extends CI_Controller
 	 */
 	public function register()
 	{
-		$this->load->view('user/register');	
-	}
-	
-	/**
-	 * 
-	 */
-	public function validate($ruleset)
-	{
-		echo "Something";
-	}
-	
-	public function register_process()
-	{
-		echo "do something else";
+		/*
+		 * User is registered. NO FUNNY BUSINESS!
+		 */
+		if (array_key_exists('userId', $this->session->all_userdata()))
+		{
+			redirect('user/edit');
+		}
+		
+		/*
+		 * We'll be making heavy use of form validation here ...
+		 */
+		$this->load->library('form_validation');
+		
+		/*
+		 * Preferred Labeling for this screen.
+		 */
+		$data['buttonLabel'] = User::DEFAULT_REGISTER_LABEL;
+		
+		/*
+		 * Setup form validation rules.
+		 */
+		$config_rules = array(
+ 				array(
+                     'field'   => 'Email', 
+                     'label'   => 'Email', 
+                     'rules'   => 'required|is_unique[User.Email]|valid_email'
+                  ),
+               array(
+                     'field'   => 'Password', 
+                     'label'   => 'Password', 
+                     'rules'   => 'required'
+                  ),
+				array(
+					'field' => 'Nickname',
+					'label'  => 'Nickname',
+					'rules' => ''),
+               array(
+                     'field'   => 'Confirm', 
+                     'label'   => 'Password Confirmation', 
+                     'rules'   => 'required|matches[Password]'
+                  )			
+		); 
+		 
+		$this->form_validation->set_rules($config_rules);
+		
+		if ($this->form_validation->run() == FALSE)
+		{	
+			$this->load->view('user/register', $data);	
+		}
+		else
+		{
+			$this->load->view('user/register_success', $data);
+		}
 	}
 }
 ?>

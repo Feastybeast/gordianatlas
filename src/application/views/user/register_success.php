@@ -1,6 +1,6 @@
 <?php
 /**
- * A reusable user registration component displayed via popup and landing page registration.
+ * The success screen for registering a new account.
  * 
  * @author Jay Ripley <riplja@metrostate.edu>
  * @since Elaboration 3
@@ -12,6 +12,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo form_open('user/register_process');
-echo form_close();
+echo header("We made it");
+
+echo anchor('/user/register', 'Register another user.'); 
 ?>

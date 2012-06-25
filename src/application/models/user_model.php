@@ -14,21 +14,19 @@ if (!defined('BASEPATH'))
  
 class User_model extends CI_Model 
 {
-	private $isAdmin = false;
-	private $email = "";
-	private $pseudonym = "";
-	private $memberOfGroups = array();
-	private $Id = 0;
-	private $moderationState = null;
-	
 	function __construct()
 	{
 		parent::__construct();
 	}
 
-	function AddUser($options = array())
+	function AddUser($data = array())
 	{
-		
+		$inboundData = array(
+			'Email' => $data['Email'],
+			'Nickname' => $data['Nickname'],
+			'CryptoPass' => hash("sha256", $data['Password']),
+			'CryptoLen' => strlen($data['Password'])
+		)
 	}
 	
 	function DeleteUser($options = array())

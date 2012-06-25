@@ -67,6 +67,22 @@ class Gordian_assets
 	{
 		$this->metas[] = $metaContent;
 	}
+	
+	/**
+	 * Boilerplate Error Widget output.
+	 */
+	public function error_widget()
+	{
+		if (strlen(validation_errors()) > 0)
+		{
+			$op = validation_errors();
+			
+			echo '<fieldset>';
+			echo '<legend>Please correct the following errors:</legend>';
+			echo validation_errors();
+			echo '</fieldset>';
+		}		
+	}
 }
 
 ?>

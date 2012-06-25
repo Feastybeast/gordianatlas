@@ -12,4 +12,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
+$this->load->view('layouts/header');
+$this->load->view('user/user_info_form');
+$this->load->view('layouts/footer');
 ?>
