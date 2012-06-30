@@ -16,9 +16,6 @@ if (!defined('BASEPATH'))
 
 class User extends CI_Controller 
 {
-	const DEFAULT_REGISTER_LABEL = "Register Account";
-	const DEFAULT_UPDATE_LABEL = "Update Account";
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -54,11 +51,12 @@ class User extends CI_Controller
 		 * We'll be making heavy use of form validation here ...
 		 */
 		$this->load->library('form_validation');
+		$this->lang->load('labels');
 		
 		/*
 		 * Preferred Labeling for this screen.
 		 */
-		$data['buttonLabel'] = User::DEFAULT_REGISTER_LABEL;
+		$data['buttonLabel'] = $this->lang->line('label_btn_register');
 		
 		/*
 		 * Setup form validation rules.
@@ -97,4 +95,3 @@ class User extends CI_Controller
 		}
 	}
 }
-?>

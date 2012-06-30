@@ -24,4 +24,3 @@ class Map extends CI_Controller
 		$this->load->view("map/view");
 	}
 }
-?>

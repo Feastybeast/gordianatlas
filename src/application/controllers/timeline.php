@@ -24,4 +24,3 @@ class Timeline extends CI_Controller
 		$this->load->view("timeline/view");
 	}
 }
-?>

@@ -15,6 +15,6 @@ if (!defined('BASEPATH'))
 <div style="width: 300px; float: left;">
 	<h3>Welcome to the Administrator</h3>
 	<ul>
-		<li><?php echo anchor('administration/toggle_maintenance', "Change Maintenance State"); ?></li>
+		<li><?php echo anchor('administration/toggle_maintenance', $this->lang->line('label_link_site_maintenance')); ?></li>
 	</ul>
 </div>

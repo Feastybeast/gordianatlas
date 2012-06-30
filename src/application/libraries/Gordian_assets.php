@@ -73,16 +73,18 @@ class Gordian_assets
 	 */
 	public function error_widget()
 	{
+		$CI =& get_instance();
+		$CI->lang->load('form_label');
+		
 		if (strlen(validation_errors()) > 0)
 		{
 			$op = validation_errors();
 			
 			echo '<fieldset>';
-			echo '<legend>Please correct the following errors:</legend>';
+			echo '<legend>' . $CI->lang->line('label_widget_header') . '</legend>';
 			echo validation_errors();
 			echo '</fieldset>';
 		}		
 	}
 }
-
 ?>

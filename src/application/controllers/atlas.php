@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
 {
 	exit('No direct script access allowed');
 }
- 
+
 class Atlas extends CI_Controller 
 {
 	function __construct()
@@ -54,7 +54,7 @@ class Atlas extends CI_Controller
 		 
 		 if ($online->num_rows() == 0)
 		 {
-		 	$data['maintenanceMessage'] = "The System is currently unavailable.";
+		 	$data['maintenanceMessage'] = $this->lang->line('system_maintenance_notice');
 		 }
 		 else 
 		 {
@@ -91,5 +91,4 @@ class Atlas extends CI_Controller
 		 */
 		$this->load->view('atlas/configured');
 	}
-} 
-?>
+}

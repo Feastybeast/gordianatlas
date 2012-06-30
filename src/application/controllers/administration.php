@@ -12,19 +12,17 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
  
- 
- 
 class Administration extends CI_Controller
 {
-	public function index()
+	public function __construct()
 	{
-		$data['assets'] = array(
-			'stylesheets' => array(
-				'/css/gordian.css'
-			)
-		);
-		
-		$this->load->view('administration/index', $data);	
+		parent::__construct();
+		$this->gordian_assets->addStyleSheet('/css/gordian.css');
+	}
+
+	public function index()
+	{		
+		$this->load->view('administration/index');	
 	}
 	
 	public function toggle_maintenance()
@@ -33,13 +31,8 @@ class Administration extends CI_Controller
 		 * Load Libraries required for this page.
 		 */
 		 $this->load->helper('form');
-		
-		
-		$data['assets'] = array(
-			'stylesheets' => array(
-				'/css/gordian.css'
-			)
-		);
+		 $this->load->helper('language');
+		 $this->lang->load('labels');
 		
 		/*
 		 * Query the database and store the information in an array 

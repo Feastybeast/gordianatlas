@@ -26,7 +26,7 @@ class User_model extends CI_Model
 			'Nickname' => $data['Nickname'],
 			'CryptoPass' => hash("sha256", $data['Password']),
 			'CryptoLen' => strlen($data['Password'])
-		)
+		);
 	}
 	
 	function DeleteUser($options = array())
