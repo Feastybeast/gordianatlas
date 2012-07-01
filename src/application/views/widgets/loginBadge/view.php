@@ -14,15 +14,14 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-
-if ($this->session->userdata('userId') == false)
-{
-	$this->gordian_assets->addFooterScript('/js/widgets/loginBadge/logged_out.js');	
-	$this->load->view('widgets/loginBadge/logged_out');
-}
-else
+if ($this->gordian_auth->is_logged_in())
 {
 	$this->gordian_assets->addFooterScript('/js/widgets/loginBadge/logged_in.js');	
 	$this->load->view('widgets/loginBadge/logged_in');	
+}
+else
+{
+	$this->gordian_assets->addFooterScript('/js/widgets/loginBadge/logged_out.js');	
+	$this->load->view('widgets/loginBadge/logged_out');
 }
 ?>

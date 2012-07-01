@@ -74,7 +74,7 @@ class Gordian_assets
 	public function error_widget()
 	{
 		$CI =& get_instance();
-		$CI->lang->load('form_label');
+		$CI->lang->load('labels');
 		
 		if (strlen(validation_errors()) > 0)
 		{

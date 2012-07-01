@@ -37,10 +37,14 @@ class Atlas extends CI_Controller
 		$this->gordian_assets->addFooterScript('/js/lib/gmap3.min.js');
 		$this->gordian_assets->addFooterScript('/js/atlas/view.js');
 		
+		$data['superbar_link_string'] = ($this->gordian_auth->is_logged_in()) 
+			? $this->lang->line('gordian_auth_logout_lnk_short')
+			: $this->lang->line('gordian_auth_register_lnk_short');
+		
 		/*
 		 * Display Contents
 		 */
-		$this->load->view('atlas/view');
+		$this->load->view('atlas/view', $data);
 	}
 	
 	function index()

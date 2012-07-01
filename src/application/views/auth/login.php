@@ -13,6 +13,5 @@ if (!defined('BASEPATH'))
 }
 
 $this->load->view('layouts/header');
-$this->load->view('user/user_info_form');
+$this->load->view('auth/login_form');
 $this->load->view('layouts/footer');
-?>
