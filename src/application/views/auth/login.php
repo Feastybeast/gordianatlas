@@ -13,5 +13,10 @@ if (!defined('BASEPATH'))
 }
 
 $this->load->view('layouts/header');
-$this->load->view('auth/login_form');
+echo gordian_auth_user_widget(array(
+	'header' => "Login to your account", 
+	'login' => FALSE,
+	'confirm' => FALSE,
+	'nickname' => FALSE
+));
 $this->load->view('layouts/footer');

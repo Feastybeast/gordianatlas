@@ -22,6 +22,7 @@ class Auth extends CI_Controller
 		$this->load->library('form_validation');
 		$this->load->helper('url');
 		$this->load->helper('html');
+		$this->load->helper('gordian_auth');
 		
 		$this->lang->load('gordian_auth');
 		
@@ -39,24 +40,14 @@ class Auth extends CI_Controller
 			redirect('atlas/view');
 		}
 	}
+
+	public function forgotten()
+	{
+		$this->load->view('auth/forgotten');
+	}
 	
 	public function login()
 	{
-		/*
-		 * Preferred Labeling for this screen.
-		 */
-		
-		$data['formHeader'] = $this->lang->line('gordian_auth_login_hdr');
-		$data['buttonLabel'] = $this->lang->line('gordian_auth_login_btn');
-		$data['registerLinkText'] = $this->lang->line('gordian_auth_register_lnk');
-		$data['forgottenLinkText'] = $this->lang->line('gordian_auth_recovery_lnk');
-		
-		$data['email_label'] = $this->lang->line('gordian_auth_label_email');
-		$data['email_label'] .= $this->lang->line('gordian_auth_label_endcap');
-		
-		$data['password_label'] = $this->lang->line('gordian_auth_label_password');
-		$data['password_label'] .= $this->lang->line('gordian_auth_label_endcap');
-
 		/*
 		 * Business Logic
 		 */
@@ -86,7 +77,7 @@ class Auth extends CI_Controller
 			$this->gordian_auth->login($email, $password);
 		}
 
-		$this->load->view('auth/login', $data);	
+		$this->load->view('auth/login');	
 	}
 
 	public function logout()
@@ -103,16 +94,7 @@ class Auth extends CI_Controller
 		{
 			redirect('user/index');
 		}
-		
-		/*
-		 * Preferred Labeling for this screen.
-		 */
-		$data['buttonLabel'] = $this->lang->line('gordian_auth_register_btn');
-		$data['headerLabel'] = $this->lang->line('gordian_auth_register_hdr');
-		
-		$data['loginLinkText'] = $this->lang->line('gordian_auth_login_lnk');
-		$data['forgottenLinkText'] = $this->lang->line('gordian_auth_recovery_lnk');
-		
+
 		/*
 		 * Setup form validation rules.
 		 */
@@ -151,7 +133,7 @@ class Auth extends CI_Controller
 			
 			if ($register_res && $login_res)
 			{				
-				$this->load->view('auth/register_success', $data);				
+				$this->load->view('auth/register_success');				
 			}
 			else 
 			{
@@ -159,7 +141,7 @@ class Auth extends CI_Controller
 				{
 					$register_failed = $this->lang->line('gordian_auth_register_failed');
 					$this->session->set_flashdata('message', $register_failed);
-					$this->load->view('auth/register', $data);
+					$this->load->view('auth/register');
 				}
 				else if (!$login_res)
 				{
@@ -171,7 +153,7 @@ class Auth extends CI_Controller
 		}
 		else
 		{
-			$this->load->view('auth/register', $data);
+			$this->load->view('auth/register');
 		}
 	}
 }

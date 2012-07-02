@@ -54,45 +54,18 @@ class Atlas extends CI_Controller
 	
 	function maintenance()
 	{		
-		 $online = $this->db->get('GordianConfig', 1);
-		 
-		 if ($online->num_rows() == 0)
-		 {
-		 	$data['maintenanceMessage'] = $this->lang->line('system_maintenance_notice');
-		 }
-		 else 
-		 {
-		 	$status = $online->row();
-		 	$data['maintenanceMessage'] = $status->MaintenanceNotice;
-		 }
+		$online = $this->db->get('GordianConfig', 1);
+	 	$status = $online->row();
+	 	$data['maintenanceMessage'] = $status->MaintenanceNotice;
 		
 		/*
 		 * Display Contents
 		 */
 		$this->load->view('atlas/maintenance');
 	}
-	
-	function unconfigured()
+		
+	function test()
 	{
-		/*
-		 * Display Contents
-		 */
-		$this->load->view('atlas/unconfigured');
-	}
-	
-	function configuration()
-	{		
-		/*
-		 * Display Contents
-		 */		
-		$this->load->view('atlas/configuration');		
-	}
-	
-	function configured()
-	{
-		/*
-		 * Display Contents
-		 */
-		$this->load->view('atlas/configured');
+		$this->load->model('gordian_group_model');
 	}
 }

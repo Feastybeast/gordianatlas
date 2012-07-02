@@ -18,11 +18,28 @@ if (!defined('BASEPATH'))
 }
 
 /*
+ * Default Values
+ */
+$lang['gordian_auth_default_btn'] = "Go!";
+$lang['gordian_auth_default_hdr'] = "Please update header value!";
+
+$lang['gordian_auth_widget_header'] = "Please correct the following errors:";
+
+$lang['gordian_auth_nickname_notice'] = "(Defaults to your email address, if blank.)";
+
+$lang['gordian_auth_email_label'] = "Email";
+$lang['gordian_auth_nickname_label'] = "Nickname";
+$lang['gordian_auth_password_label'] = "Password";
+$lang['gordian_auth_confirm_label'] = "Confirm";
+
+
+/*
  * 
  */
 $lang['gordian_auth_label_endcap'] = ":";
 $lang['gordian_auth_label_email'] = "Email Address";
 $lang['gordian_auth_label_password'] = "Password";
+
 
 /*
  * Login Related Strings

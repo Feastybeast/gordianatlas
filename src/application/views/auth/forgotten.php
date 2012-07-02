@@ -1,6 +1,6 @@
 <?php
 /**
- * The landing screen for a non-Javascript enabled browser when logging into an account.
+ * Forgotten Password landing screen for glitches in JS behavior.
  * 
  * @author Jay Ripley <riplja@metrostate.edu>
  * @since Elaboration 3
@@ -13,5 +13,11 @@ if (!defined('BASEPATH'))
 }
 
 $this->load->view('layouts/header');
-echo gordian_auth_user_widget(array('header' => "Register a new account", 'register' => FALSE));
+echo gordian_auth_user_widget(array(
+	'header' => "Forgotten Password Recovery", 
+	'forgotten' => FALSE,
+	'password' => FALSE,
+	'confirm' => FALSE,
+	'nickname' => FALSE
+));
 $this->load->view('layouts/footer');

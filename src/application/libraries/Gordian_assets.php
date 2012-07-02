@@ -67,24 +67,5 @@ class Gordian_assets
 	{
 		$this->metas[] = $metaContent;
 	}
-	
-	/**
-	 * Boilerplate Error Widget output.
-	 */
-	public function error_widget()
-	{
-		$CI =& get_instance();
-		$CI->lang->load('labels');
-		
-		if (strlen(validation_errors()) > 0)
-		{
-			$op = validation_errors();
-			
-			echo '<fieldset>';
-			echo '<legend>' . $CI->lang->line('label_widget_header') . '</legend>';
-			echo validation_errors();
-			echo '</fieldset>';
-		}		
-	}
 }
 ?>

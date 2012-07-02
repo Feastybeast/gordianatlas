@@ -16,15 +16,6 @@ class GordianHooks extends CI_Controller
 {
 	const MAINTENANCE_PAGE = "atlas/maintenance";
 	const HOME_PAGE = "atlas/view";
-	const UNCONFIGURED_PAGE = "atlas/unconfigured";
-	const CONFIGURATION_PAGE = "atlas/configuration";
-	const CONFIGURED_PAGE = "atlas/configured";
-	
-	static private $configurationPages =  array(
-		GordianHooks::UNCONFIGURED_PAGE, 
-		GordianHooks::CONFIGURATION_PAGE,
-		GordianHooks::CONFIGURED_PAGE
-	);
 	
 	function verifyOnline()
 	{
@@ -35,10 +26,9 @@ class GordianHooks extends CI_Controller
 		
 		if ($online->num_rows() == 0) /* ... the system isn't configured. */
 		{
-
-			if (!in_array(uri_string(), GordianHooks::$configurationPages))
+			if (FALSE === strpos(uri_string(), 'setup'))
 			{
-				redirect(GordianHooks::UNCONFIGURED_PAGE);			
+				redirect('setup');			
 			}
 		}
 		else /* System is configured, check to see if its on. */
@@ -46,7 +36,7 @@ class GordianHooks extends CI_Controller
 			/*
 			 * Disallow Users from going to the Config Pages -- Go Home No matter what.
 			 */
-			if (in_array(uri_string(), GordianHooks::$configurationPages))
+			if (TRUE === strpos(uri_string(), 'setup'))
 			{
 				redirect(GordianHooks::HOME_PAGE);
 			}
