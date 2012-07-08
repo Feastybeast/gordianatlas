@@ -19,7 +19,7 @@ class User extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->gordian_assets->addStyleSheet('/css/gordian.css');
+		$this->gordian_assets->loadDefaultAssets();
 		$this->load->model('User_model');
 	}
 	

@@ -46,10 +46,8 @@ class Gordian_auth
 		}
 		
 		$result = $this->CI->gordian_auth_model->login($email, $password);
-		if ($result == TRUE)
-		{
-			redirect('/', 'refresh');
-		}
+
+		return result;
 	}
 	
 	/**

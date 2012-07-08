@@ -26,7 +26,7 @@ class Auth extends CI_Controller
 		
 		$this->lang->load('gordian_auth');
 		
-		$this->gordian_assets->addStyleSheet('/css/gordian.css');
+		$this->gordian_assets->loadDefaultAssets();
 	}
 	
 	public function index()
@@ -74,7 +74,16 @@ class Auth extends CI_Controller
 			$email = $this->input->post('Email');
 			$password = $this->input->post('Password');
 			
-			$this->gordian_auth->login($email, $password);
+			$login_successful = $this->gordian_auth->login($email, $password);
+			if ($login_successful)
+			{
+				redirect('');
+			}
+			else 
+			{
+				$login_failed = $this->lang->line('gordian_auth_login_failed');
+				$this->setssion->set_flashdata('message', $login_failed);
+			}
 		}
 
 		$this->load->view('auth/login');	
@@ -133,7 +142,7 @@ class Auth extends CI_Controller
 			
 			if ($register_res && $login_res)
 			{				
-				$this->load->view('auth/register_success');				
+				redirect('/');				
 			}
 			else 
 			{

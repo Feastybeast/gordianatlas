@@ -29,10 +29,9 @@ class Atlas extends CI_Controller
 		/*
 		 * Assets that need to be loaded for this page.
 		 */
-		$this->gordian_assets->addHeaderScript('http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true');
+		$this->gordian_assets->loadDefaultAssets();
 
-		$this->gordian_assets->addFooterScript('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
-		$this->gordian_assets->addFooterScript('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js');
+		$this->gordian_assets->addHeaderScript('http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true');
 		$this->gordian_assets->addFooterScript('http://maps.google.com/maps/api/js?sensor=false');
 		$this->gordian_assets->addFooterScript('/js/lib/gmap3.min.js');
 		$this->gordian_assets->addFooterScript('/js/atlas/view.js');

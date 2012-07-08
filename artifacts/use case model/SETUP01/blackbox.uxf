@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.5.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>550</x>
+      <y>90</y>
+      <w>50</w>
+      <h>520</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;500</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>530</x>
+      <y>90</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:System_</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Actor</type>
+    <coordinates>
+      <x>250</x>
+      <y>10</y>
+      <w>120</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Site 
+Administrator</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>100</y>
+      <w>50</w>
+      <h>510</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;490</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>110</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Accesses Atlas Website</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>150</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+Forwards to Setup License Screen</panel_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>200</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Agrees to License</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>240</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+Responds with Account Setup UI</panel_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>300</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Provides Valid User Account Info</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>360</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+Responds with Timeline Setup UI</panel_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.InteractionFrame</type>
+    <coordinates>
+      <x>180</x>
+      <y>310</y>
+      <w>420</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Loop until valid</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.InteractionFrame</type>
+    <coordinates>
+      <x>180</x>
+      <y>430</y>
+      <w>420</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Loop until valid</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>420</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Provides Valid Timeline Information</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>490</y>
+      <w>320</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+Responds with Toggle Maintenance UI
+&lt;&lt;Begin MAINT01 Use Case&gt;&gt;</panel_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>370</x>
+      <y>50</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Site Setup UC
+
+@author: Jay Ripley
+@since: Elab 4
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
