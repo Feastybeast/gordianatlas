@@ -22,7 +22,7 @@ if (!function_exists('gordian_auth_user_widget'))
 		$CI =& get_instance();
 		$CI->load->helper('html');
 		$CI->lang->load('gordian_auth');
-		$CI->lang->load('gordian_localized');
+		$CI->lang->load('gordian');
 		
 		/*
 		 * Boilerplate Error Widget output.
