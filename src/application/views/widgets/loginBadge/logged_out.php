@@ -15,19 +15,12 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo form_open('user/login');
-echo form_input('username', 'Enter your username...');
+echo form_open('auth/login');
+echo form_input('Email', 'Enter your username...');
 echo ' '; 
-echo form_input('password', 'and password...');
+echo form_input('Password', 'and password...');
 echo ' '; 
 echo form_submit('login', 'Login');
 echo ' '; 
-echo anchor('/user/register', 'Register Account', array("class" => "sub"));
+echo anchor('/auth/register', $superbar_link_string, array("class" => "sub"));
 echo form_close();
-?>
-
-<div id="dialog-RegisterAccount">
-<?php 
-// $this->load->view('user/user_info_form'); 
-?>
-</div>

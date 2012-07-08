@@ -12,12 +12,14 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
+echo '		<span class="sub">&copy; <a href="http://code.google.com/p/gordianatlas">Gordian Atlas Project</a></span>';
 
 foreach ($this->gordian_assets->getFooterScripts() as $k => $v)
 {
-	echo '		<script src="'.$v.'" type="text/javascript"></script>' . "\n";
+	echo '				<script src="'.$v.'" type="text/javascript"></script>' . "\n";
 }	
+
+echo $this->gordian_assets->flashmessage_widget();
 ?>
-		<span class="sub">&copy; <a href="http://code.google.com/p/gordianatlas">Gordian Atlas Project</a></span>
 	</body>
 </html>

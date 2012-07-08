@@ -1,6 +1,6 @@
 <?php
 /**
- * The landing screen for a non-Javascript enabled browser when registering an account.
+ * The landing screen for a non-Javascript enabled browser when logging into an account.
  * 
  * @author Jay Ripley <riplja@metrostate.edu>
  * @since Elaboration 3
@@ -13,6 +13,5 @@ if (!defined('BASEPATH'))
 }
 
 $this->load->view('layouts/header');
-$this->load->view('user/user_info_form');
+echo gordian_auth_user_widget(array('header' => "Register a new account", 'register' => FALSE));
 $this->load->view('layouts/footer');
-?>

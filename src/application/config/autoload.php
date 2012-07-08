@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('database', 'session', 'Gordian_assets', 'Gordian_permissions');
+$autoload['libraries'] = array('database', 'session', 'Gordian_assets', 'Gordian_auth');
 
 
 /*

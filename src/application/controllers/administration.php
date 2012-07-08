@@ -17,7 +17,7 @@ class Administration extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->gordian_assets->addStyleSheet('/css/gordian.css');
+		$this->gordian_assets->loadDefaultAssets();
 	}
 
 	public function index()
