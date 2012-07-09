@@ -1,4 +1,9 @@
 <?php
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+
 /**
  * This controller manages AJAX request data for the timeline widget of the Gordian Atlas.
  * 
@@ -6,19 +11,19 @@
  * @since Elaboration 2
  * @license GPL 3
  */
-
-if (!defined('BASEPATH')) 
+ class Timeline extends CI_Controller
 {
-	exit('No direct script access allowed');
-}
-
-class Timeline extends CI_Controller
-{
+	/**
+	 * Default constructor.
+	 */
 	function __construct()
 	{
 		parent::__construct();
 	}
 	
+	/**
+	 * Primary action to load JSON data from the database.
+	 */
 	function view()
 	{
 		$this->load->view("timeline/view");

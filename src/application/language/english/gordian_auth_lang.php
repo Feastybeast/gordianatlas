@@ -1,4 +1,9 @@
 <?php
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+
 /**
  * This file contains localization strings supporting the behavior of the Gordian Authorization component.
  * 
@@ -11,11 +16,6 @@
  * @since Elaboration 3
  * @license GPL 3
  */
-
-if (!defined('BASEPATH')) 
-{
-	exit('No direct script access allowed');
-}
 
 /*
  * Default Values

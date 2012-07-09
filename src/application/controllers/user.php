@@ -1,4 +1,9 @@
 <?php
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+
 /**
  * This controller is responsible for user management for the Gordian Atlas.
  * 
@@ -8,14 +13,11 @@
  * @since Elaboration 2
  * @license GPL 3
  */
-
-if (!defined('BASEPATH')) 
-{
-	exit('No direct script access allowed');
-}
-
 class User extends CI_Controller 
 {
+	/**
+	 * Default constructor.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -23,6 +25,9 @@ class User extends CI_Controller
 		$this->load->model('User_model');
 	}
 	
+	/**
+	 * 
+	 */
 	public function view()
 	{
 		$data = array();		

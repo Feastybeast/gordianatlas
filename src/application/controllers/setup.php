@@ -1,20 +1,29 @@
 <?php
-/**
- * The setup controller. Run once to establish the baseline data required for the 
- * Gordian Atlas to function.
- * 
- * @author Jay Ripley <riplja@metrostate.edu>
- * @since Elaboration 3
- * @license GPL 3
- */
-
 if (!defined('BASEPATH')) 
 {
 	exit('No direct script access allowed');
 }
 
+/**
+ * The setup controller. Run once to establish the baseline data required for the 
+ * Gordian Atlas to function.
+ * 
+ * Basic execution path:
+ * 	index() -> admin_account() -> timeline() -> confirm().
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 3
+ * @license GPL 3
+ */
 class Setup extends CI_Controller
 {
+	/**
+	 * Default constructor.
+	 * 
+	 * Ensures that the GordianConfig system has not been setup prior to 
+	 * user interaction, to guarantee previous installations aren't 
+	 * trampled.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -33,6 +42,9 @@ class Setup extends CI_Controller
 		$this->gordian_assets->loadDefaultAssets();
 	}
 	
+	/**
+	 * Setup splash / license agreement screen prior to installation.
+	 */
 	public function index()
 	{
 		$this->load->helper('html');
@@ -42,6 +54,12 @@ class Setup extends CI_Controller
 		$this->load->view('layouts/footer');
 	}
 	
+	/**
+	 * Administrative account setup behaviors
+	 * 
+	 * Validates and creates the initial administrative user account 
+	 * prior to further configuration tasks.
+	 */
 	public function admin_account()
 	{		
 		/*

@@ -1,4 +1,9 @@
 <?php
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+
 /**
  * This controller manages the main "page" of the Gordian Atlas.
  * 
@@ -6,14 +11,11 @@
  * @since Elaboration 2
  * @license GPL 3
  */
-
-if (!defined('BASEPATH')) 
-{
-	exit('No direct script access allowed');
-}
-
 class Atlas extends CI_Controller 
 {
+	/**
+	 * Default constructor.
+	 */
 	function __construct()
 	{
 		parent::__construct();
@@ -21,16 +23,17 @@ class Atlas extends CI_Controller
 		/*
 		 * Anything under Atlas will always use this stylesheet...
 		 */
-		$this->gordian_assets->addStyleSheet('/css/gordian.css');		
+		$this->gordian_assets->loadDefaultAssets();	
 	}
 	
+	/**
+	 * The primary screen of the Gordian Atlas application.
+	 */
 	function view()
 	{	
 		/*
 		 * Assets that need to be loaded for this page.
 		 */
-		$this->gordian_assets->loadDefaultAssets();
-
 		$this->gordian_assets->addHeaderScript('http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true');
 		$this->gordian_assets->addFooterScript('http://maps.google.com/maps/api/js?sensor=false');
 		$this->gordian_assets->addFooterScript('/js/lib/gmap3.min.js');
@@ -46,11 +49,20 @@ class Atlas extends CI_Controller
 		$this->load->view('atlas/view', $data);
 	}
 	
+	/**
+	 * Routes the user to the prefered "view" action rather than index.
+	 */
 	function index()
 	{
 		redirect('atlas/view');
 	}
 	
+	/**
+	 * The maintenance display screen. 
+	 * 
+	 * Displayed when non-administrative users attempt to access the website
+	 * during a maintenance period.
+	 */
 	function maintenance()
 	{		
 		$online = $this->db->get('GordianConfig', 1);
@@ -61,10 +73,5 @@ class Atlas extends CI_Controller
 		 * Display Contents
 		 */
 		$this->load->view('atlas/maintenance');
-	}
-		
-	function test()
-	{
-		$this->load->model('gordian_group_model');
 	}
 }

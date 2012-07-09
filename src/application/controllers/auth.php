@@ -1,19 +1,26 @@
 <?php
-/**
- * The success screen for registering a new account.
- * 
- * @author Jay Ripley <riplja@metrostate.edu>
- * @since Elaboration 3
- * @license GPL 3
- */
-
 if (!defined('BASEPATH')) 
 {
 	exit('No direct script access allowed');
 }
 
+/**
+ * Primary authorization component for the Gordian Atlas.
+ * 
+ * Handles login / logout / registration / password recovery functions.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 3
+ * @license GPL 3
+ */
 class Auth extends CI_Controller 
 {
+	/**
+	 * Default constructor.
+	 * 
+	 * Gathers a substantial amount of helpers and libraries required 
+	 * for the Auth controller to function.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -29,6 +36,9 @@ class Auth extends CI_Controller
 		$this->gordian_assets->loadDefaultAssets();
 	}
 	
+	/**
+	 * Authorization splash / routing screen.
+	 */
 	public function index()
 	{
 		if (!$this->gordian_auth->is_logged_in())
@@ -41,11 +51,20 @@ class Auth extends CI_Controller
 		}
 	}
 
+	/**
+	 * Forgotten password management action.
+	 */
 	public function forgotten()
 	{
 		$this->load->view('auth/forgotten');
 	}
 	
+	/**
+	 * Atlas user login action.
+	 * 
+	 * Handles basic validation routines to ensure users are legitimate,
+	 * prior to allowing users to edit system data.
+	 */
 	public function login()
 	{
 		/*
@@ -89,11 +108,19 @@ class Auth extends CI_Controller
 		$this->load->view('auth/login');	
 	}
 
+	/**
+	 * Logs a user out, then redirects them to the home page with a confirmation.
+	 */
 	public function logout()
 	{
 		$this->gordian_auth->logout();
+		$this->session->set_flashdata('message', $this->lang->line('gordian_auth_logout_flash'));
+		redirect('');
 	}
 	
+	/**
+	 * Performs basic validation and registration behaviors for a new user account.
+	 */
 	public function register()
 	{
 		/*

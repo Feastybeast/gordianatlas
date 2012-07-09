@@ -1,4 +1,9 @@
 <?php
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+
 /**
  * This component acts vaugely as a Pre-Processing / Application Wide Controller
  * 
@@ -6,17 +11,15 @@
  * @since Elaboration 2
  * @license GPL 3
  */
-
-if (!defined('BASEPATH')) 
-{
-	exit('No direct script access allowed');
-}
-
 class GordianHooks extends CI_Controller
 {
 	const MAINTENANCE_PAGE = "atlas/maintenance";
 	const HOME_PAGE = "atlas/view";
 	
+	/**
+	 * This method handles two major functions: a pre-setup routine, and maintenance screening.
+	 * 
+	 */
 	function verifyOnline()
 	{
 		/*

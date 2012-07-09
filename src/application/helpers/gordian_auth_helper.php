@@ -1,19 +1,27 @@
 <?php
-/**
- * Helper functions for the Gordian Authorization Library.
- * 
- * @author Jay Ripley <riplja@metrostate.edu>
- * @since Elaboration 3
- * @license GPL 3
- */
-
 if (!defined('BASEPATH')) 
 {
 	exit('No direct script access allowed');
 }
 
+/**
+ * Helper functions for the Gordian Authorization Library.
+ * 
+ * See <http://code.google.com/p/gordianatlas/wiki/Gordian_auth>
+ * for configuration details.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 3
+ * @license GPL 3
+ */
 if (!function_exists('gordian_auth_user_widget'))
 {
+	/**
+	 * This function provides the core registration and update ui for accounts.
+	 * 
+	 * Documentation on this function can be found at
+	 * 
+	 */
 	function gordian_auth_user_widget($config = array())
 	{
 		/*

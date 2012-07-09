@@ -1,4 +1,9 @@
 <?php
+if (!defined('BASEPATH')) 
+{
+	exit('No direct script access allowed');
+}
+
 /**
  * This controller manages administrative aspects of the Gordian Atlas.
  * 
@@ -6,25 +11,30 @@
  * @since Elaboration 2
  * @license GPL 3
  */
-
-if (!defined('BASEPATH')) 
-{
-	exit('No direct script access allowed');
-}
- 
 class Administration extends CI_Controller
 {
+	/**
+	 * Default constructor.
+	 * 
+	 * Loads standard assets before handling other actions.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
 		$this->gordian_assets->loadDefaultAssets();
 	}
 
+	/**
+	 * Loads the administrative splash screen.
+	 */
 	public function index()
 	{		
 		$this->load->view('administration/index');	
 	}
 	
+	/**
+	 * This action manages the maintenance state of the Atlas.
+	 */
 	public function toggle_maintenance()
 	{ 
 		/*
