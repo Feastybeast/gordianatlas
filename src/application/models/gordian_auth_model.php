@@ -49,6 +49,16 @@ class Gordian_auth_model extends CI_Model
 	{
 		return (boolean) $this->session->userdata('gordian_id');
 	}
+	
+	public function edit_user($nickname)
+	{
+		$vars = array(
+			'Nickname' => 'Bob Hope'
+		);
+		
+		$this->db->where('IdUser', 1);
+		$this->db->update('User', $vars);
+	}
 		
 	public function login($email, $password)
 	{
@@ -106,10 +116,22 @@ class Gordian_auth_model extends CI_Model
 			$this->db->insert('User', $inbound_data);
 			
 			$this->db->select('IdUser')->from('User')->where('Email', $email)->limit(1);
-			$res = $this->db->get();
-		
-			return ($res->num_rows == 1) ? true : false;	
+			$res = $this->db->get()->row();
+			
+			return $res->IdUser;	
 		}
+	}
+	
+	/**
+	 * Toggles the provided User Id's admin rights on the Atlas.
+	 * 
+	 * @param $user_id The Id of the user to alter.
+	 * @param $state A boolean indication of the user's site admin rights.
+	 */
+	public function set_admin_rights($user_id, $state)
+	{
+		$this->db->where('IdUser', $user_id);
+		$this->db->update('IsAdministrator', $state);
 	}
 	
 	/*

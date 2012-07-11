@@ -1,22 +1,30 @@
 <?php
-/**
- * The success screen for registering a new account.
- * 
- * @author Jay Ripley <riplja@metrostate.edu>
- * @since Elaboration 3
- * @license GPL 3
- */
-
 if (!defined('BASEPATH')) 
 {
 	exit('No direct script access allowed');
 }
 
+/**
+ * This is the App logic intermediary for controllers and the Auth model.
+ * 
+ * It contains a number of basic methods directly related to the goal
+ * of user authorization.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 3
+ * @license GPL 3
+ */
 class Gordian_auth
 {
 	// Reference to CodeIgniter library.`
 	private $CI; 
 	
+	/**
+	 * Default constructor.
+	 * 
+	 * Prepares a reference to the CodeIgniter instance for user in 
+	 * further methods.
+	 */
 	public function __construct()
 	{
 		$this->CI =& get_instance();
@@ -24,6 +32,10 @@ class Gordian_auth
 		$this->CI->load->model('gordian_auth_model');
 	}
 	
+	/**
+	 * Indicates if the current user is logged in.
+	 * @return If the user is logged in or not.
+	 */
 	public function is_logged_in()
 	{
 		return $this->CI->gordian_auth_model->is_logged_in();
@@ -59,6 +71,14 @@ class Gordian_auth
 		redirect('/', 'refresh');
 	}
 	
+	/**
+	 * Attempts to register a new user account
+	 * 
+	 * @param $email A valid email address as the common login key.
+	 * @param $password The password used to identify the user later on.
+	 * @param $nickname An option "human readable" field to display to others.
+	 * @return The new user Id, or false if unsuccessful.
+	 */
 	public function register($email, $password, $nickname)
 	{
 		$nickname = empty($nickname) ? "" : $nickname;
@@ -80,4 +100,43 @@ class Gordian_auth
 			}
 		}		
 	}
+	
+	/**
+	 * Updates the site-administrator status of the identified user to $state.
+	 * 
+	 * @param $user_id The Id of the user account to alter.
+	 * @param $state The boolean indication of their state as an administrator.
+	 * @return TRUE if update took, FALSE if update was invalid.
+	 */
+	public function set_admin_rights($user_id, $state)
+	{
+		if (!is_numeric($user_id))
+		{
+			
+		}
+		else if (!is_bool($state))
+		{
+			
+		}
+		
+		return $this->CI->gordian_auth_model->set_admin_rights($user_id, $state);
+	}
+	
+	/**
+	 * Indicates if the identified user is an admin or not.
+	 * 
+	 * @param $user_id OPTIONAL. Value defaults to current session user id.  
+	 */
+	public function is_admin()
+	{
+		return $this->CI->gordian_auth_model->is_admin();
+	}
+	
+	/**
+	 * 
+	 */
+	 public function edit_user($nickname)
+	 {
+	 	$this->CI->gordian_auth_model->edit_user($nickname);
+	 }
 }
