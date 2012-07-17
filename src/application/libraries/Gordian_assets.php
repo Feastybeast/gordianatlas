@@ -1,27 +1,32 @@
 <?php
-/**
- * This library provides a way to handle unified data off to the view component.
- * 
- * @author Jay Ripley <riplja@metrostate.edu>
- * @since Elaboration 3
- * @license GPL 3
- */
-
 if (!defined('BASEPATH')) 
 {
 	exit('No direct script access allowed');
 }
 
+/**
+ * This library provides a clean unified way to hand data off to the view component.
+ * 
+ * @author Jay Ripley <riplja@metrostate.edu>
+ * @since Elaboration 3
+ * @license GPL 3
+ */
 class Gordian_assets 
 {
+	// Array containing header based script references.
 	private $headerscripts;
+	// Array containing footer based script references.
 	private $footerscripts;
+	// Array containing Stylesheet references.
 	private $stylesheets;
+	// Array containing meta tag references (NYI)
 	private $metas;
 	// Session Flash message data.
 	private $flash_message;
 	
-	
+	/**
+	 * Default Constructor.
+	 */
 	public function __construct()
 	{
 		/*
@@ -39,6 +44,7 @@ class Gordian_assets
 		$this->metas = array();
 		
 		$this->flash_message = $this->CI->session->flashdata('message');
+		$this->flash_title = $this->CI->session->flashdata('title');
 		
 		if (strlen($this->flash_message) > 0)
 		{
@@ -103,7 +109,6 @@ class Gordian_assets
 	{
 		if (strlen($this->flash_message) > 0)
 		{
-			$this->CI->lang->load('gordian');
 			$this->message_header = $this->CI->lang->line('gordian_message_header');
 			
 echo <<<EOF
@@ -118,7 +123,7 @@ echo <<<EOF
 			
 			$('#GA_flashmessage').dialog({ 
 				position: [ GA_midscreen, 100 ],
-				title: "{$this->message_header}"
+				title: "{$this->flash_title}"
 			});
 		}
 	);

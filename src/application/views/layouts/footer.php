@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo '		<span class="sub">&copy; <a href="http://code.google.com/p/gordianatlas">Gordian Atlas Project</a></span>';
+echo '		<div class="sub">&copy; <a href="http://code.google.com/p/gordianatlas">Gordian Atlas Project</a></div>';
 
 foreach ($this->gordian_assets->getFooterScripts() as $k => $v)
 {

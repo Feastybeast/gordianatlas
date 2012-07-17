@@ -12,8 +12,5 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo form_open();
-echo "Search for Timelines here:";
-echo form_input('searchFor', 'search for timelines here.');
-echo form_close();
+echo 'Currently viewing timeline "'. $timeline_name . '"';
 ?>

@@ -11,17 +11,24 @@ if (!defined('BASEPATH'))
 {
 	exit('No direct script access allowed');
 }
-?>
 
-<div class="structuralRow" id="superBar">
-	<span id="siteTitle">
-		The Gordian Atlas
-	</span>
-	<span id="contextBar">
-		<?php echo $this->load->view('widgets/searchBar/view'); ?>
-	</span>
-	<span id="userWidget">
-		<?php echo $this->load->view('widgets/loginBadge/view'); ?>
-	</span>
-</div>
+echo '<div class="structuralRow" id="superBar">';
 
+if (strpos(uri_string(), 'maintenance') > 0)
+{
+	echo '<span id="contextBar">The Gordian Atlas is currently undergoing maintenance</span>' . "\n";
+}
+else
+{
+	echo '<span id="siteTitle">' . "\n";
+	echo '	The Gordian Atlas' . "\n";
+	echo '</span>' . "\n";
+	echo '<span id="contextBar">' . "\n";
+	echo $this->load->view('widgets/searchBar/view');
+	echo '</span>' . "\n";
+	echo '<span id="userWidget">' . "\n";
+	echo $this->load->view('widgets/loginBadge/view');
+	echo '</span>' . "\n";	
+}
+
+echo '</div>' . "\n";

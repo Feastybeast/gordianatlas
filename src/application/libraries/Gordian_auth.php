@@ -52,14 +52,9 @@ class Gordian_auth
 	 */
 	public function login($email, $password)
 	{
-		if ($this->is_logged_in())
-		{
-			return false;
-		}
-		
-		$result = $this->CI->gordian_auth_model->login($email, $password);
-
-		return result;
+		$this->logout();
+				
+		return $this->CI->gordian_auth_model->login($email, $password);
 	}
 	
 	/**
@@ -68,7 +63,6 @@ class Gordian_auth
 	public function logout()
 	{
 		$this->CI->gordian_auth_model->logout();
-		redirect('/', 'refresh');
 	}
 	
 	/**
@@ -98,7 +92,9 @@ class Gordian_auth
 				$groups_notice = $this->lang->line('gordian_auth_register_defaults_failed');
 				$this->CI->session->set_flashdata('message', $groups_notice);
 			}
-		}		
+		}
+		
+		return $user_id;		
 	}
 	
 	/**
@@ -109,14 +105,10 @@ class Gordian_auth
 	 * @return TRUE if update took, FALSE if update was invalid.
 	 */
 	public function set_admin_rights($user_id, $state)
-	{
-		if (!is_numeric($user_id))
+	{		
+		if (!is_numeric($user_id) ||  !is_bool($state))
 		{
-			
-		}
-		else if (!is_bool($state))
-		{
-			
+			return false;
 		}
 		
 		return $this->CI->gordian_auth_model->set_admin_rights($user_id, $state);

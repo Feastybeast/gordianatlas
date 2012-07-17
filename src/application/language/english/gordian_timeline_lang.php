@@ -12,4 +12,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-$lang['system_maintenance_notice'] = "The system is currently offline for maintenance.";
+$lang['gordian_timeline_heading'] = "Timeline Details";
+$lang['gordian_timeline_title_label'] = "Timeline Title:";
+$lang['gordian_timeline_description_label'] = "Timeline Description:";
+$lang['gordian_timeline_button'] = "Go!";

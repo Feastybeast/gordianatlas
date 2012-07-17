@@ -19,7 +19,7 @@ class Atlas extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		
+
 		/*
 		 * Anything under Atlas will always use this stylesheet...
 		 */
@@ -30,7 +30,15 @@ class Atlas extends CI_Controller
 	 * The primary screen of the Gordian Atlas application.
 	 */
 	function view()
-	{	
+	{
+		/*
+		 * Load required libraries for this action. 
+		 */
+		 //TODO: We may want to remove the raw reference to this model and use a library instead.
+		$this->load->model('gordian_user_model');
+		
+		$this->load->library('Gordian_timeline');
+				
 		/*
 		 * Assets that need to be loaded for this page.
 		 */
@@ -39,10 +47,21 @@ class Atlas extends CI_Controller
 		$this->gordian_assets->addFooterScript('/js/lib/gmap3.min.js');
 		$this->gordian_assets->addFooterScript('/js/atlas/view.js');
 		
+		/* 
+		 * Prep data for the view.
+		 */
 		$data['superbar_link_string'] = ($this->gordian_auth->is_logged_in()) 
 			? $this->lang->line('gordian_auth_logout_lnk_short')
 			: $this->lang->line('gordian_auth_register_lnk_short');
+			
+		/*
+		 * This is a reference to the current user model information.
+		 */
+		$data['user_data'] = $this->gordian_user_model->current();
 		
+		// Identify the first timeline and output it's name.
+		$data['timeline_name'] = $this->gordian_timeline->find(1)->Title;
+				
 		/*
 		 * Display Contents
 		 */
@@ -64,14 +83,13 @@ class Atlas extends CI_Controller
 	 * during a maintenance period.
 	 */
 	function maintenance()
-	{		
-		$online = $this->db->get('GordianConfig', 1);
-	 	$status = $online->row();
-	 	$data['maintenanceMessage'] = $status->MaintenanceNotice;
+	{	
+		$this->load->library('gordian_state');
+	 	$data['maintenanceMessage'] = $this->gordian_state->get_maintenance_notice();
 		
 		/*
 		 * Display Contents
 		 */
-		$this->load->view('atlas/maintenance');
-	}
+		$this->load->view('atlas/maintenance', $data);
+	}	
 }

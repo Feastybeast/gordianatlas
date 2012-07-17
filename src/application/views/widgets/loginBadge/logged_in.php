@@ -12,5 +12,6 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo "We're totally logged in.'";
+echo 'Hello ' . $user_data->Nickname . "! ";
+
 echo anchor('/auth/logout', $superbar_link_string, array("class" => "sub"));

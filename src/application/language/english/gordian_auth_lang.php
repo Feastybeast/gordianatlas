@@ -27,25 +27,24 @@ $lang['gordian_auth_widget_header'] = "Please correct the following errors:";
 
 $lang['gordian_auth_nickname_notice'] = "(Defaults to your email address, if blank.)";
 
-$lang['gordian_auth_email_label'] = "Email";
-$lang['gordian_auth_nickname_label'] = "Nickname";
-$lang['gordian_auth_password_label'] = "Password";
-$lang['gordian_auth_confirm_label'] = "Confirm";
+$lang['gordian_auth_email_label'] = "Email:";
+$lang['gordian_auth_nickname_label'] = "Nickname:";
+$lang['gordian_auth_password_label'] = "Password:";
+$lang['gordian_auth_confirm_label'] = "Confirm:";
 
 
 /*
- * 
+ * Email Related Strings
  */
-$lang['gordian_auth_label_endcap'] = ":";
-$lang['gordian_auth_label_email'] = "Email Address";
-$lang['gordian_auth_label_password'] = "Password";
+$lang['gordian_auth_label_email'] = "Email Address:";
+$lang['gordian_auth_label_password'] = "Password:";
 
 
 /*
  * Login Related Strings
  */
-$lang['gordian_auth_login_btn'] = "Log in to Account";
-$lang['gordian_auth_login_hdr'] = "Log in to Account";
+$lang['gordian_auth_login_btn'] = "Log in to Account:";
+$lang['gordian_auth_login_hdr'] = "Log in to Account:";
 $lang['gordian_auth_login_lnk'] = "Need to login to your account?";
 
 $lang['gordian_auth_register_failed'] = "Unable to register your account, please verify credentials are unique.";
@@ -82,3 +81,8 @@ $lang['gordian_auth_register_failed'] = "Registration failed, please try again."
   */
 $lang['gordian_auth_update_hdr'] = "Update Account Details";
 $lang['gordian_auth_update_btn'] = "Update Account";
+
+/*
+ * Administration Related Strings
+ */
+$lang['gordian_auth_admin_toggle_failed'] = 'Unable to toggle account\'s administrative state.';

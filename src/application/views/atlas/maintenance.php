@@ -13,6 +13,7 @@ if (!defined('BASEPATH'))
 }
 
 $this->load->view('layouts/header');
+$this->load->view('layouts/superbar');
 echo $maintenanceMessage;
 $this->load->view('layouts/footer');
 ?>

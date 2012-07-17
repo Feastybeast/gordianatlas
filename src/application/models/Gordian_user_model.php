@@ -39,7 +39,12 @@ class Gordian_user_model extends CI_Model
 	 */
 	public function find($user_id)
 	{
-		$query = $this->db->select('IdUser AS id, Email, Nickname, Created, IsAdministrator')->get_where('User', array('IdUser' => $user_id));
+		// SELECT statement ...
+		$columns = 'IdUser AS id, Email, Nickname, Created, IsAdministrator';
+		// WHERE clause ...
+		$predicates = array('IdUser' => $user_id);
+		
+		$query = $this->db->select($columns)->get_where('User', $predicates);
 
 	 	if ($query->num_rows() != 1)
 	 	{
@@ -47,7 +52,7 @@ class Gordian_user_model extends CI_Model
 	 	}
 	 	else
 	 	{
-	 		return $row = $query->result();
+	 		return $row = $query->row();
 	 	}
 	}
 }

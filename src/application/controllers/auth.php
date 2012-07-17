@@ -101,7 +101,7 @@ class Auth extends CI_Controller
 			else 
 			{
 				$login_failed = $this->lang->line('gordian_auth_login_failed');
-				$this->setssion->set_flashdata('message', $login_failed);
+				$this->session->set_flashdata('message', $login_failed);
 			}
 		}
 

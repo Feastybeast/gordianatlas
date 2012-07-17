@@ -13,9 +13,6 @@ if (!defined('BASEPATH'))
  */
 class GordianHooks extends CI_Controller
 {
-	const MAINTENANCE_PAGE = "atlas/maintenance";
-	const HOME_PAGE = "atlas/view";
-	
 	/**
 	 * This method handles two major functions: a pre-setup routine, and maintenance screening.
 	 * 
@@ -25,15 +22,21 @@ class GordianHooks extends CI_Controller
 		/*
 		 * Check the config database to see if the system is on.
 		 */
-		 $online = $this->db->get('GordianConfig', 1);
+		$this->load->config('gordian');
+		$this->load->library('Gordian_state');
+
+		$site_state = $this->gordian_state->is_online();
 		
-		if ($online->num_rows() == 0) /* ... the system isn't configured. */
+		$the_home_page = $this->config->item('gordian_uri_primary');
+		$the_maint_page = $this->config->item('gordian_uri_maint');
+		
+		if (!$this->gordian_state->is_setup())
 		{
 			if (FALSE === strpos(uri_string(), 'setup'))
 			{
 				redirect('setup');			
 			}
-		}
+		}		
 		else /* System is configured, check to see if its on. */
 		{
 			/*
@@ -41,25 +44,21 @@ class GordianHooks extends CI_Controller
 			 */
 			if (TRUE === strpos(uri_string(), 'setup'))
 			{
-				redirect(GordianHooks::HOME_PAGE);
+				redirect($the_home_page);
 			}
+			
+			$is_online = $this->gordian_state->is_online();
 			
 			/*
 			 * Is the system online? Act accordingly.
 			 */
-			$status = $online->row();
-
-			if ( ($status->IsActive == 0) 
-				&& (uri_string() != GordianHooks::MAINTENANCE_PAGE)
-			)
+			if ( !$is_online && (uri_string() != $the_maint_page) )
 			{
-				redirect(GordianHooks::MAINTENANCE_PAGE);			
+				redirect($the_maint_page);			
 			} 
-			else if ( ($status->IsActive == 1)
-				&& uri_string() == GordianHooks::MAINTENANCE_PAGE
-			)
+			else if ( $is_online && uri_string() == $the_maint_page )
 			{
-				redirect(GordianHooks::HOME_PAGE);	
+				redirect($the_home_page);	
 			}							
 		}
 	}

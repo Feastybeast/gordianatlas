@@ -30,8 +30,7 @@ if (!function_exists('gordian_auth_user_widget'))
 		$CI =& get_instance();
 		$CI->load->helper('html');
 		$CI->lang->load('gordian_auth');
-		$CI->lang->load('gordian');
-		
+				
 		/*
 		 * Boilerplate Error Widget output.
 		 */
@@ -136,11 +135,6 @@ if (!function_exists('gordian_auth_user_widget'))
 		$forgotten_link = anchor('auth/forgotten', $forgotten_label);
 		
 		/*
-		 * Miscellaneous strings required ...
-		 */
-		$LABEL_SUFFIX = $CI->lang->line('gordian_label_suffix');
-		
-		/*
 		 * Output the main UI. Note there is no way to supress the Email and Password fields.
 		 */
 		if (!(array_key_exists('header', $config) && $config['header'] === FALSE))
@@ -152,7 +146,7 @@ if (!function_exists('gordian_auth_user_widget'))
 		echo '<table>';
 
 		echo '  <tr>';
-		echo '		<td align="right">' . $email_label . $LABEL_SUFFIX . '</td>';
+		echo '		<td align="right">' . $email_label . '</td>';
 		echo '		<td align="right" width="1">'. $email_field .'</td>';
 		echo '</tr>';
 
@@ -160,7 +154,7 @@ if (!function_exists('gordian_auth_user_widget'))
 		if (!(array_key_exists('nickname', $config) && $config['nickname'] == FALSE))
 		{
 			echo '	<tr>';
-			echo '		<td align="right">' . $nickname_label . $LABEL_SUFFIX . '</td>';
+			echo '		<td align="right">' . $nickname_label . '</td>';
 			echo '		<td align="right" width="1">' . $nickname_field . "<br />";
 			echo '<span class="sub">' . $CI->lang->line('gordian_auth_nickname_blank_notice') . '</span>';
 			echo '		</td>';
@@ -168,14 +162,14 @@ if (!function_exists('gordian_auth_user_widget'))
 		}
 		
 		echo '	<tr>';
-		echo '		<td align="right">' . $password_label . $LABEL_SUFFIX . '</td>';
+		echo '		<td align="right">' . $password_label . '</td>';
 		echo '		<td align="right" width="1">' . $password_field. '</td>';
 		echo '	</tr>';
 		
 		if (!(array_key_exists('confirm', $config) && $config['confirm'] == FALSE))
 		{
 			echo '	<tr>';
-			echo '		<td align="right">' . $confirm_label . $LABEL_SUFFIX . '</td>';
+			echo '		<td align="right">' . $confirm_label . '</td>';
 			echo '		<td align="right" width="1">' . $confirm_field . '</td>';
 			echo '	</tr>';
 		}

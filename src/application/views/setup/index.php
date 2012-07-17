@@ -12,9 +12,9 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo heading($this->lang->line('gordian_setup_welcome'), 2);
+echo heading($this->lang->line('gordian_setup_index_header'), 2);
 
-echo $this->lang->line('gordian_setup_unconfigured');
+echo $this->lang->line('gordian_setup_index_body');
 
 echo "<p><strong>";
 echo  anchor('setup/admin_account', $this->lang->line('gordian_setup_admin_link'));
