@@ -18,6 +18,11 @@ if (!defined('BASEPATH'))
 
 class Gordian_auth_model extends CI_Model
 {
+	/**
+	 * Default Constructor.
+	 * 
+	 * Loads the Cookie, Date and Gordian_auth stringpack.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -45,21 +50,24 @@ class Gordian_auth_model extends CI_Model
 		//TODO: Implement
 	}
 	
+	/**
+	 * Verifies if the current user is logged in.
+	 * @return boolean The current user's login state.
+	 */
 	public function is_logged_in()
 	{
 		return (boolean) $this->session->userdata('gordian_id');
 	}
-	
-	public function edit_user($nickname)
-	{
-		$vars = array(
-			'Nickname' => 'Bob Hope'
-		);
-		
-		$this->db->where('IdUser', 1);
-		$this->db->update('User', $vars);
-	}
-		
+
+	/**
+	 * Logs a user into the application, given a valid login / password combo.
+	 * 
+	 * Note: A user MUST be logged out or the login() method will silently fail.
+	 * 
+	 * @param $email The email address of the logging in user.
+	 * @param $password The password of the logging in user.
+	 * @return boolean If the user successfully logged in or not.
+	 */		
 	public function login($email, $password)
 	{
 		if (!$this->is_logged_in())
@@ -86,14 +94,23 @@ class Gordian_auth_model extends CI_Model
 		return FALSE;
 	}
 	
+	/**
+	 * Logs a user out of the application.
+	 */
 	public function logout()
 	{
-		$logout_notice = $this->lang->line('gordian_auth_logout_flash');
-		$this->session->set_flashdata('message', $logout_notice);		
-				$this->session->unset_userdata('gordian_id');
+		$this->session->unset_userdata('gordian_id');
 	}
 
 	
+	/**
+	 * Registers a new email / password combination into the application's database.
+	 * 
+	 * @param $email The email address of the user registering for the application.
+	 * @param $password The password of the user registering for the application.
+	 * @param $nickname The optionally provided nickname of the registering user.
+	 * @return boolean If the registration successfully took or not.
+	 */
 	public function register($email, $password, $nickname)
 	{
 		$this->db->select('IdUser')->from('User')->where('Email', $email)->limit(1);
@@ -130,16 +147,23 @@ class Gordian_auth_model extends CI_Model
 	 */
 	public function set_admin_rights($user_id, $state)
 	{
+		$field_updates = array(
+			'IsAdministrator' => $state
+		);
+		
 		$this->db->where('IdUser', $user_id);
-		$this->db->update('IsAdministrator', $state);
+		$this->db->update('User', $field_updates);
+		
+		return TRUE;
 	}
 	
 	/*
 	 * Support functions
 	 */
-	 private function set_error($error_string)
+	 
+	 private function reset_errors()
 	 {
-	 	$this->errors[] = $error_string;
+	 	$this->errors = array();
 	 }
 	 
 	 private function get_errors()
@@ -152,5 +176,13 @@ class Gordian_auth_model extends CI_Model
 	 	}
 	 	
 	 	return $output;
+	 }
+
+	 /**
+	  * Logs a new error condition into the 
+	  */
+	 private function set_error($error_string)
+	 {
+	 	$this->errors[] = $error_string;
 	 }
 }
