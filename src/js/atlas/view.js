@@ -4,29 +4,29 @@ $(document).ready(
 	function() 
 	{
 		/*
-		 * Wire up and Reference the main map object.
-		 */ 
-		gmap_conf = { 
-			'mapTypeControl': false, 
-			'panControl': false, 
-			'zoomControl': false, 
-			'streetViewControl': false, 
-			'mapTypeId': google.maps.MapTypeId.SATELLITE,
-		}
-
-		// Setup Map and References
-		$('#mapViewport').gmap3(gmap_conf);
+		 * Setup Map and References
+		 */
+		$('#mapViewport').gmap3({ 
+			action:'init',
+    		options:{
+				'mapTypeControl': false, 
+				'panControl': false, 
+				'zoomControl': false, 
+				'streetViewControl': false, 
+				'mapTypeId': google.maps.MapTypeId.SATELLITE
+	    	},
+    		events: {
+        		zoom_changed: function(map)
+        		{
+          			// alert(map.getZoom());
+        		}
+  			}
+		});
 		
 		/*
-		 * Load the initial data & Store it in the Body Object. 
-		 * Access data store via get_data().
+		 * Load Map Data onto the page.
 		 */
-		$.getJSON("/map/view?"+ (new Date().getTime()), function(the_data) 
-		{
-			$('body').data('data', the_data);
-			prepMarkers();
-			displayDefault();
-		});
+		refreshMapData();
 
 		/*
 		 * Timeline Details
@@ -56,12 +56,58 @@ $(document).ready(
             eventSource.loadJSON(json, url);
         });
 
-
         Timeline.OriginalEventPainter.prototype._showBubble = function(x, y, evt) 
         {
         	res = evt.getClassName().split(" ");
         	updateInfoPane(res[0], res[1]);
         }
+
+		/*
+		 * Wire the Add Location and Event Items.
+		 */
+		 $("#addLoc").click(function() {
+		 	
+		 	var name = $( "#loc_name" ),
+				lat = $( "#lat" ),
+				lng = $( "#lng" ),
+				loc_descript = $("#loc_descript"),
+				csrf = $("input[name=csrf_test_name]")
+				allFields = $( [] ).add( name ).add( lat ).add( lng ).add(loc_descript);
+		 
+		 	$("#location-form").dialog({
+			 	autoOpen: true,
+				height: 400,
+				width: 400,
+				modal: true,
+				buttons: {
+					"Accept": function() {						
+						var a = $.post(
+							"/map/add", 
+							{  
+								"name": name.val(),
+								"lat": lat.val(),
+								"lng": lng.val(),
+								"description": loc_descript.val(),
+								"csrf_test_name": csrf.val()
+							}, 
+							function(data) 
+							{
+								refreshMapData();
+								allFields.val("").removeClass("ui-state-error");
+								$("#location-form").dialog("close");							
+							}
+						);
+
+						// Clean house.
+						allFields.val("").removeClass( "ui-state-error");						
+					},
+					"Cancel": function() {
+						allFields.val("").removeClass("ui-state-error");
+						$( this ).dialog( "close" );
+					}
+				}
+		 	});		 	
+		 });
         
 		/*
 		 * End Document.Ready Function here.
@@ -75,34 +121,34 @@ function getData()
 	return $('body').data('data');
 }
 
-// Returns crappy reference to GMAP Object.
-function getMap(args) 
+function refreshMapData()
 {
-	return $('body').data('map');
+	$.getJSON("/map/view?"+ (new Date().getTime()), function(the_data) 
+	{
+		$('#mapViewport').gmap3({
+			action: 'clear'
+		});
+	
+		$('body').data('data', the_data);
+		prepMarkers();
+	});
 }
 
 // 
 function prepMarkers(places) 
 {
-	var m = getMap();
 	var details = {};
-	var max_lng, min_lng, max_lat, min_lat;
 
 	// Iterate each data element, preparing map info.	
 	$.each(getData().locations, function(key, val) 
 	{
-		var imgPath = (val.city) ? "/assets/img/city-pin.png" : "/assets/img/battle-pin.png";
-		
 		$('#mapViewport').gmap3({
 			action: 'addMarker',
-			lat: val.lat,
-			lng: val.lng,
+			lat: val.Lat,
+			lng: val.Lng,
 			marker: {
 				options: {
-					icon: {
-						url: imgPath
-					},
-					title: val.name
+					title: val.Title
 				},
 				data: {
 					"hr_idx": key

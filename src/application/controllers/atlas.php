@@ -37,7 +37,11 @@ class Atlas extends CI_Controller
 		 //TODO: We may want to remove the raw reference to this model and use a library instead.
 		$this->load->model('gordian_user_model');
 		
+		// Used to locate the name of the timeline being viewed.
 		$this->load->library('Gordian_timeline');
+			
+		// Used as labels in the Jquery interface.
+		$this->lang->load('gordian_atlas');	
 				
 		/*
 		 * Assets that need to be loaded for this page.
@@ -53,7 +57,15 @@ class Atlas extends CI_Controller
 		$data['superbar_link_string'] = ($this->gordian_auth->is_logged_in()) 
 			? $this->lang->line('gordian_auth_logout_lnk_short')
 			: $this->lang->line('gordian_auth_register_lnk_short');
-			
+
+		// Prep location widget data for view.		
+		$data['add_button_link'] = $this->lang->line('gordian_atlas_add_location_btn');
+
+		$data['label_location_name'] = $this->lang->line('gordian_atlas_location_name_lbl');
+		$data['label_location_lat'] = $this->lang->line('gordian_atlas_location_lat_lbl');
+		$data['label_location_lng'] = $this->lang->line('gordian_atlas_location_lng_lbl');
+		$data['label_location_description'] = $this->lang->line('gordian_atlas_location_descript_lbl');		
+		
 		/*
 		 * This is a reference to the current user model information.
 		 */

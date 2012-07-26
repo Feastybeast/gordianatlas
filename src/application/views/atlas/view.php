@@ -22,12 +22,26 @@ $this->load->view('layouts/superBar');
 			<p id="content_details">Feel free to explore this time period by clicking on Icons on the map, or using the timeline below!</p>
 		</div>
 	</div>
-	<div id="mapViewport">
-	</div>	
+	<div id="mapViewport">		
+	</div>
+<?php
+	if ($this->gordian_auth->is_logged_in())
+	{
+		echo '	<div id="addLoc"><a href="#" id="btnAddLoc"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
+		echo $add_button_link; 
+		echo '</div>';	
+	}
+?>
 </div>
 <div id="timelineRow" class="structuralRow">
 	<div id="timelineViewport"></div>
-</div> 
-<?php
-	$this->load->view('layouts/footer');
+</div>
+
+<?php 
+if ($this->gordian_auth->is_logged_in())
+{
+	$this->load->view('atlas/controls_logged_in');	
+}
+
+$this->load->view('layouts/footer');
 ?>

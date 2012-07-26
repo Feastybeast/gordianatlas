@@ -19,6 +19,8 @@ class Map extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
+
+		$this->load->library('Gordian_map');
 	}
 	
 	/**
@@ -26,6 +28,50 @@ class Map extends CI_Controller
 	 */
 	public function view()
 	{
-		$this->load->view("map/view");
+		$data['jsonData'] = $this->gordian_map->load(1);
+		
+		$this->load->view("map/view", $data);
 	}
+	
+	/**
+	 * Adds information to the map for the timeline
+	 */
+	public function add()
+	{
+		if ($this->input->is_ajax_request())
+		{
+			$name = $this->input->post('name');
+			$lat = $this->input->post('lat');
+			$lng = $this->input->post('lng');
+			$description = $this->input->post('description');
+			
+			/*
+			 * Attempt to add the new location to timeline 1.
+			 */
+			if (strlen($name) > 0 && is_numeric($lat) && is_numeric($lng) && strlen($description))
+			{
+				$this->gordian_map->add($lat, $lng, $name, $description, 1);		
+				$this->load->view('map/add_succeeded');
+				exit();
+			}
+		}
+
+		$this->load->view('map/add_failed');
+	}
+	
+	/**
+	 * Edits a location for the map for the given timeline.
+	 */
+	public function edit()
+	{
+		
+	}
+	
+	/**
+	 * Action to remove a map item for a given timeline.
+	 */
+	 public function remove()
+	 {
+	 	
+	 }
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * The main output script for mapping JSON data accessed by /atlas/view.
+ * Success notice for adding new location.
  * 
  * @author Jay Ripley <riplja@metrostate.edu>
- * @since Elaboration 2
+ * @since Elaboration 3
  * @license GPL 3
  */
 
@@ -12,4 +12,4 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo $jsonData;
+echo "TRUE";
