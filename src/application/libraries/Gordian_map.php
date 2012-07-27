@@ -44,7 +44,6 @@ class Gordian_map
 		// Timeline at present is hardcoded.
 		$timeline_id = 1;
 		
-		
 		// First, add it to the locations database ...
 		$location_id = $this->CI->Gordian_map_model->add($lat, $lng, $name);
 		
@@ -112,7 +111,7 @@ class Gordian_map
 		
 		foreach($timeline_data->result() as $row)
 		{
-			$json['locations']["loc{$row->Id}"] = 
+			$json['locations']["id{$row->Id}"] = 
 				array('Lat' => $row->Lat, 
 					'Lng' => $row->Lng,
 					'Title' => $row->Title

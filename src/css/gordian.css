@@ -294,18 +294,32 @@ td { vertical-align: top; }
 	position: relative;
 }
 
-#addLoc {
+#addLoc, #addEvent {
 	position: absolute;
-	top: 5px;
-	right: 5px;
+	top: 0px;
+	right: 0px;
 	z-index: 20;
+}
+
+#addLoc A, #addEvent A {
+	padding: 3px;
+	text-decoration: none;
+	font-weight: bold;
+	background-color: #ccc;
+	background-color: rgba(200,200,200,0.5);
 }
 
 #addLoc A {
 	color: #fff;
-	text-decoration: none;
-	font-weight: bold;
-	font-size: 80%;
+}
+
+#addEvent A {
+	color: #000;
+}
+
+
+#location-form {
+	display: none;
 }
 
 /*

@@ -47,6 +47,26 @@ class Gordian_wiki_model extends CI_Model
 	 * 
 	 * @return boolean if the association was valid.
 	 */
+	function associate_event($timeline_id, $event_id, $wiki_id)
+	{
+		$data = array(
+					'Timeline_IdTimeline' => $timeline_id,
+					'Event_IdEvent' => $event_id,
+					'WikiPage_IdWikiPage' => $wiki_id
+				); 
+				
+		$this->db->insert('TimelineEventHasWikiPage', $data);
+	}
+
+	/**
+	 * Associates the given Wiki to the identified location.
+	 * 
+	 * @param numeric The Id of the timeline to make the association.
+	 * @param numeric The Id of the Wikipage to associate.
+	 * @param numeric The Id of the location to associate to for said timeline.
+	 * 
+	 * @return boolean if the association was valid.
+	 */
 	function associate_location($timeline_id, $location_id, $wiki_id)
 	{
 		$data = array(

@@ -31,36 +31,67 @@ $(document).ready(
 		/*
 		 * Timeline Details
 		 */
+		$("#evt_occurance").datepicker(); 
+		 
+		timelineInitialize();
+		timelineUpdate();
 
-		var eventSource = new Timeline.DefaultEventSource(0);
-        
-        var theme = Timeline.ClassicTheme.create();
-        theme.event.bubble.width = 350;
-        theme.event.bubble.height = 300;
-        var d = Timeline.DateTime.parseGregorianDateTime("1090");
-        var bandInfos = [
-            Timeline.createBandInfo({
-                width:          "100%", 
-                intervalUnit:   Timeline.DateTime.DECADE, 
-                intervalPixels: 100,
-                eventSource:    eventSource,
-                date:           d,
-                theme:          theme,
-                layout:         'original'  // original, overview, detailed
-            })
-        ];
-        
-        tl = Timeline.create(document.getElementById("timelineViewport"), bandInfos, Timeline.HORIZONTAL);
-        // stop browser caching of data during testing...
-        tl.loadJSON("/timeline/view?"+ (new Date().getTime()), function(json, url) {
-            eventSource.loadJSON(json, url);
-        });
+		/*
+		 * Wire the add event location
+		 */
+		  $("#addEvent").click(function() {
+		 	
+		 	var evt_name = $( "#evt_name" );
+			var	evt_occurance = $( "#evt_occurance" );
+			var	evt_range = $( "#evt_range" );
+			var	evt_duration = $("#evt_duration");
+			var	evt_descript = $("#evt_descript");
+			var	evt_units = $("#evt_units option:selected");
+			var	csrf = $("input[name=csrf_test_name]");
+			var allFields = $( [] ).add( evt_name ).add( evt_occurance ).add( evt_range ).add(evt_duration).add(evt_descript);
+		 
+		 	$("#event-form").dialog({
+			 	autoOpen: true,
+				height: 550,
+				width: 500,
+				modal: true,
+				buttons: {
+					"Accept": function() {
+						
+						var datum = {  
+								"evt_name": evt_name.val(),
+								"evt_occurance": evt_occurance.val(),
+								"evt_range": (evt_range.val() == '') ? 0 : evt_range.val(),
+								"evt_duration": (evt_duration.val() == '') ? 0 : evt_duration.val(),
+								"evt_descript": evt_descript.val(),
+								"evt_units": evt_units.val(),
+								"csrf_test_name": csrf.val()
+						};
+						
+										
+						$.post(
+							"/timeline/add", 
+							datum, 
+							function(data) 
+							{
+								timelineUpdate();
+								// allFields.val("").removeClass("ui-state-error");
+								// $("#event-form").dialog("close");							
+							}
+						);
 
-        Timeline.OriginalEventPainter.prototype._showBubble = function(x, y, evt) 
-        {
-        	res = evt.getClassName().split(" ");
-        	updateInfoPane(res[0], res[1]);
-        }
+						// Clean house.
+						allFields.val("").removeClass( "ui-state-error");
+						$( this ).dialog( "close" );						
+					},
+					"Cancel": function() {
+						allFields.val("").removeClass("ui-state-error");
+						$( this ).dialog( "close" );
+					}
+				}
+		 	});
+		  });
+	
 
 		/*
 		 * Wire the Add Location and Event Items.
@@ -71,7 +102,7 @@ $(document).ready(
 				lat = $( "#lat" ),
 				lng = $( "#lng" ),
 				loc_descript = $("#loc_descript"),
-				csrf = $("input[name=csrf_test_name]")
+				csrf = $("input[name=csrf_test_name]"),
 				allFields = $( [] ).add( name ).add( lat ).add( lng ).add(loc_descript);
 		 
 		 	$("#location-form").dialog({
@@ -115,10 +146,45 @@ $(document).ready(
 	}
 );
 
-// Core JSON Data Retrieval function
-function getData() 
+function timelineInitialize()
 {
-	return $('body').data('data');
+	/*
+	 * Wire the timeline behaviors.
+	 */
+    Timeline.OriginalEventPainter.prototype._showBubble = function(x, y, evt) 
+    {
+    	res = evt.getClassName().split(" ");    	
+    	updateInfoPane(res[0], res[1]);
+    }
+        
+	// Timeline boilerplate code.
+    var theme = Timeline.ClassicTheme.create();
+	eventSource = new Timeline.DefaultEventSource(0);
+
+	var d = Timeline.DateTime.parseGregorianDateTime("1900");		
+		                
+    var bandInfos = [
+        Timeline.createBandInfo({
+            width:          "100%", 
+            intervalUnit:   Timeline.DateTime.DECADE, 
+            intervalPixels: 100,
+            eventSource:    eventSource,
+            date:           d,
+            theme:          theme,
+            layout:         'original'  // original, overview, detailed
+        })
+    ];
+        
+    tl = Timeline.create(document.getElementById("timelineViewport"), bandInfos, Timeline.HORIZONTAL);
+}
+
+function timelineUpdate()
+{
+    // stop browser caching of data during testing...
+    tl.loadJSON("/timeline/view?"+ (new Date().getTime()), function(json, url) {
+    	eventSource.clear();
+        eventSource.loadJSON(json, url);
+    });
 }
 
 function refreshMapData()
@@ -128,19 +194,18 @@ function refreshMapData()
 		$('#mapViewport').gmap3({
 			action: 'clear'
 		});
-	
-		$('body').data('data', the_data);
-		prepMarkers();
+
+		prepMarkers(the_data);
 	});
 }
 
 // 
-function prepMarkers(places) 
+function prepMarkers(markers) 
 {
 	var details = {};
 
 	// Iterate each data element, preparing map info.	
-	$.each(getData().locations, function(key, val) 
+	$.each(markers.locations, function(key, val) 
 	{
 		$('#mapViewport').gmap3({
 			action: 'addMarker',
@@ -166,107 +231,16 @@ function prepMarkers(places)
 
 function updateInfoPane(type, key) 
 {
-	$("#content_title").html(getData()[type][key].name);
-	$("#content_picture").attr("src", getData()[type][key].image_url);
-
-	$("#content_details A").off("click");
+	var controller = {
+		'events': "timeline",
+		'locations': "map"
+	}
 	
-	var record = getData()[type][key];
+	var url = "/" + controller[type] + "/wiki/" + key.substr(2);
 	
-	if (type == 'personalities')
-	{
-		// Deal with Birth and Death Locations
-		birth_loc = "";
-		death_loc = "";
-		
-		if (record.birth_loc != "")
-		{
-			var loc = getData()['locations'][record.birth_loc];
-
-			if (loc != undefined)
-			{			
-				birth_loc = ' at <a href="#" class="locations ' + record.birth_loc + '">'+loc.name+'</a>';
-			}
-		}
-		
-		if (record.death_loc != "")
-		{
-			var loc = getData()['locations'][record.death_loc];
-			
-			if (loc != undefined)
-			{
-				death_loc = ' at <a href="#" location="' + record.death_loc + '" class="locations">'+loc.name+'</a>';				
-			}
-		}
-
-		// Participation details
-		var participation_details = "";
-
-		if (record.participant.length > 0)
-		{
-			participation_details += "<p><strong>Participant of:</strong></p>";
-			
-			for(i = 0; i < record.participant.length; i++)
-			{
-				current_event = getData()['events'][record.participant[i]];
-				if (current_event != undefined)
-				{
-					participation_details += 
-						'<a href="#" class="events" event="' + 
-						record.participant[i] + 
-						'">' + current_event.name + '</a>, ';
-				}
-			}		
-		}
-		
-		// Finally output results
-		var display_text = 
-			"<p><strong>Born: " + record.birth_ts + birth_loc + 
-			"<br /> Died: " + record.death_ts + death_loc + "</strong></p>" +  
-			"<p>" + record.description + "<p>" + 
-			participation_details;		
-		
-		$("#content_details").html(display_text);
-
-		$("#content_details A.events").click(
-				function() {
-					updateInfoPane('events', $(this).attr("event"));
-			});
-		
-		$("#content_details A.locations").click(
-			function() {
-				updateInfoPane('locations', $(this).attr("location"));
-		});
-	}
-	else if (type == 'events')
-	{
-		var display_text = 
-			"<p><strong>" + record.ts + "</strong></p>" +  
-			"<p>" + record.description + "<p>";
-				
-		if (record.participants.length > 0)
-		{
-			display_text += "<p><strong>Participants:</strong></p>";
-			
-			for(i = 0; i < record.participants.length; i++)
-			{
-				current_person = getData()['personalities'][record.participants[i]];
-				if (current_person != undefined)
-				{
-					display_text += '<a href="#" class="' + record.participants[i] + '">' + current_person.name + '</a>, ';
-				}
-			}
-		}	
-
-		$("#content_details").html(display_text);
-
-		$("#content_details A").click(
-				function() {
-					updateInfoPane('personalities', $(this).attr("class"));
-		});	
-	}
-	else if (type == 'locations')
-	{
-		$("#content_details").html(record.description);		
-	}
-}
+	$.get(url, 
+		function(data) {
+			$("#content A").off("click");
+			$("#content").html("I attempted " + url);
+	});	
+} 

@@ -52,6 +52,35 @@ class Gordian_wiki
 		
 		return $wiki_id;
 	}
+
+	/**
+	 * Associates the given Wiki to the identified location.
+	 * 
+	 * @param numeric The Id of the timeline to associate to.
+	 * @param numeric The Id of the location to associate to.
+	 * @param numeric The Id of the Wikipage to associate.
+	 * 
+	 * @return boolean if the association was valid.
+	 */
+	function associate_event($timeline_id, $event_id, $wiki_id)
+	{
+		$this->CI->load->library('Gordian_timeline');
+		
+		$event = $this->CI->gordian_timeline->find_event($event_id);
+		$timeline = $this->CI->gordian_timeline->find($timeline_id);
+		
+		if (!is_object($event))
+		{
+			return FALSE;
+		}
+		
+		if (!is_object($timeline))
+		{
+			return FALSE;
+		}
+		
+		return $this->CI->Gordian_wiki_model->associate_event($timeline_id, $event_id, $wiki_id);		
+	}
 		
 	/**
 	 * Associates the given Wiki to the identified location.

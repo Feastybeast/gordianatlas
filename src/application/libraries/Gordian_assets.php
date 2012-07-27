@@ -137,8 +137,7 @@ EOF;
 		$this->addFooterScript($this->CI->config->item('gordian_JQ'));
 		$this->addFooterScript($this->CI->config->item('gordian_JQUI'));
 		$this->addStyleSheet($this->CI->config->item('gordian_JQUI_CSS'));
-		$this->addStyleSheet('/css/gordian.css');
-		$this->addFooterScript('/js/lib/flashdata.js');		
+		$this->addStyleSheet('/css/gordian.css');	
 	}
 }
 ?>

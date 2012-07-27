@@ -34,6 +34,14 @@ $this->load->view('layouts/superBar');
 ?>
 </div>
 <div id="timelineRow" class="structuralRow">
+<?php
+	if ($this->gordian_auth->is_logged_in())
+	{
+		echo '	<div id="addEvent"><a href="#" id="btnAddEvent"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
+		echo $add_button_event; 
+		echo '</div>';	
+	}
+?>
 	<div id="timelineViewport"></div>
 </div>
 

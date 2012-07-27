@@ -22,6 +22,53 @@ class Gordian_timeline_model extends CI_Model
 	}
 	
 	/**
+	 * Adds a new event record to the system.
+	 * 
+	 * @param string The day the event occured, as {YYYY-MM-DD}.
+	 * @param numeric The range of an event, given as +/- the given value.
+	 * @param numeric The duration of an event
+	 * @param enum The unit the duration and range is given in.
+	 */
+	public function add($occured_on, $occured_range, $occured_duration, $occured_unit)
+	{
+		/*
+		 * We'll need a boilerplate icon for the moment.
+		 */
+		$this->db->insert('Icon', array('Path' => '', 'Color' => ''));
+		$icon_id = $this->db->insert_id();
+
+		$data = array(
+			'Icon_IdIcon' => $icon_id,
+			'OccuredOn' => $occured_on,
+			'OccuredRange' => $occured_range,
+			'OccuredDuration' => $occured_duration,
+			'OccuredUnit' => $occured_unit
+		);
+		
+		$this->db->insert('Event', $data);
+		return $this->db->insert_id();
+	}
+	
+	/**
+	 * Adds an alias to a known event given its Id.
+	 * 
+	 * @param numeric The ID of the event in question.
+	 * @param string The alias to refer to the event as.
+	 * 
+	 * @return boolean if it was successfully added.
+	 */
+	public function add_alias($event_id, $alias)
+	{
+		$data = array(
+			'Event_IdEvent' => $event_id,
+			'Title' => $alias
+		);
+		
+		$this->db->insert('EventAlias', $data);
+		return $this->db->insert_id();		
+	}
+	
+	/**
 	 * Assigns a previously unassociated timeline to a group.
 	 * 
 	 * @param numeric ID of timeline to associate to a group.
@@ -37,6 +84,34 @@ class Gordian_timeline_model extends CI_Model
 		$this->db->query($query, array($group_id, $timeline_id));
 		
 		return ($this->db->affected_rows() == 1);
+	}
+	
+	/**
+	 * Attaches an event to a given timeline.
+	 * 
+	 * @param numeric The event ID to associate to a timeline.
+	 * @param numeric The timeline Id to associate to.
+	 * 
+	 * @return boolean If the event was attached correctly.
+	 */
+	public function attach_timeline($event_id, $timeline_id)
+	{
+		$data = array(
+				'Event_IdEvent' => $event_id, 
+				'Timeline_IdTimeline' => $timeline_id
+		);
+
+		// Is the data already present?
+		$query = $this->db->get_where('TimelineHasEvent', $data);
+		
+		if ($query->num_rows() > 0)
+		{
+			return FALSE;
+		}
+		
+		$this->db->insert('TimelineHasEvent', $data);
+
+		return TRUE;
 	}
 	
 	/**
@@ -63,9 +138,14 @@ class Gordian_timeline_model extends CI_Model
 		return FALSE;		
 	}
 	
+	/**
+	 * Deactivates a given timeline.
+	 * 
+	 * @param numeric The timeline to deactivate
+	 */
 	public function deactivate($timeline_id)
 	{
-		
+		// TODO: NYI
 	}
 
 	/**
@@ -115,6 +195,89 @@ class Gordian_timeline_model extends CI_Model
 	}
 	
 	/**
+	 * Finds an event given a date and title.
+	 * 
+	 * Accepts either a given Id, or a combo of {Occurance, Title}
+	 * 
+	 * @param numeric The Id of a given event.
+	 * 
+	 * @param string A date of a given event, as {YYYY-MM-DD}
+	 * @param string An alias of the given event.
+	 */
+	public function find_event()
+	{
+		// We need a baseline query to pull info from.
+		$qry_main = "SELECT IdEvent, OccuredOn, OccuredRange, ";
+		$qry_main .= "OccuredDuration, OccuredUnit ";
+		$qry_main .= "FROM `Event` evt "; 
+
+		switch(func_num_args())
+		{
+			case 2: // Date & Title
+				$date = func_get_arg(0);
+				$title = func_get_arg(1);
+				
+				if (!is_string($date) || !is_string($title))
+				{
+					return FALSE;
+				}
+							
+				$qry_main .= " INNER JOIN `EventAlias` ea ON ea.Event_IdEvent = evt.IdEvent ";
+				$qry_main .= " WHERE ea.Title = ? ";
+				$qry_main .= " AND evt.OccuredOn = DATE_FORMAT(?, '%Y-%m-%d')";
+				
+				$res = $this->db->query($qry_main, array($title, $date));
+				break;
+			
+			case 1: // By Id.
+				$id = func_get_arg(0);
+				
+				if (!is_numeric($id))
+				{
+					return FALSE;
+				}
+			
+				$qry_main .= "WHERE IdEvent = ?";
+				$res = $this->db->query($qry_main, array($id));
+				break;
+			
+			default: // Invalid.
+				return FALSE;
+		}
+		
+		if ($res->num_rows() != 1)
+		{
+			return FALSE;
+		}
+		
+		else 
+		{
+
+			/*
+			 * Finally locate all the aliases and return them.
+			 */
+			$ret = $res->row();
+			$ret->aliases = array();
+
+			$qry_alias = "SELECT Title FROM `EventAlias` ";
+			$qry_alias .= "WHERE Event_IdEvent = ? ";
+			$qry_alias .= "ORDER BY Ordering ";
+
+			$res = $this->db->query($qry_alias, $ret->IdEvent);
+			
+			if ($res->num_rows() > 0)
+			{
+				foreach ($res->row() as $row)
+				{
+					$ret->aliases[] = $row;
+				}
+			}
+		}
+		
+		return $ret;
+	}
+	
+	/**
 	 * Verifies that a timeline provided a title or ID exists.
 	 * 
 	 * @param mixed Either a numeric ID or Title string of the timeline.
@@ -139,5 +302,26 @@ class Gordian_timeline_model extends CI_Model
 		}
 		
 		return FALSE;		
+	}
+	
+	/**
+	 * Returns a data object appropriate to parse into JSON data within the library.
+	 * 
+	 * @param numeric The timeline to load.
+	 * @returns resource The dataset of events associated to the given timeline.
+	 */
+	public function load($timeline_id)
+	{
+		$query = "SELECT IdEvent, OccuredOn, OccuredRange, OccuredDuration, OccuredUnit, ea.Title ";
+		$query .= "FROM `Event` evt ";
+		$query .= "INNER JOIN `EventAlias` ea ON ea.Event_IdEvent = evt.IdEvent ";
+		$query .= "INNER JOIN `TimelineHasEvent` the ON the.Event_IdEvent = evt.IdEvent ";
+		$query .= "INNER JOIN `Timeline` t ON the.Timeline_IdTimeline = t.IdTimeline ";
+		$query .= "WHERE t.IdTimeline = ? ";
+		$query .= "GROUP BY evt.IdEvent, ea.Title";
+		
+		$res = $this->db->query($query, array($timeline_id));
+		
+		return $res;
 	}
 }

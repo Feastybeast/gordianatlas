@@ -59,12 +59,24 @@ class Atlas extends CI_Controller
 			: $this->lang->line('gordian_auth_register_lnk_short');
 
 		// Prep location widget data for view.		
-		$data['add_button_link'] = $this->lang->line('gordian_atlas_add_location_btn');
+		$data['add_button_link'] = $this->lang->line('gordian_atlas_location_add_btn');
 
 		$data['label_location_name'] = $this->lang->line('gordian_atlas_location_name_lbl');
 		$data['label_location_lat'] = $this->lang->line('gordian_atlas_location_lat_lbl');
 		$data['label_location_lng'] = $this->lang->line('gordian_atlas_location_lng_lbl');
 		$data['label_location_description'] = $this->lang->line('gordian_atlas_location_descript_lbl');		
+
+		// Prep event widget data.
+		$data['add_button_event'] = $this->lang->line('gordian_atlas_event_add_btn');
+
+		$data['label_event_name'] = $this->lang->line('gordian_atlas_event_name_lbl');
+		$data['label_event_description'] = $this->lang->line('gordian_atlas_event_descrpt_lbl');
+		$data['label_event_occurance'] = $this->lang->line('gordian_atlas_event_occurance_lbl');
+		
+		$data['label_event_duration'] = $this->lang->line('gordian_atlas_event_duration_lbl');
+		$data['label_event_range'] = $this->lang->line('gordian_atlas_event_range_lbl');
+		
+		$data['label_event_notice'] = $this->lang->line('gordian_atlas_event_range_duration_notice');
 		
 		/*
 		 * This is a reference to the current user model information.

@@ -1,9 +1,9 @@
 <?php
 /**
- * The main output script for timeline JSON data accessed by /atlas/view.
+ * Failure notice for adding new event.
  * 
  * @author Jay Ripley <riplja@metrostate.edu>
- * @since Elaboration 2
+ * @since Elaboration 4
  * @license GPL 3
  */
 
@@ -12,4 +12,4 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-echo $jsonData;
+echo "FALSE";
