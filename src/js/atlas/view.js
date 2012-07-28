@@ -4,6 +4,11 @@ $(document).ready(
 	function() 
 	{
 		/*
+		 *
+		 */
+		defaultBioPage();
+	
+		/*
 		 * Setup Map and References
 		 */
 		$('#mapViewport').gmap3({ 
@@ -21,7 +26,7 @@ $(document).ready(
           			// alert(map.getZoom());
         		}
   			}
-		});
+		});		
 		
 		/*
 		 * Load Map Data onto the page.
@@ -241,7 +246,50 @@ function updateInfoPane(type, key)
 	
 	$.get(url, 
 		function(data) {
-			$("#content A").off("click");
-			$("#content").html(data);
+			updateBioPane(data);
 	});	
 } 
+
+function updateBioPane(data)
+{
+	$("#content A").off("click");
+	$("#content").html(data);
+
+	$("#content A.remove_btn").click(
+		function(evt) {
+			evt.preventDefault();
+			
+			var url = evt.target.href;
+			
+			if (url.indexOf("remove") != -1)
+			{
+				// -- Dialog --
+				$("#content .dialog").dialog({
+			      buttons : {
+        				"Confirm" : function() {
+							$.get(url, 
+									function(data) {
+										defaultBioPage();
+										refreshMapData();
+										timelineUpdate();
+								});
+								
+							$( this ).dialog( "close" );
+       				 	},
+        				"Cancel" : function() {
+          					$( this ).dialog( "close" );
+        				}
+      				}
+    			});
+				// -- Dialog --
+			}
+	});
+}
+
+function defaultBioPage()
+{
+	$.get("/atlas/wiki", 
+		function(data) {
+			updateBioPane(data);
+		});
+}

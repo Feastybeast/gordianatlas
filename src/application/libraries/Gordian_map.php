@@ -48,8 +48,8 @@ class Gordian_map
 		$location_id = $this->CI->Gordian_map_model->add($lat, $lng, $name);
 		
 		// Then associate it to at least one timeline.
-		$is_attached = $this->CI->Gordian_map_model->attach_timeline($location_id, $timeline_id);
-		
+		$this->CI->Gordian_map_model->attach_timeline($location_id, $timeline_id);
+				
 		// Then associate it to it's wikipage.
 		$this->CI->load->library("Gordian_wiki"); 
 		
@@ -119,5 +119,10 @@ class Gordian_map
 		}
 		
 		return json_encode($json);
+	}
+	
+	public function remove_location($id)
+	{
+		$this->CI->Gordian_map_model->remove_location($id);
 	}
 }

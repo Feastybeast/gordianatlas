@@ -185,5 +185,17 @@ class Gordian_map_model extends CI_Model
 		
 		return $res;
 	}
+	
+	/**
+	 * Removes a location pin from a given Timeline's map.
+	 * 
+	 * @param numeric The Id of the element to remove from the given timeline.
+	 */
+	public function remove_location($id)
+	{
+		$this->db->delete('TimelineHasLocation', 
+			array('Location_IdLocation' => $id, 'Timeline_IdTimeline' => 1)
+		); 	
+	}	
 }
 ?>

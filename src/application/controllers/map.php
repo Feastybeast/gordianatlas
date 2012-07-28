@@ -70,9 +70,17 @@ class Map extends CI_Controller
 	/**
 	 * Action to remove a map item for a given timeline.
 	 */
-	 public function remove()
+	 public function remove_location()
 	 {
+		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
+		{
+			
+			$data_array = explode('/', uri_string());
+		 	$id = $data_array[2];
 	 	
+			$this->gordian_map->remove_location($id);
+		}
+			
 	 }
 	 
 	 public function wiki()
@@ -101,6 +109,11 @@ class Map extends CI_Controller
 		 	$data['loc_aka'] = array_diff($location_data->aliases, array($wiki_data->Title));
 		 	
 		 	$data['latlng_lbl'] = $this->lang->line('gordian_map_ajax_latlng_lbl');
+		 	
+		 	// Manipulation Labels
+		 	$data['edit_lbl'] = $this->lang->line('gordian_map_ajax_edit_lbl');
+		 	$data['remove_lbl'] = $this->lang->line('gordian_map_ajax_remove_lbl');
+		 	$data['remove_confirm'] = $this->lang->line('gordian_map_ajax_remove_confirm');
 		 	
 		 	$this->load->view('map/wiki', $data);
 	 	}

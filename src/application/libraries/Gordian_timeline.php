@@ -365,6 +365,16 @@ class Gordian_timeline
 		
 		return json_encode($json);		
 	}
+	
+	/**
+	 * Removes a location pin from a given Timeline's map.
+	 * 
+	 * @param numeric The Id of the element to remove from the given timeline.
+	 */
+	public function remove_event($id)
+	{
+		$this->CI->Gordian_timeline_model->remove_event($id);
+	}
 
 	/*
 	 * Support Methods

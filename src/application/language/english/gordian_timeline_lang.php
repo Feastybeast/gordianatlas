@@ -30,8 +30,14 @@ $lang['gordian_timeline_error_add_occurance_unit'] = " isn't an understood unit 
 $lang['gordian_timeline_ajax_error'] = "We're sorry, but we're unable to load location data at this time. Please try again momentarily, or if this error continues to arise, please contact an administrator for assistance.";
 $lang['gordian_timeline_ajax_aka_lbl'] = ".. also known as ";
 
+// Time 
 $lang['gordian_timeline_ajax_occured_lbl'] = "Occured ";
 $lang['gordian_timeline_ajax_duration_lbl'] = "Began ";
 $lang['gordian_timeline_ajax_range_lbl'] = "Circa ";
 
 $lang['gordian_timeline_ajax_centuries'] = "Centuries";
+
+// Labels
+$lang['gordian_timeline_ajax_edit_lbl'] = "Edit this Event";
+$lang['gordian_timeline_ajax_remove_lbl'] = "Remove this Event";
+$lang['gordian_timeline_ajax_remove_confirm'] = "Are you sure you wish to remove this Event?";

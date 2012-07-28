@@ -72,6 +72,23 @@ if (!defined('BASEPATH'))
 	}
 	
 	/**
+	 * Removes a location pin from a given Timeline's map.
+	 * 
+	 * @param numeric The Id of the element to remove from the given timeline.
+	 */
+	public function remove_event($id)
+	{
+		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
+		{
+			
+			$data_array = explode('/', uri_string());
+		 	$id = $data_array[2];
+	
+			$this->gordian_timeline->remove_event($id);
+		}
+	}	
+	
+	/**
 	 * Primary action to load JSON data from the database.
 	 */
 	function view()
@@ -108,6 +125,10 @@ if (!defined('BASEPATH'))
 		 	
 		 	$data['aka_lbl'] = $this->lang->line('gordian_timeline_ajax_aka_lbl');
 
+			// Button Strings
+		 	$data['edit_lbl'] = $this->lang->line('gordian_timeline_ajax_edit_lbl');
+		 	$data['remove_lbl'] = $this->lang->line('gordian_timeline_ajax_remove_lbl');
+		 	$data['remove_confirm'] = $this->lang->line('gordian_timeline_ajax_remove_confirm');
 
 			// Time label
 			$date = DateTime::createFromFormat('Y-m-d', $event_data->OccuredOn);

@@ -115,5 +115,15 @@ class Atlas extends CI_Controller
 		 * Display Contents
 		 */
 		$this->load->view('atlas/maintenance', $data);
-	}	
+	}
+	
+	function wiki()
+	{
+		$this->lang->load('gordian_atlas');
+		
+		$data['splash_header'] = $this->lang->line('gordian_atlas_splash_header');
+		$data['splash_content'] = $this->lang->line('gordian_atlas_splash_body');
+		
+		$this->load->view('atlas/wiki', $data);
+	}
 }

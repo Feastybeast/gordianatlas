@@ -25,4 +25,6 @@ $lang['gordian_atlas_location_lat_lbl'] = "Lat:";
 $lang['gordian_atlas_location_lng_lbl'] = "Lng:";
 $lang['gordian_atlas_location_descript_lbl'] = "Brief Description:";
 
-$lang['gordian_atlas_default_wiki_revision'] = "The following information is entered in the initial wiki page for the Location ....";
+// Splash Messages displayed on the idle biography screen.
+$lang['gordian_atlas_splash_header'] = "Welcome to the Gordian Atlas!";
+$lang['gordian_atlas_splash_body'] = "Explore history with the click of a mouse. Interesting places, people and events await you; If not, you're welcome to add your own. Simply register an account to get started!";
