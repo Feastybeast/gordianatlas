@@ -42,8 +42,8 @@ class Gordian_wiki
 		 * Insert data
 		 */
 		 
-		 $wiki_id = $this->CI->Gordian_wiki_model->add($name);		 
-		 $revision_id = $this->revise($wiki_id, $description);
+		 $wiki_id = $this->CI->Gordian_wiki_model->add($name);
+		 $revision_id = $this->revise($wiki_id, $description);		 
 		 
 		 if (!is_numeric($wiki_id) || !is_numeric($revision_id))
 		 {
@@ -103,7 +103,7 @@ class Gordian_wiki
 	}
 	
 	/**
-	 * Attempts to find a WikiPage by name
+	 * Attempts to find a WikiPage either by name or Id.
 	 * 
 	 * @param mixed The ID or name of the WikiPage to locate.
 	 * 
@@ -120,6 +120,50 @@ class Gordian_wiki
 	}
 	
 	/**
+	 * Support method to locate a given wiki resource provided a record type and ID.
+	 * 
+	 * @param enum The kind of record to locate.
+	 * @param enum Its ID.
+	 * 
+	 * @return mixed either FALSE or a JSON object containing critical details.
+	 */
+	public function referenced_by($kind, $id)
+	{	
+		$sql_mappings = array(
+			'map' => array(
+				'table' => 'TimelineLocationHasWikiPage',
+				'clause' => 'Location_IdLocation'
+			), 
+			'timeline' => array(
+				'table' => 'TimelineEventHasWikiPage',
+				'clause' => 'Event_IdEvent'
+			)
+		);
+		
+		// If there is no mapping ...
+		if (!array_key_exists($kind, $sql_mappings))
+		{
+			return FALSE;
+		}
+		
+		// See if there's a record ...
+		$qry  = " SELECT WikiPage_IdWikiPage AS Id ";
+		$qry .= "FROM " . $sql_mappings[$kind]['table'] . " ";
+		$qry .= "WHERE " . $sql_mappings[$kind]['clause'] . " = {$id} ";
+		$qry .= "AND Timeline_IdTimeline = 1";
+
+		$res = $this->CI->db->query($qry, array($id));
+
+		if ($res->num_rows() != 1)
+		{
+			return FALSE;
+		}
+		
+		// One has been located ...
+		return $this->find($res->row()->Id);		
+	}
+	
+	/**
 	 * Revises the data of a given wikipage.
 	 * 
 	 * @param numeric The ID of the core wiki page to revise.
@@ -129,7 +173,9 @@ class Gordian_wiki
 	 */
 	public function revise($wiki_id, $revisions)
 	{
-		if (is_object($this->find($wiki_id)))
+		$parent_wiki = $this->find($wiki_id);
+		
+		if (is_object($parent_wiki))
 		{
 			return $this->CI->Gordian_wiki_model->revise($wiki_id, $revisions);
 		}	

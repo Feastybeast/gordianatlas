@@ -25,3 +25,13 @@ $lang['gordian_timeline_error_add_occured_duration'] = "While attempting to add 
 $lang['gordian_timeline_error_add_alias_invalid'] = "While attempting to add an event, an invalid initial alias was provided.";
 $lang['gordian_timeline_error_add_description_invalid'] = "While attempting to add an event, an invalid description was provided.";
 $lang['gordian_timeline_error_add_occurance_unit'] = " isn't an understood unit of time, unable to add event.";
+
+// AJAX messages.
+$lang['gordian_timeline_ajax_error'] = "We're sorry, but we're unable to load location data at this time. Please try again momentarily, or if this error continues to arise, please contact an administrator for assistance.";
+$lang['gordian_timeline_ajax_aka_lbl'] = ".. also known as ";
+
+$lang['gordian_timeline_ajax_occured_lbl'] = "Occured ";
+$lang['gordian_timeline_ajax_duration_lbl'] = "Began ";
+$lang['gordian_timeline_ajax_range_lbl'] = "Circa ";
+
+$lang['gordian_timeline_ajax_centuries'] = "Centuries";

@@ -91,37 +91,34 @@ class Gordian_wiki_model extends CI_Model
 		{
 			return FALSE;
 		}
-		
-		/*
-		 * Data critereon to look for.
-		 */
+
 		$arg = func_get_arg(0);
 		
-		if (is_numeric($arg))
-		{
-			$data = array(
-				'IdWikiPage' => $arg
-			);			
-		}
-		else
-		{
-			$data = array(
-				'Title' => $arg
-			);			
-		}
+		// Prepare the overall Query.
+		$qry  = "SELECT IdWikiPage, Title, Content ";
+		$qry .= "FROM WikiPage wp ";
+		$qry .= "LEFT OUTER JOIN WikiPageRevision rev ON wp.IdWikiPage = rev.WikiPage_IdWikiPage ";
 		
-		$query = $this->db->get_where('WikiPage', $data);
+		$qry .= (is_numeric($arg))
+			? "WHERE wp.IdWikiPage = ? " 
+			: "WHERE wp.Title = ? ";
+
+		$qry .= "ORDER BY IdWikiPageRevision DESC ";
+		$qry .= "LIMIT 1";	
+
+		
+		$res = $this->db->query($qry, array($arg));
 		
 		/*
 		 * Act accordingly.
 		 */
-		if ($query->num_rows() == 0)
+		if ($res->num_rows() == 0)
 		{
 			return FALSE;
 		}
 		else
 		{
-			return $query->row();
+			return $res->row();
 		}
 	}
 	

@@ -153,8 +153,9 @@ function timelineInitialize()
 	 */
     Timeline.OriginalEventPainter.prototype._showBubble = function(x, y, evt) 
     {
-    	res = evt.getClassName().split(" ");    	
+    	res = evt.getClassName().split(" ");
     	updateInfoPane(res[0], res[1]);
+    	window.scrollTo(0, 0);
     }
         
 	// Timeline boilerplate code.
@@ -241,6 +242,6 @@ function updateInfoPane(type, key)
 	$.get(url, 
 		function(data) {
 			$("#content A").off("click");
-			$("#content").html("I attempted " + url);
+			$("#content").html(data);
 	});	
 } 

@@ -104,9 +104,8 @@ class Gordian_map_model extends CI_Model
 		}
 		
 		$this->db->insert('TimelineHasLocation', $data);
-		$this->db->insert_id();
 		
-		return TRUE;
+		return ($this->db->insert_id()) ? TRUE : FALSE;
 	}
 	
 	/**
@@ -124,40 +123,53 @@ class Gordian_map_model extends CI_Model
 		{
 			return FALSE;
 		}
-		
-		/*
-		 * Begin the basic query elements
-		 */		
+
+		// Prep the Query
+		$query = "SELECT loc.IdLocation AS Id, Loc.Lat, Loc.Lng ";
+		$query .= "FROM Location loc ";
+		$query .= "INNER JOIN TimelineHasLocation thl ON thl.Location_IdLocation = loc.IdLocation ";
+
 		if (func_num_args() == 2)
 		{
 			$lat = func_get_arg(0);
 			$lng = func_get_arg(1);
-
-			$data = array(
-				'Lat' => $lat,
-				'Lng' => $lng
-			);
 			
-			$res = $this->db->get_where('Location', $data);
+			$query .= "WHERE loc.Lat = {$lat} AND loc.Lng = {$lng} ";
 		} 
 		else // Only looking for Id.
 		{
 			$id = func_get_arg(0);
 			
-			$data = array(
-				'IdLocation' => $id
-			);
-			
-			$res = $this->db->get_where('Location', $data);
-
+			$query .= "WHERE loc.IdLocation = {$id} ";			
 		}
+
+		$query .= "AND thl.Timeline_IdTimeline = 1";
+		
+		// Run the query.
+		$res = $this->db->query($query);
 				 
 		if ($res->num_rows() != 1)
 		{
 			return FALSE;
 		}
 		
-		return $res->row();
+		// We have our data, now return the aliases as well...
+		$ret = $res->row();
+		$ret->aliases = array();
+
+		// And the aliases...
+		$qry_alias =  "SELECT Title FROM LocationAlias ";
+		$qry_alias .= "WHERE Location_IdLocation = {$ret->Id} ";
+		$qry_alias .= "ORDER BY Ordering DESC";
+
+		$res = $this->db->query($qry_alias);
+		
+		foreach($res->row() as $row)
+		{
+			$ret->aliases[] = $row;
+		}
+		
+		return $ret;
 	}
 	
 	public function load($timeline_id)

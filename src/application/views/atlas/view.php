@@ -29,7 +29,7 @@ $this->load->view('layouts/superBar');
 	{
 		echo '	<div id="addLoc"><a href="#" id="btnAddLoc"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
 		echo $add_button_link; 
-		echo '</div>';	
+		echo '</a></div>';	
 	}
 ?>
 </div>
@@ -39,7 +39,7 @@ $this->load->view('layouts/superBar');
 	{
 		echo '	<div id="addEvent"><a href="#" id="btnAddEvent"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
 		echo $add_button_event; 
-		echo '</div>';	
+		echo '</a></div>';	
 	}
 ?>
 	<div id="timelineViewport"></div>

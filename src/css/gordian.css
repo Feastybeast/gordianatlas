@@ -318,7 +318,7 @@ td { vertical-align: top; }
 }
 
 
-#location-form {
+#location-form, #event-form {
 	display: none;
 }
 
@@ -330,6 +330,10 @@ td { vertical-align: top; }
 {
 	width: 40%;
 	float: left;
+	overflow: auto;
+	overflow-x: hidden;
+	max-height: 400px;
+		
 }
 
 #content 
@@ -339,7 +343,7 @@ td { vertical-align: top; }
 
 #timelineViewport 
 {
-	min-height: 500px;
+	min-height: 300px;
 	width: 100%;
 }
 
