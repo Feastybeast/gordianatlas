@@ -13,7 +13,7 @@ if (!defined('BASEPATH'))
  */
 
 echo "<p><strong>{$wiki->Title}</strong></p>";
-echo "<p>{$latlng_lbl} ({$location->Lng}, {$location->Lng})</p>";
+echo "<p>{$latlng_lbl} ({$location->Lat}, {$location->Lng})</p>";
 
 if (count($loc_aka) > 0)
 {
