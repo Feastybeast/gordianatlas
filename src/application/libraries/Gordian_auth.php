@@ -89,8 +89,7 @@ class Gordian_auth
 			
 			if (!$res_defaults)
 			{
-				exit("Wombat");
-				$groups_notice = $this->lang->line('gordian_auth_register_defaults_failed');
+				$groups_notice = $this->CI->lang->line('gordian_auth_register_defaults_failed');
 				$this->CI->session->set_flashdata('message', $groups_notice);
 			}
 		}

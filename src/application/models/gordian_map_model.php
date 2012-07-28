@@ -125,7 +125,7 @@ class Gordian_map_model extends CI_Model
 		}
 
 		// Prep the Query
-		$query = "SELECT loc.IdLocation AS Id, Loc.Lat, Loc.Lng ";
+		$query = "SELECT loc.IdLocation AS Id, loc.Lat, loc.Lng ";
 		$query .= "FROM Location loc ";
 		$query .= "INNER JOIN TimelineHasLocation thl ON thl.Location_IdLocation = loc.IdLocation ";
 
@@ -174,7 +174,7 @@ class Gordian_map_model extends CI_Model
 	
 	public function load($timeline_id)
 	{
-		$query = "SELECT loc.IdLocation AS Id, Loc.Lat, Loc.Lng, la.Title ";
+		$query = "SELECT loc.IdLocation AS Id, loc.Lat, loc.Lng, la.Title ";
 		$query .= "FROM Location loc ";
 		$query .= "INNER JOIN LocationAlias la ON la.Location_IdLocation = loc.IdLocation ";
 		$query .= "INNER JOIN TimelineHasLocation thl ON ";
