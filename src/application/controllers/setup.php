@@ -44,7 +44,7 @@ class Setup extends CI_Controller
 		$this->lang->load('gordian_setup');
 		
 		$this->load->helper('html');
-		$this->load->library('form_validation');
+		$this->load->library('Form_validation');
 		
 		$this->gordian_assets->loadDefaultAssets();
 	}

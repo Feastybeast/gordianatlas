@@ -22,7 +22,7 @@ class Gordian_group
 	public function __construct()
 	{
 		$this->CI =& get_instance();
-		$this->CI->load->model('gordian_group_model');
+		$this->CI->load->model('Gordian_group_model');
 	}
 	
 	/**
@@ -32,7 +32,7 @@ class Gordian_group
 	 */
 	function add_defaults($user_id)
 	{
-		return $this->CI->gordian_group_model->add_defaults($user_id);
+		return $this->CI->Gordian_group_model->add_defaults($user_id);
 	}
 	
 	/**
@@ -44,7 +44,7 @@ class Gordian_group
 	 */
 	function administrate($group_id, $user_id)
 	{
-		return $this->CI->gordian_group_model->administrate($group_id, $user_id);
+		return $this->CI->Gordian_group_model->administrate($group_id, $user_id);
 	}
 	
 	/**
@@ -60,7 +60,7 @@ class Gordian_group
 			
 		if (!$group_exists)
 		{			
-			return $this->CI->gordian_group_model->create($title, $description);
+			return $this->CI->Gordian_group_model->create($title, $description);
 		}
 		
 		return FALSE;
@@ -83,7 +83,7 @@ class Gordian_group
 		else
 		{
 			$arg = func_get_arg(0);
-			return $this->CI->gordian_group_model->exists($arg);		
+			return $this->CI->Gordian_group_model->exists($arg);		
 		}
 		
 		return FALSE;

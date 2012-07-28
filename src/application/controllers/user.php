@@ -40,7 +40,7 @@ class User extends CI_Controller
 		 }
 		 
 		$this->load->helper('gordian_auth');
-		$this->load->library('form_validation');
+		$this->load->library('Form_validation');
 		
 		/*
 		 * Form Validation code goes here.

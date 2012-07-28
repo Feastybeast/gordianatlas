@@ -29,7 +29,7 @@ class Gordian_auth
 	{
 		$this->CI =& get_instance();
 		$this->CI->lang->load('gordian_auth');
-		$this->CI->load->model('gordian_auth_model');
+		$this->CI->load->model('Gordian_auth_model');
 	}
 	
 	/**
@@ -38,7 +38,7 @@ class Gordian_auth
 	 */
 	public function is_logged_in()
 	{
-		return $this->CI->gordian_auth_model->is_logged_in();
+		return $this->CI->Gordian_auth_model->is_logged_in();
 	}
 	
 	/**
@@ -54,7 +54,7 @@ class Gordian_auth
 	{
 		$this->logout();
 				
-		return $this->CI->gordian_auth_model->login($email, $password);
+		return $this->CI->Gordian_auth_model->login($email, $password);
 	}
 	
 	/**
@@ -62,7 +62,7 @@ class Gordian_auth
 	 */
 	public function logout()
 	{
-		$this->CI->gordian_auth_model->logout();
+		$this->CI->Gordian_auth_model->logout();
 	}
 	
 	/**
@@ -78,11 +78,11 @@ class Gordian_auth
 		$nickname = empty($nickname) ? "" : $nickname;
 		
 		// Register the new user account.
-		$user_id = $this->CI->gordian_auth_model->register($email, $password, $nickname);
+		$user_id = $this->CI->Gordian_auth_model->register($email, $password, $nickname);
 		
 		if ($user_id != FALSE)
 		{
-			$this->CI->load->library('gordian_group');
+			$this->CI->load->library('Gordian_group');
 			// 	Associate the user to default groups.
 			$res_defaults = $this->CI->gordian_group->add_defaults($user_id);
 			
@@ -112,7 +112,7 @@ class Gordian_auth
 			return false;
 		}
 		
-		return $this->CI->gordian_auth_model->set_admin_rights($user_id, $state);
+		return $this->CI->Gordian_auth_model->set_admin_rights($user_id, $state);
 	}
 	
 	/**
@@ -122,7 +122,7 @@ class Gordian_auth
 	 */
 	public function is_admin()
 	{
-		return $this->CI->gordian_auth_model->is_admin();
+		return $this->CI->Gordian_auth_model->is_admin();
 	}
 	
 	/**
@@ -130,6 +130,6 @@ class Gordian_auth
 	 */
 	 public function edit_user($nickname)
 	 {
-	 	$this->CI->gordian_auth_model->edit_user($nickname);
+	 	$this->CI->Gordian_auth_model->edit_user($nickname);
 	 }
 }

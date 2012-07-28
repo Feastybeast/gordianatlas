@@ -35,7 +35,7 @@ class Atlas extends CI_Controller
 		 * Load required libraries for this action. 
 		 */
 		 //TODO: We may want to remove the raw reference to this model and use a library instead.
-		$this->load->model('gordian_user_model');
+		$this->load->model('Gordian_user_model');
 		
 		// Used to locate the name of the timeline being viewed.
 		$this->load->library('Gordian_timeline');
@@ -81,7 +81,7 @@ class Atlas extends CI_Controller
 		/*
 		 * This is a reference to the current user model information.
 		 */
-		$data['user_data'] = $this->gordian_user_model->current();
+		$data['user_data'] = $this->Gordian_user_model->current();
 		
 		// Identify the first timeline and output it's name.
 		$data['timeline_name'] = $this->gordian_timeline->find(1)->Title;
@@ -108,7 +108,7 @@ class Atlas extends CI_Controller
 	 */
 	function maintenance()
 	{	
-		$this->load->library('gordian_state');
+		$this->load->library('Gordian_state');
 	 	$data['maintenanceMessage'] = $this->gordian_state->get_maintenance_notice();
 		
 		/*

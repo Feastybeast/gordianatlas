@@ -24,9 +24,9 @@ class Auth extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->library('gordian_auth');
-		$this->load->library('session');
-		$this->load->library('form_validation');
+		$this->load->library('Gordian_auth');
+		$this->load->library('Session');
+		$this->load->library('Form_validation');
 		$this->load->helper('url');
 		$this->load->helper('html');
 		$this->load->helper('gordian_auth');
