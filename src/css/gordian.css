@@ -251,6 +251,9 @@ td { vertical-align: top; }
 	position: relative;
 	clear: both;
 	height: 30px;
+	text-align: center;
+	font-weight: bold;
+	color: #705522;
 }
 
 #superBar FORM {
@@ -259,23 +262,18 @@ td { vertical-align: top; }
 
 
 #siteTitle {
+	position: relative;
 	font-weight: bold;
-	color: #705522;
-	width: 15%;
 	float: left; 
-}
-
-
-#contextBar {
-	font-weight: bold;
-	color: #705522;
-	width: 45%;
-	margin: 0px;
+	padding-left: 10px;
 }
 
 #userWidget {
-	width: 40%;
 	float: right;
+	text-align: right;
+	font-weight: normal;
+	color: #000;
+	padding-right: 10px;
 }
 
 .sub {

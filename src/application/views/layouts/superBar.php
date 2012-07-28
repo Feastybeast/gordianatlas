@@ -20,12 +20,10 @@ if (strpos(uri_string(), 'maintenance') > 0)
 }
 else
 {
-	echo '<span id="siteTitle">' . "\n";
-	echo '	The Gordian Atlas' . "\n";
-	echo '</span>' . "\n";
-	echo '<span id="contextBar">' . "\n";
+	echo '<span id="siteTitle">The Gordian Atlas</span>' . "\n";
+	
 	echo $this->load->view('widgets/searchBar/view');
-	echo '</span>' . "\n";
+	
 	echo '<span id="userWidget">' . "\n";
 	echo $this->load->view('widgets/loginBadge/view');
 	echo '</span>' . "\n";	
