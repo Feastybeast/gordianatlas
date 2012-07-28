@@ -22,6 +22,39 @@ class Gordian_group_model extends CI_Model
 	}
 
 	/**
+	 * Inspects existing DEFAULT groups within the Atlas and adds the user to them.
+	 * 
+	 * @param numeric The user ID to add to default groups.
+	 * 
+	 * @param boolean TRUE if groups were added, otherwise FALSE.
+	 */
+	function add_defaults($user_id)
+	{
+		if (is_numeric($user_id))
+		{
+			$query = "INSERT INTO UserRoleInGroup (Group_IdGroup, User_IdUser, Role) ";
+			$query .= "SELECT g.IdGroup, ?, 'EDIT' ";
+			$query .= "FROM `Group` g ";
+			$query .= "WHERE Status = 'Default' ";
+			$query .= "AND IdGroup NOT IN ";
+			$query .= "( ";
+			$query .= "    SELECT Group_IdGroup ";
+			$query .= "    FROM UserRoleInGroup ur ";
+			$query .= "    WHERE ur.User_IdUser = ? ";
+			$query .= ") ";
+			
+			$res = $this->db->query($query, array($user_id, $user_id));
+			
+			if ($this->db->affected_rows() > 0) 
+			{
+				return TRUE;
+			}
+		}
+		
+		return FALSE;
+	}
+
+	/**
 	 * Adds the user to the group identified as an administrator.
 	 * 
 	 * @param numeric The group Id to add to.

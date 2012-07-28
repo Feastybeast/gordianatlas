@@ -26,6 +26,16 @@ class Gordian_group
 	}
 	
 	/**
+	 * Inspects existing DEFAULT groups within the Atlas and adds the user to them.
+	 * 
+	 * @param numeric The user ID to add to default groups.
+	 */
+	function add_defaults($user_id)
+	{
+		return $this->CI->gordian_group_model->add_defaults($user_id);
+	}
+	
+	/**
 	 * Adds the user to the group identified as an administrator.
 	 * 
 	 * @param numeric The group Id to add to.

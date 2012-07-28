@@ -82,13 +82,14 @@ class Gordian_auth
 		
 		if ($user_id != FALSE)
 		{
+			$this->CI->load->library('gordian_group');
 			// 	Associate the user to default groups.
-			// $res_defaults = $this->CI->gordian_groups_model->set_defaults_for($user_id);
+			$res_defaults = $this->CI->gordian_group->add_defaults($user_id);
 			
-			$res_defaults = true;
 			
 			if (!$res_defaults)
 			{
+				exit("Wombat");
 				$groups_notice = $this->lang->line('gordian_auth_register_defaults_failed');
 				$this->CI->session->set_flashdata('message', $groups_notice);
 			}
