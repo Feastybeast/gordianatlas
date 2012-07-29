@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.5.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>720</x>
+      <y>150</y>
+      <w>50</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;260</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>700</x>
+      <y>150</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:System_</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Actor</type>
+    <coordinates>
+      <x>350</x>
+      <y>70</y>
+      <w>120</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Timeline Viewer</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>380</x>
+      <y>160</y>
+      <w>50</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;260</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>380</x>
+      <y>170</y>
+      <w>390</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+User selects "Remove Location" Link on Wiki Page</panel_attributes>
+    <additional_attributes>370;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>380</x>
+      <y>220</y>
+      <w>390</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+System presents confirmation UI</panel_attributes>
+    <additional_attributes>30;50;370;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>470</x>
+      <y>110</y>
+      <w>150</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Delete Location UC
+
+@author: Jay Ripley
+@since: Elab 4
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>380</x>
+      <y>260</y>
+      <w>390</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+User affirms request</panel_attributes>
+    <additional_attributes>370;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>380</x>
+      <y>310</y>
+      <w>390</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+System reloads interface, excluding deleted element</panel_attributes>
+    <additional_attributes>30;50;370;50</additional_attributes>
+  </element>
+</diagram>

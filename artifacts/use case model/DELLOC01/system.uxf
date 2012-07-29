@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.5.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>300</x>
+      <y>110</y>
+      <w>50</w>
+      <h>390</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;370</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>280</x>
+      <y>110</y>
+      <w>110</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:Atlas Controller_</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Actor</type>
+    <coordinates>
+      <x>0</x>
+      <y>30</y>
+      <w>120</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Timeline Viewer</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>120</y>
+      <w>50</w>
+      <h>380</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;360</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>200</y>
+      <w>320</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+
+$.post("/map/remove_location/[id] ")
+&lt;&lt;JQuery Driven Behavior&gt;&gt;</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>120</x>
+      <y>70</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Delete Location UC
+
+@author: Jay Ripley
+@since: Elab 4
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>420</x>
+      <y>150</y>
+      <w>230</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>_:Map Controller_
+&lt;&lt;Indicated by hot element selected&gt;&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>330</x>
+      <y>180</y>
+      <w>20</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>590</x>
+      <y>170</y>
+      <w>50</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;300</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>620</x>
+      <y>220</y>
+      <w>20</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>690</x>
+      <y>170</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>_:Gordian_auth_
+&lt;&lt;CodeIgniter Library&gt;&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>780</x>
+      <y>190</y>
+      <w>50</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;280</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>810</x>
+      <y>250</y>
+      <w>20</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>970</x>
+      <y>250</y>
+      <w>50</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;220</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>1000</x>
+      <y>310</y>
+      <w>20</w>
+      <h>20</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>610</x>
+      <y>260</y>
+      <w>410</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+
+remove_location($id)
+</panel_attributes>
+    <additional_attributes>390;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>860</x>
+      <y>230</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>_:Gordian_map_
+&lt;&lt;CodeIgniter Library&gt;&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>400</y>
+      <w>320</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+Suite of reults from AJAX displayed
+&lt;&lt;Jquery AJAX Result&gt;&gt;</panel_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>610</x>
+      <y>220</y>
+      <w>220</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+
+is_logged_in()
+</panel_attributes>
+    <additional_attributes>200;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>170</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+$("#content .dialog").dialog({...});</panel_attributes>
+    <additional_attributes>30;50;300;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>130</y>
+      <w>320</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+
+User presses "Remove Location" Link
+&lt;&lt;JQuery Driven Behavior&gt;&gt;</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>320</x>
+      <y>200</y>
+      <w>320</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+
+remove_location()</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>280</y>
+      <w>320</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+defaultBioPage();
+&lt;&lt;JQuery Driven Behavior&gt;&gt;
+</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>320</y>
+      <w>320</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+refreshMapData();
+&lt;&lt;JQuery Driven Behavior&gt;&gt;
+
+</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>30</x>
+      <y>360</y>
+      <w>320</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+timelineUpdate();
+&lt;&lt;JQuery Driven Behavior&gt;&gt;
+</panel_attributes>
+    <additional_attributes>300;50;30;50</additional_attributes>
+  </element>
+</diagram>
