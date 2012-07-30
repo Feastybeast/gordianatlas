@@ -14,7 +14,7 @@ if (!defined('BASEPATH'))
 ?>
 <!-- Begin the Add / Edit Location forms -->
 <div id="location-form" title="Manage Location">
-<?php echo form_open('/map/add'); ?>
+<?php echo form_open(''); ?>
 	<fieldset>
 		<p>
 			<label for="loc_name"><?php echo $label_location_name; ?></label><br />
@@ -40,7 +40,7 @@ if (!defined('BASEPATH'))
 
 <!-- Begin the Add / Edit Event forms -->
 <div id="event-form" title="Manage Event">
-<?php echo form_open('/timeline/add'); ?>
+<?php echo form_open(''); ?>
 	<fieldset>
 		<p>
 			<label for="evt_name"><?php echo $label_event_name; ?></label><br />
@@ -83,3 +83,4 @@ if (!defined('BASEPATH'))
 ?>
 </div>
 <!-- //End the Add / Edit Location forms -->
+<?php echo '<div class="dialog" id="deletion_notice" title="' . $delete_title . '">' . $delete_content . '</div>'; ?>

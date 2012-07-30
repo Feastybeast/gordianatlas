@@ -28,3 +28,7 @@ $lang['gordian_atlas_location_descript_lbl'] = "Brief Description:";
 // Splash Messages displayed on the idle biography screen.
 $lang['gordian_atlas_splash_header'] = "Welcome to the Gordian Atlas!";
 $lang['gordian_atlas_splash_body'] = "Explore history with the click of a mouse. Interesting places, people and events await you; If not, you're welcome to add your own. Simply register an account to get started!";
+
+// Standardized Delete messages for the UI
+$lang['gordian_atlas_delete_dialog_content'] = 'Are you sure you wish to remove this record from the timeline?';
+$lang['gordian_atlas_delete_dialog_title'] = 'Please confirm deletion';

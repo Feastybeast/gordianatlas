@@ -71,6 +71,40 @@ if (!defined('BASEPATH'))
 		}
 	}
 	
+	public function edit_event()
+	{
+		// $this->input->is_ajax_request() && 
+		
+		if ($this->gordian_auth->is_logged_in())
+		{
+			$do = $this->input->post('evt_occurance');
+			$date_obj = DateTime::createFromFormat('m/d/Y', $do);
+			$occured_on = $date_obj->format('Y-m-d'); 
+						
+			$occured_range = $this->input->post('evt_range');
+			$occured_duration = $this->input->post('evt_duration');
+			$occured_unit = $this->input->post('evt_units');
+			$initial_alias = $this->input->post('evt_name');
+			$description = $this->input->post('evt_descript');
+			
+			/*
+			 * Attempt to add the new location to timeline 1.
+			 */
+			if (strlen($initial_alias) > 0 
+				&& strlen($occured_on) > 6 
+				&& is_numeric($occured_range) && $occured_range >= 0 
+				&& is_numeric($occured_duration) && $occured_duration >= 0
+				)
+			{
+				$data_array = explode('/', uri_string());
+			 	$id = $data_array[2];
+
+				$result = $this->gordian_timeline->edit_event($occured_on, $occured_range, $occured_duration, 
+					$occured_unit, $initial_alias, $description, $id);
+		 	} 	
+		}
+	}
+	
 	/**
 	 * Removes a location pin from a given Timeline's map.
 	 * 
@@ -86,7 +120,7 @@ if (!defined('BASEPATH'))
 	
 			$this->gordian_timeline->remove_event($id);
 		}
-	}	
+	}
 	
 	/**
 	 * Primary action to load JSON data from the database.
@@ -208,7 +242,8 @@ if (!defined('BASEPATH'))
 		 	$this->load->view('timeline/wiki', $data);
 	 	}
 	 	else
-	 	{	 		
+	 	{	
+	 		$data['title'] = $this->lang->line('gordian_timeline_ajax_title'); 		
 	 		$data['error'] = $this->lang->line('gordian_timeline_ajax_error');
 		 	$this->load->view('timeline/wiki_error', $data);
 	 	}

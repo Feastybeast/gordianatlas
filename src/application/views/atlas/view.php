@@ -25,7 +25,7 @@ $this->load->view('layouts/superBar');
 <?php
 	if ($this->gordian_auth->is_logged_in())
 	{
-		echo '	<div id="addLoc"><a href="#" id="btnAddLoc"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
+		echo '	<div id="addLoc"><a href="/map/add" id="btnAddLoc"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
 		echo $add_button_link; 
 		echo '</a></div>';	
 	}
@@ -35,7 +35,7 @@ $this->load->view('layouts/superBar');
 <?php
 	if ($this->gordian_auth->is_logged_in())
 	{
-		echo '	<div id="addEvent"><a href="#" id="btnAddEvent"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
+		echo '	<div id="addEvent"><a href="/timeline/add" id="btnAddEvent"><img src="/assets/img/add.png" width="16" height="16" border="0" />';
 		echo $add_button_event; 
 		echo '</a></div>';	
 	}

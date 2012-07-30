@@ -85,6 +85,10 @@ class Atlas extends CI_Controller
 		
 		// Identify the first timeline and output it's name.
 		$data['timeline_name'] = $this->gordian_timeline->find(1)->Title;
+		
+		// Deletion notices for logged in users.
+		$data['delete_title'] = $this->lang->line('gordian_atlas_delete_dialog_title');
+		$data['delete_content'] = $this->lang->line('gordian_atlas_delete_dialog_content');
 				
 		/*
 		 * Display Contents

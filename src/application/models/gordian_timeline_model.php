@@ -149,6 +149,51 @@ class Gordian_timeline_model extends CI_Model
 	}
 
 	/**
+	 * Verifies that a timeline provided a title or ID exists.
+	 * 
+	 * @param mixed Either a numeric ID or Title string of the timeline.
+	 * @return boolean TRUE if the timeline identified exists.
+	 */
+	public function exists()
+	{
+		if (func_num_args() != 1)
+		{
+			$this->load->lang('gordian_exceptions');
+			$ex = $this->lang->line('gordian_exceptions_illegal_arg');
+			throw new Exception($ex);
+		}
+		else 
+		{
+			$arg = func_get_arg(0);
+			
+			if (is_numeric($arg) || is_string($arg))
+			{
+				return (boolean) $this->find($arg);	
+			}			
+		}
+		
+		return FALSE;		
+	}
+
+	public function edit_event(
+			$id, $occured_on, $occured_range, 
+			$occured_duration, $occured_unit)
+	{
+		$data = array(
+			'OccuredOn' => $occured_on,
+			'OccuredRange' => $occured_range,
+			'OccuredDuration' => $occured_duration,
+			'OccuredUnit' => $occured_unit
+		);
+		
+		
+		$this->db->where('IdEvent', $id);
+		$this->db->update('Event', $data); 
+
+		return $this->db->insert_id();	
+	}
+
+	/**
 	 * Locates essential information about the provided timeline.
 	 * 
 	 * @param mixed Either a numeric ID or Title string of the timeline.
@@ -275,33 +320,6 @@ class Gordian_timeline_model extends CI_Model
 		}
 		
 		return $ret;
-	}
-	
-	/**
-	 * Verifies that a timeline provided a title or ID exists.
-	 * 
-	 * @param mixed Either a numeric ID or Title string of the timeline.
-	 * @return boolean TRUE if the timeline identified exists.
-	 */
-	public function exists()
-	{
-		if (func_num_args() != 1)
-		{
-			$this->load->lang('gordian_exceptions');
-			$ex = $this->lang->line('gordian_exceptions_illegal_arg');
-			throw new Exception($ex);
-		}
-		else 
-		{
-			$arg = func_get_arg(0);
-			
-			if (is_numeric($arg) || is_string($arg))
-			{
-				return (boolean) $this->find($arg);	
-			}			
-		}
-		
-		return FALSE;		
 	}
 	
 	/**

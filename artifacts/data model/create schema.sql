@@ -3,7 +3,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `gordianatlas` ;
-CREATE SCHEMA IF NOT EXISTS `gordianatlas` DEFAULT CHARACTER SET latin1 ;
+CREATE SCHEMA IF NOT EXISTS `gordianatlas` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `gordianatlas` ;
 
 -- -----------------------------------------------------
@@ -14,10 +14,13 @@ DROP TABLE IF EXISTS `gordianatlas`.`User` ;
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`User` (
   `IdUser` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `Email` VARCHAR(255) NULL COMMENT 'A valid email address must be provided by users.' ,
-  `Pseudonym` VARCHAR(45) NULL COMMENT 'The value to display if not for an email address for the user' ,
-  `CryptoPass` CHAR(40) NULL COMMENT 'SHA1()\'ed cryptographically generated password.' ,
-  `CryptoLen` INT(2) UNSIGNED NULL COMMENT 'The Length of the plaintext password initially generating the cryptographically generated password.' ,
-  `IsAdministrator` TINYINT(1)  NULL DEFAULT 0 ,
+  `Nickname` VARCHAR(45) NULL COMMENT 'The value to display if not for an email address for the user' ,
+  `Pass` CHAR(40) NULL COMMENT 'SHA1()\'ed cryptographically generated password.' ,
+  `Salt` CHAR(64) NULL COMMENT 'The Length of the plaintext password initially generating the cryptographically generated password.' ,
+  `LoginAttempts` TINYINT(1) NULL DEFAULT 0 ,
+  `LastAttempt` TIMESTAMP NULL ,
+  `Created` TIMESTAMP NULL DEFAULT Now() ,
+  `IsAdministrator` TINYINT(1) NULL DEFAULT 0 ,
   PRIMARY KEY (`IdUser`) ,
   UNIQUE INDEX `unique_email` (`Email` ASC) )
 ENGINE = InnoDB;
@@ -30,8 +33,9 @@ DROP TABLE IF EXISTS `gordianatlas`.`Group` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Group` (
   `IdGroup` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `Title` VARCHAR(255) NOT NULL ,
+  `Title` VARCHAR(255) NULL ,
   `Content` TINYTEXT NULL ,
+  `Status` ENUM('COMPULSORY_PUBLIC', 'DEFAULT', 'PUBLIC', 'MODERATED', 'PRIVATE', 'COMPULSORY_PRIVATE') NULL DEFAULT 'DEFAULT' ,
   PRIMARY KEY (`IdGroup`) )
 ENGINE = InnoDB;
 
@@ -129,10 +133,12 @@ DROP TABLE IF EXISTS `gordianatlas`.`Event` ;
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Event` (
   `IdEvent` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `Icon_idIcon` INT UNSIGNED NOT NULL ,
-  `OccuredOn` TIMESTAMP NULL ,
+  `OccuredOn` CHAR(11) NULL ,
   `OccuredRange` TINYINT NULL ,
   `OccuredDuration` TINYINT UNSIGNED NULL DEFAULT 0 ,
   `OccuredUnit` ENUM('MINUTE', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR', 'DECADE', 'CENTURY', 'MILLENIA') NULL DEFAULT 'MINUTE' ,
+  `CreatedOn` TIMESTAMP NOT NULL DEFAULT NOW() ,
+  `EditedOn` TIMESTAMP NULL ,
   PRIMARY KEY (`IdEvent`) ,
   INDEX `fk_Event_Icon` (`Icon_idIcon` ASC) ,
   CONSTRAINT `fk_Event_Icon1`
@@ -164,8 +170,8 @@ DROP TABLE IF EXISTS `gordianatlas`.`Location` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Location` (
   `IdLocation` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `Lat` FLOAT(7,2) NULL ,
-  `Lng` FLOAT(7,2) NULL ,
+  `Lat` FLOAT(7,2) NOT NULL ,
+  `Lng` FLOAT(7,2) NOT NULL ,
   `Icon_idIcon` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`IdLocation`) ,
   INDEX `fk_Location_Icon` (`Icon_idIcon` ASC) ,
@@ -355,7 +361,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `gordianatlas`.`EventAlias` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`EventAlias` (
-  `IdEventAlias` INT NOT NULL ,
+  `IdEventAlias` INT NOT NULL AUTO_INCREMENT ,
   `Event_IdEvent` INT UNSIGNED NOT NULL ,
   `Title` VARCHAR(255) NULL ,
   `Ordering` TINYINT UNSIGNED NULL ,
@@ -375,7 +381,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `gordianatlas`.`LocationAlias` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`LocationAlias` (
-  `IdLocationAlias` INT NOT NULL ,
+  `IdLocationAlias` INT NOT NULL AUTO_INCREMENT ,
   `Location_IdLocation` INT UNSIGNED NOT NULL ,
   `Title` VARCHAR(255) NULL ,
   `Ordering` TINYINT UNSIGNED NULL ,
@@ -725,7 +731,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `gordianatlas`.`WikiPageRevision` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`WikiPageRevision` (
-  `IdWikiPageRevision` INT NOT NULL ,
+  `IdWikiPageRevision` INT NOT NULL AUTO_INCREMENT ,
   `WikiPage_IdWikiPage` INT UNSIGNED NOT NULL ,
   `Content` TEXT NULL ,
   PRIMARY KEY (`IdWikiPageRevision`, `WikiPage_IdWikiPage`) ,
@@ -735,17 +741,6 @@ CREATE  TABLE IF NOT EXISTS `gordianatlas`.`WikiPageRevision` (
     REFERENCES `gordianatlas`.`WikiPage` (`IdWikiPage` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `gordianatlas`.`GordianConfig`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `gordianatlas`.`GordianConfig` ;
-
-CREATE  TABLE IF NOT EXISTS `gordianatlas`.`GordianConfig` (
-  `IsActive` TINYINT(1)  NULL DEFAULT True ,
-  `MaintenanceNotice` TINYTEXT NULL )
 ENGINE = InnoDB;
 
 
@@ -900,16 +895,9 @@ DROP TABLE IF EXISTS `gordianatlas`.`ViewHasTimeline` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`ViewHasTimeline` (
   `View_IdView` INT UNSIGNED NOT NULL ,
-  `View_Group_IdGroup` INT UNSIGNED NOT NULL ,
   `Timeline_IdTimeline` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`View_IdView`, `View_Group_IdGroup`, `Timeline_IdTimeline`) ,
+  PRIMARY KEY (`View_IdView`, `Timeline_IdTimeline`) ,
   INDEX `fk_View_has_Timeline_Timeline` (`Timeline_IdTimeline` ASC) ,
-  INDEX `fk_View_has_Timeline_View` (`View_Group_IdGroup` ASC) ,
-  CONSTRAINT `fk_View_has_Timeline_View1`
-    FOREIGN KEY (`View_Group_IdGroup` )
-    REFERENCES `gordianatlas`.`View` (`IdView` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_View_has_Timeline_Timeline1`
     FOREIGN KEY (`Timeline_IdTimeline` )
     REFERENCES `gordianatlas`.`Timeline` (`IdTimeline` )
@@ -927,8 +915,8 @@ CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Permissions` (
   `IdPermissions` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `UserUpdatedBy` INT NULL ,
   `OccuredOn` TIMESTAMP NULL ,
-  `IsArchived` TINYINT(1)  NULL DEFAULT 0 ,
-  `IsLocked` TINYINT(1)  NULL ,
+  `IsArchived` TINYINT(1) NULL DEFAULT 0 ,
+  `IsLocked` TINYINT(1) NULL ,
   `IsGalleryLocked` TINYINT(1) NULL ,
   `Journal` TINYTEXT NULL ,
   PRIMARY KEY (`IdPermissions`) )
@@ -1195,6 +1183,30 @@ CREATE  TABLE IF NOT EXISTS `gordianatlas`.`ConceptHasGalleryObject` (
   CONSTRAINT `fk_ConceptHasGalleryObject_Concept1`
     FOREIGN KEY (`Concept_IdConcept` )
     REFERENCES `gordianatlas`.`Concept` (`IdConcept` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `gordianatlas`.`TimelineHasLocation`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gordianatlas`.`TimelineHasLocation` ;
+
+CREATE  TABLE IF NOT EXISTS `gordianatlas`.`TimelineHasLocation` (
+  `Timeline_IdTimeline` INT UNSIGNED NOT NULL ,
+  `Location_IdLocation` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`Timeline_IdTimeline`, `Location_IdLocation`) ,
+  INDEX `fk_Timeline_has_Location_Location1` (`Location_IdLocation` ASC) ,
+  INDEX `fk_Timeline_has_Location_Timeline1` (`Timeline_IdTimeline` ASC) ,
+  CONSTRAINT `fk_Timeline_has_Location_Timeline1`
+    FOREIGN KEY (`Timeline_IdTimeline` )
+    REFERENCES `gordianatlas`.`Timeline` (`IdTimeline` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Timeline_has_Location_Location1`
+    FOREIGN KEY (`Location_IdLocation` )
+    REFERENCES `gordianatlas`.`Location` (`IdLocation` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

@@ -60,6 +60,56 @@ class Gordian_map
 	}
 	
 	/**
+	 * Updates information for the given location identified by Id.
+	 * 
+	 * @param numeric The latitude of the given location.
+	 * @param numeric The longitude of the given location.
+	 * @param string The updated name of the given location.
+	 * @param string The revised wikipage of the given location.
+	 * @param numeric The Location ID to update.
+	 */
+	public function edit_location($lat, $lng, $name, $description, $id)
+	{
+		// Update the Alias if required.
+		$existing_details = $this->find($id);
+						
+		if (!is_object($existing_details))
+		{
+			return FALSE;
+		}		
+
+		// Update the coordinates IIF they're not trampling somewhere else.
+		if ($existing_details->Lat != $lat || $existing_details->Lng != $lng)
+		{
+			$check_loc = $this->find($lat, $lng);
+			
+			if ($check_loc == FALSE)
+			{
+				$this->CI->Gordian_map_model->update_latlng($id, $lat, $lng);
+			}
+		}
+
+		// Update aliases if necessary.
+		if (!in_array($name, $existing_details->aliases))
+		{
+			$this->CI->Gordian_map_model->add_alias($id, $name);
+		}
+		
+		// Then update it's wikipage if necessary.
+		$this->CI->load->library("Gordian_wiki"); 
+		
+		$wiki_details = $this->CI->gordian_wiki->referenced_by('map', $id);
+		
+		if ($wiki_details->Content != $description)
+		{
+			$this->CI->gordian_wiki->revise($wiki_details->IdWikiPage, $description);
+		}
+		
+		return TRUE;
+	}
+	
+	
+	/**
 	 * Locates a given Location in the database given either
 	 * 
 	 * @param mixed {lat,lng} pair as seperate arguments, or an Id.

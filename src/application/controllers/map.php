@@ -68,21 +68,47 @@ class Map extends CI_Controller
 	}
 	
 	/**
+	 * Edits the location information 
+	 */
+	public function edit_location()
+	{
+		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
+		{
+			$name = $this->input->post('name');
+			$lat = $this->input->post('lat');
+			$lng = $this->input->post('lng');
+			$description = $this->input->post('description');
+						
+			/*
+			 * Attempt to add the new location to timeline 1.
+			 */
+			if (strlen($name) > 0 && is_numeric($lat) && is_numeric($lng) && strlen($description))
+			{
+				$data_array = explode('/', uri_string());
+			 	$id = $data_array[2];
+
+				$this->gordian_map->edit_location($lat, $lng, $name, $description, $id);
+		 	} 	
+		}		
+	}
+	
+	/**
 	 * Action to remove a map item for a given timeline.
 	 */
 	 public function remove_location()
 	 {
 		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
 		{
-			
 			$data_array = explode('/', uri_string());
 		 	$id = $data_array[2];
 	 	
 			$this->gordian_map->remove_location($id);
-		}
-			
+		}			
 	 }
 	 
+	 /**
+	  * 
+	  */
 	 public function wiki()
 	 {
 	 	// Load the map stringpack.
@@ -106,8 +132,9 @@ class Map extends CI_Controller
 		 	$data['location'] = $location_data;
 		 	
 		 	// Don't list the primary city name on the WikiPage.
+		 	$data['aka_lbl'] = $this->lang->line('gordian_map_ajax_aka_label');
 		 	$data['loc_aka'] = array_diff($location_data->aliases, array($wiki_data->Title));
-		 	
+		 			 	
 		 	$data['latlng_lbl'] = $this->lang->line('gordian_map_ajax_latlng_lbl');
 		 	
 		 	// Manipulation Labels
@@ -118,7 +145,8 @@ class Map extends CI_Controller
 		 	$this->load->view('map/wiki', $data);
 	 	}
 	 	else
-	 	{	 		
+	 	{	
+	 		$data['title'] = $this->lang->line('gordian_map_ajax_title');
 	 		$data['error'] = $this->lang->line('gordian_map_ajax_error');
 		 	$this->load->view('map/wiki_error', $data);
 	 	}

@@ -164,11 +164,11 @@ class Gordian_map_model extends CI_Model
 
 		$res = $this->db->query($qry_alias);
 		
-		foreach($res->row() as $row)
+		foreach($res->result() as $row)
 		{
-			$ret->aliases[] = $row;
+			$ret->aliases[] = $row->Title;
 		}
-		
+				
 		return $ret;
 	}
 	
@@ -196,6 +196,24 @@ class Gordian_map_model extends CI_Model
 		$this->db->delete('TimelineHasLocation', 
 			array('Location_IdLocation' => $id, 'Timeline_IdTimeline' => 1)
 		); 	
-	}	
+	}
+	
+	/**
+	 * Updates the latitude and longitude of an existing location.
+	 * 
+	 * @param numeric The Id of the location updated.
+	 * @param numeric The altered latitude.
+	 * @param numeric The altered longitude.
+	 */
+	public function update_latlng($id, $lat, $lng)
+	{
+		$data = array(
+		               'Lat' => $lat,
+		               'Lng' => $lng
+		            );
+		
+		$this->db->where('IdLocation', $id);
+		$this->db->update('Location', $data); 
+	}
 }
 ?>

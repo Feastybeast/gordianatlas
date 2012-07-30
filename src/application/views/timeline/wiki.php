@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
  * @license GPL 3
  */
 
-echo "<p><strong>{$wiki->Title}</strong></p>";
+echo "<p><strong id='evt_name_val'>{$wiki->Title}</strong></p>";
 
 if (count($evt_aka) > 0)
 {
@@ -22,14 +22,14 @@ if (count($evt_aka) > 0)
 echo $timestamp;
 
 
-echo "<p>{$wiki->Content}</p>";
+echo "<p id='evt_descript_val'>{$wiki->Content}</p>";
 
 if ($this->gordian_auth->is_logged_in())
 {
 echo <<<EOF
 	<div id="wiki_actions">
 		<span class="wiki_button">
-			<a href="/timeline/edit_event/{$event->IdEvent}" class="edit_button">
+			<a href="/timeline/edit_event/{$event->IdEvent}" class="edit_btn">
 				<img src="/assets/img/edit.png" width="32" height="32" alt="{$edit_lbl}" title="{$edit_lbl}"  />
 				{$edit_lbl}
 			</a>
@@ -39,8 +39,13 @@ echo <<<EOF
 				<img src="/assets/img/remove.png" width="32" height="32" alt="{$remove_confirm}" title="{$remove_lbl}"  />
 				{$remove_lbl}
 			</a>
-			<div class="dialog" title="{$remove_confirm}">{$remove_confirm}</div>
 		</span>
 	</div>
+	<span class="hidden" id="evt_range_val">{$event->OccuredRange}</span>
+	<span class="hidden" id="evt_duration_val">{$event->OccuredDuration}</span>
+	<span class="hidden" id="evt_units_val">{$event->OccuredUnit}</span>
 EOF;
+
+$formatted_date = DateTime::createFromFormat('Y-m-d', $event->OccuredOn);
+echo '	<span class="hidden" id="evt_occurance_val">' . $formatted_date->format('m/d/Y') . '</span>';
 }
