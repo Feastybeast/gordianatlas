@@ -22,7 +22,7 @@ class Gordian_concept
 	public function __construct()
 	{
 		$this->CI =& get_instance();
-		$this->CI->load->model('gordian_concept_model');
+		$this->CI->load->model('Gordian_concept_model');
 		$this->CI->load->library('Gordian_wiki');
 	}
 	
@@ -34,7 +34,7 @@ class Gordian_concept
 	 */
 	public function add($title, $content)
 	{
-		//TODO: NYI
+		return $this->CI->Gordian_concept_model->add($title,$content);
 	}
 
 	/**
@@ -55,9 +55,23 @@ class Gordian_concept
 	
 	/**
 	 * Find a concept via ID or Title.
-	 */
+	 * 
+	 * @param mixed either an ID or title
+	 **/
 	public function find()
 	{
-		//TODO: NYI	
+		if (func_num_args()!=1)
+		{
+			return FALSE;
+		}
+		
+		$arg=func_get_arg(0);
+		
+		if (!is_string($arg) && !is_numeric($arg))
+		{
+			return FALSE;
+		}
+
+		return $this->CI->Gordian_concept_model->find($arg);
 	}
 }

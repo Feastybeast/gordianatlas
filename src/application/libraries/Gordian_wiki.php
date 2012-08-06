@@ -69,7 +69,10 @@ class Gordian_wiki
 		
 		$concept = $this->CI->gordian_concept->find($concept_id);
 		$timeline = $this->CI->gordian_timeline->find($timeline_id);
-		
+		var_dump($concept);
+		var_dump($concept_id);
+		var_dump($timeline);
+		exit();
 		if (!is_object($concept))
 		{
 			return FALSE;

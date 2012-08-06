@@ -19,6 +19,7 @@ class Gordian_concept_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->library("gordian_wiki");
 	}
 	
 	/**
@@ -29,7 +30,18 @@ class Gordian_concept_model extends CI_Model
 	 */
 	public function add($title, $content)
 	{
-		//TODO: NYI
+		//	Preparing a new ID to use
+		$this->db->insert("Concept",array("CreatedOn"=>date('Y-m-d H:i:s')));
+		$concept_id = $this->db->insert_id();
+
+		//	Going to add a new alias to Database
+		$this->db->insert("ConceptAlias",array("Concept_IdConcept"=>$concept_id,"Content"=>$title));
+		
+		//	Going to add a new wiki page to Database
+		$wiki_id = $this->gordian_wiki->add($title, $content);
+		$this->gordian_wiki->associate_concept(1,$concept_id,$wiki_id);
+		
+		return $concept_id;
 	}
 
 	/**
@@ -51,8 +63,33 @@ class Gordian_concept_model extends CI_Model
 	/**
 	 * Find a concept via ID or Title.
 	 */
-	public function find()
+	public function find($arg)
 	{
-		//TODO: NYI	
+		$query  ="SELECT IdWikiPage ";
+		$query .= "FROM Concept con ";
+		$query .= "INNER JOIN ConceptAlias cona ON cona.Concept_IdConcept = con.IdConcept ";
+		$query .= "LEFT OUTER JOIN TimelineConceptHasWikiPage tchw ON con.IdConcept = tchw.Concept_IdConcept ";
+		$query .= "LEFT OUTER JOIN WikiPage wp ON wp.IdWikiPage = tchw.WikiPage_IdWikiPage ";
+			
+		if (is_string($arg))
+		{
+			$query .= "WHERE cona.Content = ?";
+		}
+		else if (is_numeric($arg))
+		{
+			$query .= "WHERE con.IdConcept = ?";
+			var_dump($query);
+			var_dump($arg);
+			exit();			
+		}
+	
+		$res = $this->db->query($query,array($arg));
+		
+		if ($res->num_rows() == 0)
+		{
+				return FALSE;
+		}
+		
+		return $this->gordian_wiki->find($res->row());
 	}
 }
