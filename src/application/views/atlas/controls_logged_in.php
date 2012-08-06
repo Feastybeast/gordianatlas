@@ -13,7 +13,7 @@ if (!defined('BASEPATH'))
 }
 ?>
 <!-- Begin the Add / Edit Location forms -->
-<div id="location-form" title="Manage Location">
+<div id="location-form" title="<?php echo $label_location_title; ?>">
 <?php echo form_open(''); ?>
 	<fieldset>
 		<p>
@@ -39,7 +39,7 @@ if (!defined('BASEPATH'))
 <!-- //End the Add / Edit Location forms -->
 
 <!-- Begin the Add / Edit Event forms -->
-<div id="event-form" title="Manage Event">
+<div id="event-form" title="<?php echo $label_event_title; ?>">
 <?php echo form_open(''); ?>
 	<fieldset>
 		<p>
@@ -83,4 +83,25 @@ if (!defined('BASEPATH'))
 ?>
 </div>
 <!-- //End the Add / Edit Location forms -->
+
+
+<!-- Begin Concept forms -->
+<div id="concept-form" title="<?php echo $label_concept_title; ?>">
+<?php echo form_open(''); ?>
+	<fieldset>
+		<p>
+			<label for="concept_name"><?php echo $label_concept_name; ?></label><br />
+			&nbsp;&nbsp;<input type="text" name="concept_name" id="concept_name" class="text ui-widget-content ui-corner-all" size="30" />
+		</p>
+		<p><label for="concept_descript"><?php echo $label_concept_description; ?></label>
+		&nbsp;&nbsp; <textarea rows="4" cols="30" name="concept_descript" id="concept_descript" value="" class="text ui-widget-content ui-corner-all"></textarea>
+		</p>
+	</fieldset>
+<?php 
+	echo form_hidden($this->security->get_csrf_token_name(), $this->security->get_csrf_hash());
+	echo form_close(); 
+?>
+</div>
+<!-- //End Concept form -->
+
 <?php echo '<div class="dialog" id="deletion_notice" title="' . $delete_title . '">' . $delete_content . '</div>'; ?>

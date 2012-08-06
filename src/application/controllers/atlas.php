@@ -61,6 +61,7 @@ class Atlas extends CI_Controller
 		// Prep location widget data for view.		
 		$data['add_button_link'] = $this->lang->line('gordian_atlas_location_add_btn');
 
+		$data['label_location_title'] = $this->lang->line('gordian_atlas_location_title_lbl');
 		$data['label_location_name'] = $this->lang->line('gordian_atlas_location_name_lbl');
 		$data['label_location_lat'] = $this->lang->line('gordian_atlas_location_lat_lbl');
 		$data['label_location_lng'] = $this->lang->line('gordian_atlas_location_lng_lbl');
@@ -69,14 +70,18 @@ class Atlas extends CI_Controller
 		// Prep event widget data.
 		$data['add_button_event'] = $this->lang->line('gordian_atlas_event_add_btn');
 
+		$data['label_event_title'] = $this->lang->line('gordian_atlas_event_title_lbl');
 		$data['label_event_name'] = $this->lang->line('gordian_atlas_event_name_lbl');
 		$data['label_event_description'] = $this->lang->line('gordian_atlas_event_descrpt_lbl');
 		$data['label_event_occurance'] = $this->lang->line('gordian_atlas_event_occurance_lbl');
-		
 		$data['label_event_duration'] = $this->lang->line('gordian_atlas_event_duration_lbl');
 		$data['label_event_range'] = $this->lang->line('gordian_atlas_event_range_lbl');
-		
 		$data['label_event_notice'] = $this->lang->line('gordian_atlas_event_range_duration_notice');
+		
+		// Concept Management UI.
+		$data['label_concept_title'] = $this->lang->line('gordian_atlas_concept_title_lbl');
+		$data['label_concept_name'] = $this->lang->line('gordian_atlas_concept_name_lbl');
+		$data['label_concept_description'] = $this->lang->line('gordian_atlas_concept_descript_lbl');
 		
 		/*
 		 * This is a reference to the current user model information.
