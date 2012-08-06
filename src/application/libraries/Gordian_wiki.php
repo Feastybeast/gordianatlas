@@ -65,6 +65,7 @@ class Gordian_wiki
 	function associate_concept($timeline_id, $concept_id, $wiki_id)
 	{
 		$this->CI->load->library('gordian_concept');
+		$this->CI->load->library('gordian_timeline');
 		
 		$concept = $this->CI->gordian_concept->find($concept_id);
 		$timeline = $this->CI->gordian_timeline->find($timeline_id);
