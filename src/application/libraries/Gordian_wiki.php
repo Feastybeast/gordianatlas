@@ -57,6 +57,35 @@ class Gordian_wiki
 	 * Associates the given Wiki to the identified location.
 	 * 
 	 * @param numeric The Id of the timeline to associate to.
+	 * @param numeric The Id of the concept to associate to.
+	 * @param numeric The Id of the Wikipage to associate.
+	 * 
+	 * @return boolean if the association was valid.
+	 */
+	function associate_concept($timeline_id, $concept_id, $wiki_id)
+	{
+		$this->CI->load->library('gordian_concept');
+		
+		$concept = $this->CI->gordian_concept->find($concept_id);
+		$timeline = $this->CI->gordian_timeline->find($timeline_id);
+		
+		if (!is_object($concept))
+		{
+			return FALSE;
+		}
+		
+		if (!is_object($timeline))
+		{
+			return FALSE;
+		}
+		
+		return $this->CI->Gordian_wiki_model->associate_concept($timeline_id, $concept_id, $wiki_id);		
+	}
+
+	/**
+	 * Associates the given Wiki to the identified location.
+	 * 
+	 * @param numeric The Id of the timeline to associate to.
 	 * @param numeric The Id of the location to associate to.
 	 * @param numeric The Id of the Wikipage to associate.
 	 * 
@@ -130,11 +159,11 @@ class Gordian_wiki
 	public function referenced_by($kind, $id)
 	{	
 		$sql_mappings = array(
-			'map' => array(
+			'location' => array(
 				'table' => 'TimelineLocationHasWikiPage',
 				'clause' => 'Location_IdLocation'
 			), 
-			'timeline' => array(
+			'event' => array(
 				'table' => 'TimelineEventHasWikiPage',
 				'clause' => 'Event_IdEvent'
 			)
@@ -181,5 +210,46 @@ class Gordian_wiki
 		}	
 		
 		return FALSE;
+	}
+	
+	/**
+	 * Returns a data template to be filled in by WikiPages.
+	 */
+	public function data_template()
+	{
+		$this->CI->lang->load('gordian_wiki');
+		
+		$data = array();
+
+		$data['concept_lbl'] = $this->CI->lang->line('gordian_wiki_concept_tab_lbl');
+		$data['entry_lbl'] = $this->CI->lang->line('gordian_wiki_entry_tab_lbl');
+		$data['event_lbl'] = $this->CI->lang->line('gordian_wiki_event_tab_lbl');
+		$data['location_lbl'] = $this->CI->lang->line('gordian_wiki_location_tab_lbl');
+		$data['manage_lbl'] = $this->CI->lang->line('gordian_wiki_manage_tab_lbl');
+		$data['personality_lbl'] = $this->CI->lang->line('gordian_wiki_personality_tab_lbl');
+		
+		$data['edit_lbl'] = $this->CI->lang->line('gordian_wiki_manage_edit_lbl');
+		$data['remove_lbl'] = $this->CI->lang->line('gordian_wiki_manage_remove_lbl');
+		
+		$data['block_content'] = '';
+		$data['block_concepts'] = '';
+		$data['block_events'] = '';
+		$data['block_locations'] = '';
+		$data['block_personalities'] = '';
+
+		$data['title'] = '';
+		$data['title_id'] = '';
+		
+		$data['record_type'] = '';
+		$data['record_id'] = 0;
+		
+		$data['display_tabs'][] = 'entry';
+		$data['display_tabs'][] = 'event';
+		$data['display_tabs'][] = 'location';
+		$data['display_tabs'][] = 'personality';
+		$data['display_tabs'][] = 'concept';
+		$data['display_tabs'][] = 'manage';
+		
+		return $data;
 	}
 }

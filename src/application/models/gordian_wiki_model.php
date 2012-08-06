@@ -39,11 +39,31 @@ class Gordian_wiki_model extends CI_Model
 	}
 
 	/**
-	 * Associates the given Wiki to the identified location.
+	 * Associates the given Wiki to the identified concept.
 	 * 
 	 * @param numeric The Id of the timeline to make the association.
+	 * @param numeric The Id of the concept to associate to for said timeline.
 	 * @param numeric The Id of the Wikipage to associate.
-	 * @param numeric The Id of the location to associate to for said timeline.
+	 * 
+	 * @return boolean if the association was valid.
+	 */
+	function associate_concept($timeline_id, $concept_id, $wiki_id)
+	{
+		$data = array(
+					'Timeline_IdTimeline' => $timeline_id,
+					'Concept_IdConcept' => $concept_id,
+					'WikiPage_IdWikiPage' => $wiki_id
+				); 
+				
+		$this->db->insert('TimelineConceptHasWikiPage', $data);
+	}
+
+	/**
+	 * Associates the given Wiki to the identified event.
+	 * 
+	 * @param numeric The Id of the timeline to make the association.
+	 * @param numeric The Id of the event to associate to for said timeline.
+	 * @param numeric The Id of the Wikipage to associate.
 	 * 
 	 * @return boolean if the association was valid.
 	 */
@@ -62,8 +82,8 @@ class Gordian_wiki_model extends CI_Model
 	 * Associates the given Wiki to the identified location.
 	 * 
 	 * @param numeric The Id of the timeline to make the association.
-	 * @param numeric The Id of the Wikipage to associate.
 	 * @param numeric The Id of the location to associate to for said timeline.
+	 * @param numeric The Id of the Wikipage to associate.
 	 * 
 	 * @return boolean if the association was valid.
 	 */
