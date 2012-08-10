@@ -27,16 +27,9 @@ echo $this->gordian_assets->flashmessage_widget();
 
 <script type="text/javascript">
 var amt = null;
-function updateOther(txtField) 
-{
-
-  document.getElementById("rbAmountOther").checked = true;
-  txtField.value = "";
-}
 
 function updateAmount() 
 {
-  document.getElementById("txtAmountOther").value = "";
   document.getElementsByName("amount")[0].value="";
 }
 
@@ -55,13 +48,6 @@ function gatherAmount(form)
 		  amt = form.rbAmount[i].value;
 		}
 	}
-
-  if ( form.txtAmountOther.value != "" ) 
-  {
-    var otherAmount = form.txtAmountOther.value;
-    form.amount.value = otherAmount;
-    amt = otherAmount;
-  }
   
   form.amount.value = amt;
 }
@@ -79,22 +65,22 @@ function gatherAmount(form)
 		  </td>
 		  <td >
 			<input type="radio" name="rbAmount" id="rbAmount1" onclick="updateAmount();" value="5" />
-			<label for="lbAmount1">5</label>
+			<label for="rbAmount1">5</label>
 		  </td>
 		  <td >
 			<input type="radio" name="rbAmount" id="rbAmount2" onclick="updateAmount();" value="10" />
-			<label for="lbAmount2">10</label>
+			<label for="rbAmount2">10</label>
 		  </td>
 		  <td >
 			<input type="radio" name="rbAmount" id="rbAmount3" onclick="updateAmount();" value="20" />
-			<label for="lbAmount3">20</label>
+			<label for="rbAmount3">20</label>
 		  </td>
 		  <td>
 			<input type="radio" name="rbAmount" id="rbAmount4" onclick="updateAmount();" value="25" />
-			<label for="input_amount_3">25</label>
+			<label for="rbAmount4">25</label>
 		  </td>
 		  <td>
-			  <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" onclick="donationCheck();" name="submit" alt="PayPal - The safer, easier way to pay online!">		  
+			  <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" onclick="donationCheck();" name="submit" alt="PayPal - The safer, easier way to pay online!">		  
 		  </td>
 		</tr>
 	  </table>
@@ -109,7 +95,7 @@ function gatherAmount(form)
 		<input type="hidden" name="no_note" value="0">
 		<input type="hidden" name="currency_code" value="USD">
 		<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHostedGuest">
-		<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+		<img alt="" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 	</div>
 </form>
 <!-- This is the end of paypal code -->
