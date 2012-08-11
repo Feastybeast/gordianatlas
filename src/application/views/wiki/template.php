@@ -12,7 +12,6 @@ if (!defined('BASEPATH'))
  * @license GPL 3
  */
 
-echo '<link rel="stylesheet" href="/css/gordian.css">';
 echo '<div class="wiki_title" id="' . $title_id . '">' . $title . '</div>';
 
 /*

@@ -130,7 +130,7 @@ function ui_delete(evt)
 				function(data) {
 					defaultWikiPane();
 
-					if (tgt_url.indexOf('map') != -1)
+					if (tgt_url.indexOf('location') != -1)
 					{
 	 					refreshMapData();
 					}

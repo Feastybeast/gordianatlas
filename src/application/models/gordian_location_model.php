@@ -20,6 +20,100 @@ class Gordian_location_model extends CI_Model
 	{
 		parent::__construct('location');
 	}
+
+	/**
+	 * Adds a location to the database.
+	 * 
+	 * @param numeric The latitude of the location.
+	 * @param numeric The longitude of the location.
+	 * @param string The initial alias of the location.
+	 */
+	public function add($lat, $lng, $name)
+	{
+		/*
+		 * We'll need a boilerplate icon for the moment.
+		 */
+		$this->db->insert('Icon', array('Path' => '', 'Color' => ''));
+		$icon_id = $this->db->insert_id();
+
+		/*
+		 * Initially, just insert the record.
+		 */
+		$data = array('Lat' => $lat, 'Lng' => $lng, 'Icon_IdIcon' => $icon_id);
+		$this->db->insert('Location', $data);
+		$location_id = $this->db->insert_id();
+		
+		/*
+		 * Now we need to add the location Alias ...
+		 */
+		 $this->add_alias($location_id, $name);
+		 
+		 return $location_id;
+	}
+
+	/**
+	 * Adds an alias to an existing location
+	 * 
+	 * @param numeric The Id of the location to add an alias.
+	 * @param string The alias to add to the location Id.
+	 * 
+	 * @return boolean if the alias was added or not.
+	 */
+	public function add_alias($loc_id, $alias)
+	{
+		if (!is_numeric($loc_id))
+		{
+			return FALSE;
+		}
+		
+		if (!is_string($alias) || strlen($alias) == 0)
+		{
+			return FALSE;
+		}
+		
+		/*
+		 * Ensure the alias isn't already present.
+		 */
+		$data = array('Title' => $alias, 'Location_IdLocation' => $loc_id);
+		
+		$res = $this->db->get_where('LocationAlias', $data, 1);
+		
+		if ($res->num_rows() != 0)
+		{
+			return FALSE;
+		}
+		
+		$this->db->insert('LocationAlias', $data);
+		return TRUE;
+	}
+
+	/**
+	 * Attaches a given location to a timeline.
+	 * 
+	 * @param numeric The ID of the timeline to attach to.
+	 * @param numeric The ID of the timeline to attach.
+	 * 
+	 * @return boolean If the event is attached to the timeline.
+	 */
+	public function attach_timeline($location_id, $timeline_id)
+	{
+		$data = array(
+				'Location_IdLocation' => $location_id, 
+				'Timeline_IdTimeline' => $timeline_id
+		);
+
+		// Is the data already present?
+		$query = $this->db->get_where('TimelineHasLocation', $data);
+		
+		if ($query->num_rows() > 0)
+		{
+			return FALSE;
+		}
+		
+		$this->db->insert('TimelineHasLocation', $data);
+		
+		return ($this->db->insert_id()) ? TRUE : FALSE;
+	}
 	
 	/**
 	 * Accepts two argument varieties (lat,lng) or (id). See params for details.
@@ -141,21 +235,52 @@ class Gordian_location_model extends CI_Model
 	 */
 	public function related_events($location_id)
 	{
-		$qry_events  = "SELECT evt.IdEvent, ea.Title, IFNULL(ehl.Location_IdLocation, 0) AS Mapped ";
-		$qry_events .= "FROM `Event` evt ";
+		$qry_events  = "SELECT evt.IdEvent, ea.Title, IFNULL(ehl.Mapped, 0) AS Mapped ";
+		$qry_events .= "FROM Event evt ";
 		$qry_events .= "INNER JOIN ( ";
 		$qry_events .= "    SELECT Event_IdEvent, Title ";
 		$qry_events .= "    FROM EventAlias ";
 		$qry_events .= "    GROUP BY Event_IdEvent ";
 		$qry_events .= "    ORDER BY Ordering ";
 		$qry_events .= ") ea ON ea.Event_IdEvent = evt.IdEvent ";
-		$qry_events .= "INNER JOIN TimelineHasEvent the ON the.Event_IdEvent = evt.IdEvent ";
-		$qry_events .= "LEFT OUTER JOIN `EventHasLocation` ehl ON evt.IdEvent  = ehl.Event_IdEvent  ";
-		$qry_events .= "WHERE the.Timeline_Idtimeline = 1 ";
-		$qry_events .= "GROUP BY evt.IdEvent, ea.Title";
-		
+		$qry_events .= "LEFT OUTER JOIN ( ";
+		$qry_events .= "    SELECT Event_IdEvent, GROUP_CONCAT(Location_IdLocation) AS Mapped ";
+		$qry_events .= "    FROM EventHasLocation the "; 
+		$qry_events .= "    GROUP BY Event_IdEvent ";
+		$qry_events .= ") ehl ON ehl.Event_IdEvent = evt.IdEvent ";
+
 		$res = $this->db->query($qry_events);
 		
 		return ($res->num_rows() > 0) ? $res->result() : FALSE;
 	}
+
+	/**
+	 * Removes a location pin from a given Timeline's map.
+	 * 
+	 * @param numeric The Id of the element to remove from the given timeline.
+	 */
+	public function remove($id)
+	{
+		$this->db->delete('TimelineHasLocation', 
+			array('Location_IdLocation' => $id, 'Timeline_IdTimeline' => 1)
+		); 	
+	}
+
+	/**
+	 * Updates the latitude and longitude of an existing location.
+	 * 
+	 * @param numeric The Id of the location updated.
+	 * @param numeric The altered latitude.
+	 * @param numeric The altered longitude.
+	 */
+	public function update_latlng($id, $lat, $lng)
+	{
+		$data = array(
+		               'Lat' => $lat,
+		               'Lng' => $lng
+		            );
+		
+		$this->db->where('IdLocation', $id);
+		$this->db->update('Location', $data); 
+	}	
 }

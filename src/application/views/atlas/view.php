@@ -31,7 +31,7 @@ echo '  <div id="mapViewport"></div>' . "\n";
 if ($this->gordian_auth->is_logged_in())
 {
   echo '<div id="addLoc">';
-  echo '<a href="/map/add" id="btnAddLoc"><img src="/assets/img/add.png" width="16" height="16" alt="' . $add_button_link . '"/>';
+  echo '<a href="/location/add" id="btnAddLoc"><img src="/assets/img/add.png" width="16" height="16" alt="' . $add_button_link . '"/>';
   echo $add_button_link; 
   echo '</a>';
   echo '</div>';	

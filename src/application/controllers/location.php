@@ -27,6 +27,58 @@ class Location extends GA_Controller
 	 	// Load the map stringpack.
 	 	$this->lang->load('gordian_location');
 	}
+
+	/**
+	 * Adds information to the map for the timeline
+	 */
+	public function add()
+	{
+		if ($this->input->is_ajax_request())
+		{
+			$name = $this->input->post('name');
+			$lat = $this->input->post('lat');
+			$lng = $this->input->post('lng');
+			$description = $this->input->post('description');
+			
+			/*
+			 * Attempt to add the new location to timeline 1.
+			 */
+			if (strlen($name) > 0 && is_numeric($lat) && is_numeric($lng) && strlen($description))
+			{
+				$this->gordian_location->add($lat, $lng, $name, $description, 1);		
+				exit('SUCCEEDED');
+			}
+		}
+
+		exit('FAILED');
+	}
+
+	/**
+	 * Edits the location information 
+	 */
+	public function edit()
+	{
+		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
+		{
+			$name = $this->input->post('name');
+			$lat = $this->input->post('lat');
+			$lng = $this->input->post('lng');
+			$description = $this->input->post('description');
+						
+			/*
+			 * Attempt to add the new location to timeline 1.
+			 */
+			if (strlen($name) > 0 && is_numeric($lat) && is_numeric($lng) && strlen($description))
+			{
+				$data_array = explode('/', uri_string());
+			 	$id = $data_array[2];
+
+				$this->gordian_location->edit($lat, $lng, $name, $description, $id);
+		 	} 	
+		}
+		
+		$this->load->view('wiki/backstop');	
+	}
 	
 	/**
 	 * Returns the list of possibly related events to this location.
@@ -63,7 +115,8 @@ class Location extends GA_Controller
 				
 				foreach($records as $k => $v)
 				{
-					$data['output'] .= form_checkbox('related', $v->IdEvent, ($v->Mapped == $this->record_id()) ? TRUE : FALSE);
+					$recs = explode(',', $v->Mapped);
+					$data['output'] .= form_checkbox('related', $v->IdEvent, (in_array($this->record_id(), $recs)) ? TRUE : FALSE);
 					$data['output'] .= ' ' . $v->Title . "<br />\n";
 				}
 
@@ -74,6 +127,20 @@ class Location extends GA_Controller
 			}			
 		}
 	}
+	
+	/**
+	 * Action to remove a map item for a given timeline.
+	 */
+	 public function remove()
+	 {
+		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
+		{
+			$data_array = explode('/', uri_string());
+		 	$id = $data_array[2];
+	 	
+			$this->gordian_location->remove($id);
+		}			
+	 }	
 	
 	/**
 	 * Render wiki data for the location item.

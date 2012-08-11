@@ -27,89 +27,6 @@ class Gordian_map
 	}
 	
 	/**
-	 * @param float The latitude the location should be added to.
-	 * @param float The longitude the location should be added to.
-	 * @param string The name of the location.
-	 * @param string a brief initial wikipage description for the location.
-	 */
-	public function add($lat, $lng, $name, $description)	
-	{
-		$location = $this->CI->gordian_location->find($lat, $lng);
-		
-		// Object is already present, get out.
-		if (is_object($location))
-		{
-			return FALSE;
-		}
-		
-		// Timeline at present is hardcoded.
-		$timeline_id = 1;
-		
-		// First, add it to the locations database ...
-		$location_id = $this->CI->Gordian_map_model->add($lat, $lng, $name);
-		
-		// Then associate it to at least one timeline.
-		$this->CI->Gordian_map_model->attach_timeline($location_id, $timeline_id);
-				
-		// Then associate it to it's wikipage.
-		$this->CI->load->library("Gordian_wiki"); 
-		
-		$wiki_id = $this->CI->gordian_wiki->add($name, $description);
-		$this->CI->gordian_wiki->associate_location($timeline_id, $location_id, $wiki_id);
-
-		return TRUE;
-	}
-	
-	/**
-	 * Updates information for the given location identified by Id.
-	 * 
-	 * @param numeric The latitude of the given location.
-	 * @param numeric The longitude of the given location.
-	 * @param string The updated name of the given location.
-	 * @param string The revised wikipage of the given location.
-	 * @param numeric The Location ID to update.
-	 */
-	public function edit_location($lat, $lng, $name, $description, $id)
-	{
-		// Update the Alias if required.
-		$existing_details = $this->find($id);
-						
-		if (!is_object($existing_details))
-		{
-			return FALSE;
-		}		
-
-		// Update the coordinates IIF they're not trampling somewhere else.
-		if ($existing_details->Lat != $lat || $existing_details->Lng != $lng)
-		{
-			$check_loc = $this->find($lat, $lng);
-			
-			if ($check_loc == FALSE)
-			{
-				$this->CI->Gordian_map_model->update_latlng($id, $lat, $lng);
-			}
-		}
-
-		// Update aliases if necessary.
-		if (!in_array($name, $existing_details->aliases))
-		{
-			$this->CI->Gordian_map_model->add_alias($id, $name);
-		}
-		
-		// Then update it's wikipage if necessary.
-		$this->CI->load->library("Gordian_wiki"); 
-		
-		$wiki_details = $this->CI->gordian_wiki->referenced_by('map', $id);
-		
-		if ($wiki_details->Content != $description)
-		{
-			$this->CI->gordian_wiki->revise($wiki_details->IdWikiPage, $description);
-		}
-		
-		return TRUE;
-	}
-		
-	/**
 	 * Loads all mapping data as JSON associated to the given timeline
 	 * 
 	 * @param numeric The ID of the timeline data to load.
@@ -131,10 +48,5 @@ class Gordian_map
 		}
 		
 		return json_encode($json);
-	}
-	
-	public function remove_location($id)
-	{
-		$this->CI->Gordian_map_model->remove_location($id);
 	}
 }
