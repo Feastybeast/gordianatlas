@@ -25,10 +25,21 @@ class GA_Controller extends CI_Controller
 	/**
 	 * Returns the record Id as indicated by the current URL.
 	 */
-	public function current_record()
+	public function record_id()
 	{
 		$data_array = explode('/', uri_string());
-	 	return (count($data_array) >= 3) ? $data_array[2]: FALSE;
+	 	return (count($data_array) >= 3) ? $data_array[2] : FALSE;
+	}
+	
+	/**
+	 * Indicates the record type presently being acted upon.
+	 * 
+	 * @return string The text representation of the record being manipulated.
+	 */
+	public function record_type()
+	{
+		$data_array = explode('/', uri_string());
+	 	return $data_array[0];
 	}
 	
 	public function get_vars()
@@ -39,11 +50,11 @@ class GA_Controller extends CI_Controller
 
 			foreach($_GET as $k => $v)
 			{
-				$ret[strtolower($k)] = $this->input->get($k);
+				$this->get_vars[strtolower($k)] = $this->input->get($k);
 			}			
 		}
 		
-		return $this->post_vars;
+		return $this->get_vars;
 	}
 
 	public function post_vars()
@@ -51,12 +62,12 @@ class GA_Controller extends CI_Controller
 		if (!$this->post_vars)
 		{
 			$this->post_vars = array();
-
+			
 			foreach($_POST as $k => $v)
 			{
-				$ret[strtolower($k)] = $this->input->post($k);
-			}			
-		}
+				$this->post_vars[strtolower($k)] = $this->input->post($k);
+			}	
+		}		
 		
 		return $this->post_vars;
 	}

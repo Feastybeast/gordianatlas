@@ -83,6 +83,12 @@ class Atlas extends CI_Controller
 		$data['label_concept_name'] = $this->lang->line('gordian_atlas_concept_name_lbl');
 		$data['label_concept_description'] = $this->lang->line('gordian_atlas_concept_descript_lbl');
 		
+		// Person Content
+		$data['label_person_title'] = $this->lang->line('gordian_atlas_person_title_lbl');
+		
+		// Relation Comment
+		$data['label_relation_title'] = $this->lang->line('gordian_atlas_relation_title_lbl');
+				
 		/*
 		 * This is a reference to the current user model information.
 		 */

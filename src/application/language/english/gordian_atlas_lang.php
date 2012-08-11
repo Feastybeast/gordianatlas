@@ -24,8 +24,11 @@ $lang['gordian_atlas_location_descript_lbl'] = "Brief Description:";
 
 // Concept management Strings
 $lang['gordian_atlas_concept_title_lbl'] = "Manage Concept Details";
-$lang['gordian_atlas_concept_descript_lbl'] = "Entry:";
+$lang['gordian_atlas_concept_descript_lbl'] = "Concept Entry:";
 $lang['gordian_atlas_concept_name_lbl'] = "Concept Title:";
+
+// Related elements management strings
+$lang['gordian_atlas_relation_title_lbl'] = "Manage Related Entries";
 
 // Splash Messages displayed on the idle biography screen.
 $lang['gordian_atlas_splash_header'] = "Welcome to the Gordian Atlas!";

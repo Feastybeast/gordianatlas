@@ -329,10 +329,17 @@ class Gordian_timeline_model extends CI_Model
 	 * @returns resource The dataset of events associated to the given timeline.
 	 */
 	public function load($timeline_id)
-	{
+	{		
 		$query = "SELECT IdEvent, OccuredOn, OccuredRange, OccuredDuration, OccuredUnit, ea.Title ";
 		$query .= "FROM `Event` evt ";
-		$query .= "INNER JOIN `EventAlias` ea ON ea.Event_IdEvent = evt.IdEvent ";
+
+		$query .= "INNER JOIN ( ";
+		$query .= "SELECT Event_IdEvent, Title ";
+		$query .= "FROM EventAlias ";
+		$query .= "GROUP BY Event_IdEvent ";
+		$query .= "ORDER BY Ordering ";
+		$query .= ") ea ON ea.Event_IdEvent = evt.IdEvent  ";
+				
 		$query .= "INNER JOIN `TimelineHasEvent` the ON the.Event_IdEvent = evt.IdEvent ";
 		$query .= "INNER JOIN `Timeline` t ON the.Timeline_IdTimeline = t.IdTimeline ";
 		$query .= "WHERE t.IdTimeline = ? ";

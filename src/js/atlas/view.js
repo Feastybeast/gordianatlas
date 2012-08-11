@@ -1,7 +1,7 @@
 /* Author: Jay Ripley
 */
 $(document).ready(
-	function() 
+	function()
 	{
 		$.ajaxSetup({ cache: false });
 	
@@ -27,7 +27,6 @@ function timelineInitialize()
     {
     	res = evt.getClassName().split(" ");
     	getWikiPane(res[0], res[1]);
-    	window.scrollTo(0, 0);
     }
         
 	// Timeline boilerplate code.
@@ -90,7 +89,7 @@ function refreshMapData()
 					events: {
 						click: function(marker, event, data) 
 						{
-							getWikiPane('locations', data.hr_idx);
+							getWikiPane('location', data.hr_idx);
 						}
 					}
 				}
@@ -101,6 +100,57 @@ function refreshMapData()
 /* ############################################################################
  * UI Related Functions
  * ######################################################################### */
+
+// Called for editing concepts
+function ui_concept(evt)
+{
+	var btns = {
+		"Add": function() {
+			$(this).dialog("close");			
+	 	},
+		"Cancel": function() {
+			$(this).dialog("close");
+		}
+	};
+
+	$("#concept-form").dialog({ "buttons": btns });
+	$("#concept-form").dialog("open");	
+}
+
+// Called for Deletion events.
+function ui_delete(evt)
+{
+	evt.preventDefault();
+	var tgt_url = evt.target.href;
+	
+	// Prep the necessary buttons.
+	var btns = {
+		"Confirm": function() {
+			$.get(tgt_url, 
+				function(data) {
+					defaultWikiPane();
+
+					if (tgt_url.indexOf('map') != -1)
+					{
+	 					refreshMapData();
+					}
+					else
+					{
+						timelineUpdate();
+					}
+				});
+				
+			$(this).dialog("close");
+	 	},
+		"Cancel": function() {
+			$(this).dialog("close");
+		}
+	}
+	
+	// Add the buttons and display the UI.
+	$("#deletion_notice").dialog({ "buttons": btns });
+	$("#deletion_notice").dialog("open");
+}
 
 // Called for Event addition or editing behaviors.
 function ui_event(evt)
@@ -161,7 +211,7 @@ function ui_event(evt)
 					if(is_editing) 
 					{
 						edit_id = tgt_url.substring(tgt_url.lastIndexOf('/'));
-						getWikiPane('events', edit_id);
+						getWikiPane('event', edit_id);
 					}
 				}
 			);
@@ -232,7 +282,7 @@ function ui_location(evt)
 					{
 						edit_id = tgt_url.substring(tgt_url.lastIndexOf('/')+1);
 						//TODO: We have a bug re: Updating not loading wikipage automatically.
-						getWikiPane('locations', edit_id);
+						getWikiPane('location', edit_id);
 					}
 				}
 			);
@@ -251,39 +301,71 @@ function ui_location(evt)
 	$("#location-form").dialog("open");	
 }
 
-// Called for Deletion events.
-function ui_delete(evt)
+// Called for editing personality
+function ui_personality(evt)
 {
-	evt.preventDefault();
-	var tgt_url = evt.target.href;
-	
-	// Prep the necessary buttons.
 	var btns = {
-		"Confirm": function() {
-			$.get(tgt_url, 
-				function(data) {
-					defaultWikiPane();
-
-					if (tgt_url.indexOf('map') != -1)
-					{
-	 					refreshMapData();
-					}
-					else
-					{
-						timelineUpdate();
-					}
-				});
-				
-			$(this).dialog("close");
+		"Add": function() {
+			$(this).dialog("close");			
 	 	},
 		"Cancel": function() {
 			$(this).dialog("close");
 		}
-	}
+	};
+
+	$("#person-form").dialog({ "buttons": btns });
+	$("#person-form").dialog("open");	
+}
+
+// Called for relation behaviors.
+function ui_relate(evt)
+{
+	var tgt_url = evt.target.href;
+
+	var url_frags = evt.target.href.split('/');
 	
-	// Add the buttons and display the UI.
-	$("#deletion_notice").dialog({ "buttons": btns });
-	$("#deletion_notice").dialog("open");
+	var record_id = url_frags.pop();
+	url_frags.pop();
+	var type = url_frags.pop();
+	
+	var btns = {
+		"Update": function() {
+			// Setup the request.
+			var csrf = $("input[name=csrf_test_name]");
+		
+			var datum = { 
+				'related[]' : [],
+				'related_updated': $("#related_updated").val(),
+				'csrf_test_name': csrf.val()
+			 };
+
+			$("#relate-form :checked").each(
+				function() {
+			  		datum['related[]'].push($(this).val());
+			});
+			
+			// Then make it.
+			$.post(
+				tgt_url,
+				datum,
+				function(data) {
+					getWikiPane(type, 'id'+record_id);
+				}
+			)
+
+			$(this).dialog("close");			
+	 	},
+		"Cancel": function() {
+			$(this).dialog("close");
+		}
+	};
+
+	$.get(tgt_url, 
+		function(data) {
+			$("#relation-div").html(data);
+			$("#relate-form").dialog({ "buttons": btns });
+			$("#relate-form").dialog("open");
+		});				
 }
 
 // Called at application startup, preventing rewired behaviors.
@@ -333,7 +415,18 @@ function ui_wire()
 	);
 
 	/*
-	 *
+	 * Concept Form
+	 */
+ 	$("#concept-form").dialog({
+	 	autoOpen: false,
+	 	modal: true,
+		height: 550,
+		width: 500,
+		buttons: { }
+ 	});
+
+	/*
+	 * Event Form
 	 */
  	$("#event-form").dialog({
 	 	autoOpen: false,
@@ -346,23 +439,32 @@ function ui_wire()
 	/*
 	 *  Location Form
 	 */
-  $("#location-form").dialog({
-    autoOpen: false,
-    modal: true,
-    height: 400,
-    width: 400,
-    buttons: 
-    { }
-  });
-  	
+	$("#location-form").dialog({
+		autoOpen: false,
+		modal: true,
+		height: 400,
+		width: 400,
+		buttons: { }    
+	});
+
+	/*
+	 * Personality Form
+	 */
+ 	$("#personality-form").dialog({
+	 	autoOpen: false,
+	 	modal: true,
+		height: 550,
+		width: 500,
+		buttons: { }
+ 	});
+
 	/*
 	 * And a generalized deletion notice.
 	 */
 	$("#deletion_notice").dialog({
 		autoOpen: false,
 		modal: true,
-      	buttons: 
-      	{ }
+      	buttons: { }
 	});	
 }
 
@@ -375,13 +477,8 @@ function defaultWikiPane()
 }
 
 function getWikiPane(type, key) 
-{
-	var controller = {
-		'events': "timeline",
-		'locations': "map"
-	}
-	
-	var url = "/" + controller[type] + "/wiki/" + key.substr(2);
+{	
+	var url = "/" + type + "/wiki/" + key.substr(2);
 	updateWikiPane(url);
 } 
 
@@ -389,29 +486,78 @@ function updateWikiPane(url)
 {
 	$.get(url,
 		function(data) {
-			$("#content A").off("click");
-			$("#content").html(data);
-		
-			// Wire up the edit button.
-			$("#content A.edit_btn").click(
+			$("#contentViewport A").off("click");
+			$("#contentViewport").html(data);
+
+			updateWikiTab('entry');
+			
+			// Wire up the relation buttons.
+			$("#contentViewport A.relate_btn").click(
 				function(evt) {
-					var url = evt.target.href;
+					evt.preventDefault();
+					ui_relate(evt);
+				}
+			);
+			
+			// Wire up the edit buttons.
+			$("#contentViewport A.edit_btn").click(
+				function(evt) {
+					evt.preventDefault();
 				
-					if (url.indexOf('map') == -1)
+					var url = evt.target.href;
+					var url_frags = url.split('/');
+					var action = url_frags[url_frags.length-2];
+					var controller = url_frags[url_frags.length-3];
+					
+					/*
+					 * What window needs to appear?
+					 */	
+					if (action.indexOf('add_concept') > -1)
 					{
-						ui_event(evt);
-					}
-					else
+						ui_concept(evt);
+					}					
+					else if (action.indexOf('add_personalities') > -1)
+					{
+						ui_personality(evt);
+					} 		
+					else if (controller.indexOf('location') > -1)
 					{
 						ui_location(evt);
 					}
+					else if (controller.indexOf('event') > -1)
+					{
+						ui_event(evt);
+					}
+				}
+			);
+			
+			// Wire up the redirection buttons.
+			$("#contentViewport A.wiki_btn").click(
+				function(evt) {
+					evt.preventDefault();
+					updateWikiPane(evt.target.href);
 				}
 			);
 		
 			// Wire up the removal button.
-			$("#content A.remove_btn").click(
+			$("#contentViewport A.remove_btn").click(
 				function(evt) {
 					ui_delete(evt);
 				});
+				
+			// Wire up the tabbing buttons.
+			$("#wiki_tab_tray A").click(
+				function(evt) {
+					evt.preventDefault();
+					var url_frags = evt.target.href.split('/');
+					updateWikiTab(url_frags[url_frags.length-2]);
+				}
+			);
 	});
+}
+
+function updateWikiTab(load_pane)
+{
+	$("#contentViewport .wiki_pane").hide();
+	$("#contentViewport #wiki_" + load_pane).show();
 }

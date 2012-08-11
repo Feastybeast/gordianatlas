@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
  * @since Elaboration 2
  * @license GPL 3
  */
-class Map extends CI_Controller
+class Map extends GA_Controller
 {
 	/**
 	 * Default Constructor.
@@ -104,51 +104,5 @@ class Map extends CI_Controller
 	 	
 			$this->gordian_map->remove_location($id);
 		}			
-	 }
-	 
-	 /**
-	  * 
-	  */
-	 public function wiki()
-	 {
-	 	// Load the map stringpack.
-	 	$this->lang->load('gordian_map');
-	 	
-	 	// Pull Wiki information
-	 	$this->load->library('Gordian_wiki');
-	 	
-	 	$data_array = explode('/', uri_string());
-	 	$kind = $data_array[0];
-	 	$id = $data_array[2];
-	 	
-	 	$wiki_data = $this->gordian_wiki->referenced_by($kind, $id);
-	 	
-	 	// Pull Location Information.
-	 	$location_data = $this->gordian_map->find($id);
-	 	
-	 	if (is_object($location_data) && is_object($wiki_data))
-	 	{
-		 	$data['wiki'] = $wiki_data;
-		 	$data['location'] = $location_data;
-		 	
-		 	// Don't list the primary city name on the WikiPage.
-		 	$data['aka_lbl'] = $this->lang->line('gordian_map_ajax_aka_label');
-		 	$data['loc_aka'] = array_diff($location_data->aliases, array($wiki_data->Title));
-		 			 	
-		 	$data['latlng_lbl'] = $this->lang->line('gordian_map_ajax_latlng_lbl');
-		 	
-		 	// Manipulation Labels
-		 	$data['edit_lbl'] = $this->lang->line('gordian_map_ajax_edit_lbl');
-		 	$data['remove_lbl'] = $this->lang->line('gordian_map_ajax_remove_lbl');
-		 	$data['remove_confirm'] = $this->lang->line('gordian_map_ajax_remove_confirm');
-		 	
-		 	$this->load->view('map/wiki', $data);
-	 	}
-	 	else
-	 	{	
-	 		$data['title'] = $this->lang->line('gordian_map_ajax_title');
-	 		$data['error'] = $this->lang->line('gordian_map_ajax_error');
-		 	$this->load->view('map/wiki_error', $data);
-	 	}
 	 }
 }

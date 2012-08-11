@@ -328,7 +328,7 @@ td { vertical-align: top; }
 /*
  * Content Styles
  */
- 
+
 #contentViewport
 {
 	float: left;
@@ -338,6 +338,11 @@ td { vertical-align: top; }
 	overflow-x: hidden;
 	max-height: 400px;
 	position: relative;
+}
+
+#relation-div {
+	overflow: auto;
+	overflow-x: hidden;
 }
 
 #timelineViewport 
@@ -370,7 +375,13 @@ td { vertical-align: top; }
 **/
 #wiki_tab_tray {
 	clear: both;
+	margin-top: 10px;
 	width: 100%;
+}
+
+.wiki_inset {
+	padding: 10px;
+	padding-bottom: 0px;
 }
 
 .wiki_button {
@@ -380,6 +391,7 @@ td { vertical-align: top; }
 
 .wiki_pane {
 	padding: 10px;
+	display: none;
 }
 
 .wiki_title {
@@ -396,11 +408,6 @@ td { vertical-align: top; }
 	text-align: center;
 	font-weight: bold;
 	background: #eee;
-}
-
-.wiki_pane {
-	display: none;
-	margin-bottom: 20px;
 }
 
 /**

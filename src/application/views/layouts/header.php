@@ -12,7 +12,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 ?>
-<!DOCTYPE HTML SYSTEM>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>The Gordian Atlas:</title>

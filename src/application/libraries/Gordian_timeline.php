@@ -446,17 +446,57 @@ class Gordian_timeline
 		$json = array('dateTimeFormat' => 'iso8601');
 		
 		foreach($timeline_data->result() as $row)
-		{			
-			$json['events'][] = 
-				array(
-					'start'=> $row->OccuredOn,
-        			'title' => $row->Title,
-					'isDuration' => ($row->OccuredDuration == 0) ? 0 : 1,
-        			'classname'=> 'events id'.$row->IdEvent
-				);
+		{	
+			/*
+			 * Prepare a baseline setup.
+			 */
+			$datum = array(
+				'start'=> $row->OccuredOn,
+    			'title' => $row->Title,
+				'isDuration' => 0,
+    			'classname'=> 'event id'.$row->IdEvent
+			);
+			
+			/*
+			 * Deal with durations if necessary.
+			 */
+			if ($row->OccuredDuration > 0)
+			{
+				$duration_date = new DateTime($row->OccuredOn);
+				$fd = $this->format_duration($row->OccuredDuration, $row->OccuredUnit);
+				$duration_date->add(new DateInterval($fd));
+				$datum['end'] = $duration_date->format('Y-m-d H:i:s');
+
+				$datum['isDuration'] = 1;
+			}
+			
+			/*
+			 * Set the row.
+			 */	
+			$json['events'][] = $datum;				
 		}
 		
 		return json_encode($json);		
+	}
+	
+	private function format_duration($amount, $unit)
+	{
+		$unit_trans = array( 
+			'DAY' => 'D',
+			'WEEK' => 'W',
+			'MONTH' => 'M',
+			'YEAR' => 'Y',
+			'DECADE' => '0Y',
+			'CENTURY' => '00Y',
+			'MILLENIA' => '000Y'
+		);
+		
+		if (!array_key_exists($unit, $unit_trans))
+		{
+			return FALSE;
+		}
+		
+		return "P" . $amount . $unit_trans[$unit];
 	}
 	
 	/**

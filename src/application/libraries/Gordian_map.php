@@ -22,6 +22,7 @@ class Gordian_map
 	public function __construct()	
 	{
 		$this->CI =& get_instance();
+		$this->CI->load->library('gordian_location');
 		$this->CI->load->model("Gordian_map_model");
 	}
 	
@@ -33,7 +34,7 @@ class Gordian_map
 	 */
 	public function add($lat, $lng, $name, $description)	
 	{
-		$location = $this->find($lat, $lng);
+		$location = $this->CI->gordian_location->find($lat, $lng);
 		
 		// Object is already present, get out.
 		if (is_object($location))
@@ -107,46 +108,7 @@ class Gordian_map
 		
 		return TRUE;
 	}
-	
-	
-	/**
-	 * Locates a given Location in the database given either
-	 * 
-	 * @param mixed {lat,lng} pair as seperate arguments, or an Id.
-	 * 
-	 * @return mixed An object containing relevant data, or FALSE.
-	 */
-	public function find()
-	{		
-		if (func_num_args() == 2)
-		{
-			$lat = func_get_arg(0);
-			$lng = func_get_arg(1);
-			
-			if (!is_numeric($lat) || $lat > 90 || $lat < -90)
-			{
-				return FALSE;
-			}
-			else if (!is_numeric($lng) || $lat > 180 || $lat < -180 )
-			{
-				return FALSE;
-			}
-
-			return $this->CI->Gordian_map_model->find($lat, $lng);
-		}
-		else if (func_num_args() == 1)
-		{
-			$id = func_get_arg(0);
-			
-			if (!is_numeric($id))
-			{
-				return FALSE;
-			}
-			
-			return $this->CI->Gordian_map_model->find($id);
-		}	
-	}
-	
+		
 	/**
 	 * Loads all mapping data as JSON associated to the given timeline
 	 * 
