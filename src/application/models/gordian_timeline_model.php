@@ -175,24 +175,6 @@ class Gordian_timeline_model extends CI_Model
 		return FALSE;		
 	}
 
-	public function edit_event(
-			$id, $occured_on, $occured_range, 
-			$occured_duration, $occured_unit)
-	{
-		$data = array(
-			'OccuredOn' => $occured_on,
-			'OccuredRange' => $occured_range,
-			'OccuredDuration' => $occured_duration,
-			'OccuredUnit' => $occured_unit
-		);
-		
-		
-		$this->db->where('IdEvent', $id);
-		$this->db->update('Event', $data); 
-
-		return $this->db->insert_id();	
-	}
-
 	/**
 	 * Locates essential information about the provided timeline.
 	 * 
@@ -240,89 +222,6 @@ class Gordian_timeline_model extends CI_Model
 	}
 	
 	/**
-	 * Finds an event given a date and title.
-	 * 
-	 * Accepts either a given Id, or a combo of {Occurance, Title}
-	 * 
-	 * @param numeric The Id of a given event.
-	 * 
-	 * @param string A date of a given event, as {YYYY-MM-DD}
-	 * @param string An alias of the given event.
-	 */
-	public function find_event()
-	{
-		// We need a baseline query to pull info from.
-		$qry_main = "SELECT IdEvent, OccuredOn, OccuredRange, ";
-		$qry_main .= "OccuredDuration, OccuredUnit ";
-		$qry_main .= "FROM `Event` evt "; 
-
-		switch(func_num_args())
-		{
-			case 2: // Date & Title
-				$date = func_get_arg(0);
-				$title = func_get_arg(1);
-				
-				if (!is_string($date) || !is_string($title))
-				{
-					return FALSE;
-				}
-							
-				$qry_main .= " INNER JOIN `EventAlias` ea ON ea.Event_IdEvent = evt.IdEvent ";
-				$qry_main .= " WHERE ea.Title = ? ";
-				$qry_main .= " AND evt.OccuredOn = DATE_FORMAT(?, '%Y-%m-%d')";
-				
-				$res = $this->db->query($qry_main, array($title, $date));
-				break;
-			
-			case 1: // By Id.
-				$id = func_get_arg(0);
-				
-				if (!is_numeric($id))
-				{
-					return FALSE;
-				}
-			
-				$qry_main .= "WHERE IdEvent = ?";
-				$res = $this->db->query($qry_main, array($id));
-				break;
-			
-			default: // Invalid.
-				return FALSE;
-		}
-		
-		if ($res->num_rows() != 1)
-		{
-			return FALSE;
-		}
-		
-		else 
-		{
-
-			/*
-			 * Finally locate all the aliases and return them.
-			 */
-			$ret = $res->row();
-			$ret->aliases = array();
-
-			$qry_alias = "SELECT Title FROM `EventAlias` ";
-			$qry_alias .= "WHERE Event_IdEvent = ? ";
-			$qry_alias .= "ORDER BY Ordering ";
-
-			$res = $this->db->query($qry_alias, $ret->IdEvent);
-			
-			if ($res->num_rows() > 0)
-			{
-				foreach ($res->row() as $row)
-				{
-					$ret->aliases[] = $row;
-				}
-			}
-		}
-		
-		return $ret;
-	}
-	
-	/**
 	 * Returns a data object appropriate to parse into JSON data within the library.
 	 * 
 	 * @param numeric The timeline to load.
@@ -348,17 +247,5 @@ class Gordian_timeline_model extends CI_Model
 		$res = $this->db->query($query, array($timeline_id));
 		
 		return $res;
-	}
-	
-	/**
-	 * Removes a location pin from a given Timeline's map.
-	 * 
-	 * @param numeric The Id of the element to remove from the given timeline.
-	 */
-	public function remove_event($id)
-	{
-		$this->db->delete('TimelineHasEvent', 
-			array('Event_IdEvent' => $id, 'Timeline_IdTimeline' => 1)
-		); 	
 	}	
 }

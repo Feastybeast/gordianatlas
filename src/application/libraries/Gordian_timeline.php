@@ -21,6 +21,7 @@ class Gordian_timeline
 	private static $durations = 
 		array('MINUTE','HOUR','DAY','WEEK','MONTH',
 				'YEAR','DECADE','CENTURY','MILLENIA');
+
 	/**
 	 * Default constructor. 
 	 * 
@@ -252,99 +253,6 @@ class Gordian_timeline
 	{
 		// NYI
 	}
-	
-	public function edit_event($occured_on, $occured_range, $occured_duration, 
-					$occured_unit, $alias, $description, $id)
-	{
-		/*
-		 * Prevent things that occured at the same time with the same name from being added.
-		 */
-		$this->reset_errors(); 
-		
-		$existing_event = $this->find_event($id);
-		
-		if (!is_object($existing_event))
-		{
-			$this->set_error($this->CI->lang->line('gordian_timeline_error_edit_existence'));
-		}
-		
-		/*
-		 * Validation
-		 */
-		 
-		 // Must be a valid date.
-		 if (strlen($occured_on) != 10)
-		 {
-		 	$this->set_error($this->CI->lang->line('gordian_timeline_error_edit_occured_on'));
-		 }
-		 
-		 // Range must be at least 0.
-		 if (!is_numeric($occured_range) || $occured_range < 0)
-		 {
-		 	$this->set_error($this->CI->lang->line('gordian_timeline_error_edit_occured_range'));
-		 }
-		 
-		 // Duration must be at least 0.
-		 if (!is_numeric($occured_duration) || $occured_duration < 0)
-		 {
-		 	$this->set_error($this->CI->lang->line('gordian_timeline_error_edit_occured_duration'));
-		 }
-		 
-		 // Is the initial Alias valid?
-		 if (!is_string($alias) || strlen($alias) < 1)
-		 {
-			$this->set_error($this->CI->lang->line('gordian_timeline_error_edit_alias_invalid'));	 	
-		 }
-
-		 // Is the initial Alias valid?
-		 if (!is_string($description))
-		 {
-			$this->set_error($this->CI->lang->line('gordian_timeline_error_edit_description_invalid'));
-		 }
-		 
-		 // Is the occurance interval understood?
-		 $occured_unit = strtoupper($occured_unit);
-		 
-		 if (!in_array($occured_unit, Gordian_timeline::$durations))
-		 {
-			$this->set_error($occured_unit + $this->CI->lang->line('gordian_timeline_error_add_occurance_unit'));			 	
-		 }
-
-		if (count($this->errors) > 0)
-		{
-			return FALSE;
-		}
-		 
-		/*
-		 * Begin writing data.
-		 */
-
-		// Add the event to the database.
-		$this->CI->Gordian_timeline_model->edit_event(
-			$id, $occured_on, $occured_range, 
-			$occured_duration, $occured_unit
-		);
-		
-		// Then add its initial alias.
-		// Update aliases if necessary.
-		if (!in_array($alias, $existing_event->aliases))
-		{
-			$alias_id = $this->add_alias($id, $alias);
-		}
-		
-		// Then associate it to it's wikipage.
-		$this->CI->load->library("Gordian_wiki"); 
-
-		$wiki_details = $this->CI->gordian_wiki->referenced_by('timeline', $id);
-
-		if ($wiki_details->Content != $description)
-		{
-			$this->CI->gordian_wiki->revise($wiki_details->IdWikiPage, $description);
-		}
-		
-		
-		return TRUE;						
-	}
 
 	/**
 	 * Checks to see if a Timeline exists given a title or Id.
@@ -392,46 +300,6 @@ class Gordian_timeline
 		return FALSE;		
 	}
 	
-	/**
-	 * Finds an event given a date and title.
-	 * 
-	 * Accepts either a given Id, or a combo of {Occurance, Title}
-	 * 
-	 * @param numeric The Id of a given event.
-	 * 
-	 * @param string A date of a given event, as {YYYY-MM-DD}
-	 * @param string An alias of the given event.
-	 */
-	public function find_event()
-	{
-		switch(func_num_args())
-		{
-			case 2: // Date & Title
-				$date = func_get_arg(0);
-				$title = func_get_arg(1);
-				
-				if (!is_string($date) || !is_string($title))
-				{
-					return FALSE;
-				}
-				
-				return $this->CI->Gordian_timeline_model->find_event($date, $title);
-			
-			case 1: // By Id.
-				$id = func_get_arg(0);
-				
-				if (!is_numeric($id))
-				{
-					return FALSE;
-				}
-			
-				return $this->CI->Gordian_timeline_model->find_event($id);
-			
-			default: // Invalid.
-				return FALSE;
-		}		
-	}
-
 	/**
 	 * Returns the JSON data for the given timeline.
 	 * 
@@ -499,16 +367,6 @@ class Gordian_timeline
 		return "P" . $amount . $unit_trans[$unit];
 	}
 	
-	/**
-	 * Removes a location pin from a given Timeline's map.
-	 * 
-	 * @param numeric The Id of the element to remove from the given timeline.
-	 */
-	public function remove_event($id)
-	{
-		$this->CI->Gordian_timeline_model->remove_event($id);
-	}
-
 	/*
 	 * Support Methods
 	 */

@@ -104,8 +104,39 @@ function refreshMapData()
 // Called for editing concepts
 function ui_concept(evt)
 {
+	var	con_name = $("#concept_name");
+	var	con_descript = $("#concept_descript");
+	var	csrf = $("input[name=csrf_test_name]");
+	var con_fields = $([]).add(con_name).add(con_descript);
+
+	var tgt_url = evt.target.href;
+	var url_frags = tgt_url.split('/');
+	var record_id = url_frags.pop();
+	url_frags.pop();
+	var type = url_frags.pop();	
+
 	var btns = {
 		"Add": function() {
+			evt.preventDefault();
+			
+
+			var datum = {  
+				"title": con_name.val(),
+				"content": con_descript.val(),
+				"csrf_test_name": csrf.val()
+			};
+
+			// Then send it to the system.
+			$.post(
+				tgt_url, 
+				datum, 
+				function(data) 
+				{
+					getWikiPane(type, 'id'+record_id);
+				}
+			);
+
+			con_fields.val("").removeClass("ui-state-error");
 			$(this).dialog("close");			
 	 	},
 		"Cancel": function() {
@@ -157,7 +188,13 @@ function ui_event(evt)
 {
 	// Prevent the baseline behavior.
 	evt.preventDefault();
+	
 	var tgt_url = evt.target.href;
+	var url_frags = tgt_url.split('/');
+	var record_id = url_frags.pop();
+	url_frags.pop();
+	var type = url_frags.pop();	
+	
 	
 	var is_editing = (tgt_url.indexOf('add') == -1) ? true : false;
 
@@ -172,15 +209,15 @@ function ui_event(evt)
 	var evt_fields = $([]).add(evt_name).add(evt_occurance).add(evt_range).add(evt_duration).add(evt_descript);
 
 	if (is_editing)
-	{
+	{	
 		evt_name.val($('#evt_name_val').text());
-		evt_occurance.val($('#evt_occurance_val').text());
-		evt_range.val($('#evt_range_val').text());
-		evt_duration.val($('#evt_duration_val').text());
+		evt_occurance.val($('#evt_occurance_val').val());
+		evt_range.val($('#evt_range_val').val());
+		evt_duration.val($('#evt_duration_val').val());
 		evt_descript.val($('#evt_descript_val').html());
 
 		// Wipe the select boxes.
-		var comparator = $('#evt_units_val').text().trim();
+		var comparator = $('#evt_units_val').val();
 		$("#evt_units option").removeAttr('selected');
 		$("#evt_units option[value='"+comparator+"']").attr('selected', 'selected');
 	}
@@ -210,8 +247,7 @@ function ui_event(evt)
 					// It's an edit screen. Reload the UI.
 					if(is_editing) 
 					{
-						edit_id = tgt_url.substring(tgt_url.lastIndexOf('/'));
-						getWikiPane('event', edit_id);
+						getWikiPane('event', 'id'+record_id);
 					}
 				}
 			);

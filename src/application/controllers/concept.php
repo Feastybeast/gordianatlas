@@ -13,6 +13,9 @@ if (!defined('BASEPATH'))
  */
 class Concept extends GA_Controller
 {
+	/**
+	 * Default Constructor.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -20,80 +23,113 @@ class Concept extends GA_Controller
 	}
 	
 	/**
-	 * 
+	 * Add a new concept to the database.
 	 */
 	public function add()
 	{
-		$this->db->query("DELETE FROM wikipagerevision WHERE 1 = 1 limit 10");
-		$this->db->query("DELETE FROM timelineconcepthaswikipage WHERE 1 = 1 limit 10");
-		$this->db->query("DELETE FROM wikipage WHERE 1 = 1 limit 10");
-		$this->db->query("DELETE FROM conceptalias WHERE 1 = 1 limit 10");
-		$this->db->query("DELETE FROM concept WHERE 1 = 1 limit 10");
-		//$this->db->query("DELETE FROM WHERE 1 = 1 limit 10");
-		$title = $this->input->post("title");
-		$content = $this->input->post("content");
+		$title = $this->input->post("concept_name");
+		$content = $this->input->post("concept_descript");
 
-		if (strlen($title)>0 && strlen($content)>0)
-		{		
-			$concept = $this->gordian_concept->find($title);
-
-			if(!is_object($concept))
-			{
-				$this->gordian_concept->add($title,$content);	
+		if ($this->gordian_auth->is_logged_in())
+		{
+			if (strlen($title)>0 && strlen($content)>0)
+			{		
+	
+				$concept = $this->gordian_concept->find($title);
+	
+				if(!is_object($concept))
+				{
+					$this->gordian_concept->add($title,$content);	
+				}
+				
 			}
 		}
-
-		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
-		{
-			exit("This is the add screen.");
-		}
 	}
 	
+	/**
+	 * NYI
+	 */
 	public function delete()
 	{
-		if ($this->current_record() == FALSE)
+		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
 		{
-			return FALSE;
-		}		
+			$remove_id = $this->record_id();
+
+			if ($remove_id != FALSE)
+			{
+				// $this->gordian_concept->remove_from($remove_id);				
+			}
+		}	
 	}
 	
+	/**
+	 * Updates a concept's wiki page.
+	 */
 	public function edit()
 	{
-		if ($this->current_record() == FALSE)
+		if ($this->input->is_ajax_request() && $this->gordian_auth->is_logged_in())
 		{
-			return FALSE;
+			if ($this->record_id() == FALSE)
+			{
+				return FALSE;
+			}
+		
+			$updated_concept = $this->input->post('');
+				
+			if (strlen($updated_concept) > 0)
+			{
+				$this->gordian_concept->edit($this->record_id(), $updated_concept);
+			}
 		}
 	}
-	
-	public function test()
+
+	/**
+	 * Returns information associated to a given record type.
+	 */
+	public function entries()
 	{
-		// facsimile for testing code as it is developed. Clls method to be tested.
-		
-		//exit("In concept/test");
-		
-		echo form_open('concept/add');  //Start of dynamically generated html page
-		//echo <input type="submit" name="mysubmit" value="Submit Post!" /> //standard submit button
+		exit(json_encode($this->gordian_concept->entries()));
+	}
 
-		$data = array(
-              'name'	=> 'title',
-              'value'	=> 'username'
-            );
+	/**
+	 * Returns information associated to a given record type.
+	 */
+	public function related_to()
+	{
+		$values = explode('/', uri_string());
 
-		echo "Concept: ";
-		echo form_input($data);
-		echo "<br />Description: ";
-		echo form_textarea(array('name'	=> 'content'));
-		echo "<br />";
-		echo form_submit('','Submit');
-		echo form_close();  //End of dynamically generated html page
-		exit(); // needed because Code Igniter needs it 
+		$id = array_pop($values);
+		$kind = array_pop($values);
+		
+		$data = '';
+
+		if (is_numeric($id) && is_string($kind))
+		{
+			$data = $this->gordian_concept->entries($kind, $id);
+		}
+		
+		exit(json_encode($data));
 	}
 	
 	public function wiki()
 	{
-		if ($this->current_record() == FALSE)
+		$id = $this->record_id();
+		$data = $this->gordian_wiki->data_template($this->record_type());
+		
+		if ($id == FALSE)
 		{
 			return FALSE;
-		}		
+		}
+		
+		$concept_data = $this->gordian_concept->find($id);
+		
+		/*
+		 * Fill out the standard component. 
+		 */
+		$data['title'] = $concept_data->wikidata->Title;
+				
+		$data['block_content'] = $concept_data->wikidata->Content;
+		
+		$this->load->view('wiki/template', $data);
 	}
 }

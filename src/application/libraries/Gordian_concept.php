@@ -38,19 +38,84 @@ class Gordian_concept
 	}
 
 	/**
-	 * Delete a concept from a Timeline.
+	 * Removes a concept from a given event in the current timeline.
+	 * 
+	 * @param numeric The Id of the event to attach to.
+	 * @param numeric The Id of the concept to remove from the given timeline.
 	 */
-	public function delete()
+	public function attach_event($record_id, $concept_id)
 	{
-		//TODO: NYI
+		return $this->CI->Gordian_concept_model->attach('event', $record_id, $concept_id);
 	}
-	
+
+	/**
+	 * Removes a concept from a given event in the current timeline.
+	 * 
+	 * @param numeric The Id of the location to attach to.
+	 * @param numeric The Id of the concept to remove from the given timeline.
+	 */
+	public function attach_location($record_id, $concept_id)
+	{
+		return $this->CI->Gordian_concept_model->attach('location', $record_id, $concept_id);
+	}
+
+	/**
+	 * Removes a concept from a given person in the current timeline.
+	 * 
+	 * @param numeric The Id of the person to attach to.
+	 * @param numeric The Id of the concept to remove from the given timeline.
+	 */
+	public function attach_person($record_id, $concept_id)
+	{
+		return $this->CI->Gordian_concept_model->attach('person', $record_id, $concept_id);
+	}
+
+	/**
+	 * Removes a concept from a given event in the current timeline.
+	 * 
+	 * @param numeric The Id of the event to detach from.
+	 * @param numeric The Id of the concept to remove from the given timeline.
+	 */
+	public function detach_event($record_id, $concept_id)
+	{
+		return $this->CI->Gordian_concept_model->detach('event', $record_id, $concept_id);
+	}
+
+	/**
+	 * Removes a concept from a given event in the current timeline.
+	 * 
+	 * @param numeric The Id of the location to detach from.
+	 * @param numeric The Id of the concept to remove from the given timeline.
+	 */
+	public function detach_location($record_id, $concept_id)
+	{
+		return $this->CI->Gordian_concept_model->detach('location', $record_id, $concept_id);
+	}
+
+	/**
+	 * Removes a concept from a given person in the current timeline.
+	 * 
+	 * @param numeric The Id of the person to detach from.
+	 * @param numeric The Id of the concept to remove from the given timeline.
+	 */
+	public function detach_person($record_id, $concept_id)
+	{
+		return $this->CI->Gordian_concept_model->detach('person', $record_id, $concept_id);
+	}
+
 	/**
 	 * Edit a concept for a timeline.
 	 */
-	public function edit()
+	public function edit($record_id, $updated_content)
 	{
-		//TODO: NYI
+		$the_concept = $this->find($record_id);
+
+		if (!is_object($the_concept))
+		{
+			return FALSE;
+		}
+				
+		return $this->CI->gordian_wiki->revise($the_concept->wikidata->IdWikiPage, $updated_content);
 	}
 	
 	/**
@@ -71,7 +136,29 @@ class Gordian_concept
 		{
 			return FALSE;
 		}
-
+		
 		return $this->CI->Gordian_concept_model->find($arg);
+	}
+	
+	/**
+	 * Returns the list of all known entries, additionally indicating associations to the provided record.
+	 * 
+	 * @param string The kind of record to associate.
+	 * @param numeric The ID of record in question.
+	 */
+	public function entries()
+	{
+		$tot_args = func_num_args();
+		
+		if ($tot_args == 0)
+		{
+			return $this->CI->Gordian_concept_model->entries();	
+		} 
+		else if ($tot_args == 2)
+		{
+			return $this->CI->Gordian_concept_model->entries(func_get_arg(0), func_get_arg(1));
+		}
+		
+		return FALSE;		
 	}
 }

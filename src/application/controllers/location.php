@@ -184,17 +184,6 @@ class Location extends GA_Controller
 	 		$data['block_content'] .= '<div class="wiki_inset" id="loc_descript_val">' . $wiki_data->Content . '</div>';
 		 	
 		 	/*
-		 	 * Related Concepts 
-		 	 */
-		 	 foreach($data['display_tabs'] as $k => $v)
-		 	 {
-				if ($v == 'concept' || $v == 'personality')
-				{
-					unset($data['display_tabs'][$k]);
-				}		 	 	
-		 	 }
-		 	
-		 	/*
 		 	 * Link the event tabs as necessary.
 		 	 */
 			if (count($location_data->events) > 0)

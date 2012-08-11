@@ -43,21 +43,107 @@ class Gordian_concept_model extends CI_Model
 		
 		return $concept_id;
 	}
-
-	/**
-	 * Delete a concept from a Timeline.
-	 */
-	public function delete()
-	{
-		//TODO: NYI
-	}
 	
 	/**
-	 * Edit a concept for a timeline.
+	 * Removes a concept from a given timeline.
+	 * 
+	 * @param string The type of resource to remove from {'location', 'event', 'personality' }
+	 * @param numeric The Id of the resource attaching to.
+	 * @param numeric The Id of the concept to attach the resource to.
 	 */
-	public function edit()
+	public function attach($resource_type, $resource_id, $concept_id)
 	{
-		//TODO: NYI
+		/*
+		 * SQL Mappings
+		 */
+		$sql_mappings = $this->mappings($resource_type);
+		
+		/*
+		 * If there is no mapping ...
+		 */
+		if (!is_array($sql_mappings))
+		{
+			return FALSE;
+		}		
+		
+		$fields = array(
+			$sql_mappings['clause'] => $resource_id, 
+			'Concept_IdConcept' => $concept_id
+		);
+
+		$this->db->insert($sql_mappings['table'], $fields);
+		
+		return $this->db->insert_id();
+	}	
+
+	/**
+	 * Returns the list of all known entries, additionally indicating associations to the provided record.
+	 * 
+	 * @param string The kind of record to associate.
+	 * @param numeric The ID of record in question.
+	 */	
+	public function entries()
+	{
+		/*
+		 * The initial query that must run.
+		 */
+		 
+		$query =  "SELECT concepts.IdConcept, concepts.Content, concepts.Ordering, IFNULL(loj.Related, 0) AS Related ";
+		$query .= "FROM ( "; 
+		$query .= "SELECT con.IdConcept, cona.Content, cona.Ordering ";
+		$query .= "FROM Concept con INNER JOIN ConceptAlias cona ON cona.Concept_IdConcept = con.IdConcept ";
+		$query .= ") AS concepts LEFT OUTER JOIN ( ";		 
+
+		/*
+		 * If necessary, associate records as required.
+		 */
+		if (func_num_args() != 2)
+		{
+			$query .= " SELECT 0 AS Related "; 
+			$query .= " ) AS loj ON 1 = 1";
+		}
+		else 
+		{
+			$kind = func_get_arg(0); 
+			$id = func_get_arg(1);
+			
+			/*
+		 	 * SQL Mappings
+		 	 */
+			$sql_mappings = $this->mappings($kind);
+			
+			// If there is no mapping ...
+			if (!is_array($sql_mappings))
+			{
+				return FALSE;
+			}
+			
+			/*
+			 * Mapping Query follows ...
+			 */
+			$query .= " SELECT loj.Concept_IdConcept, ";
+			$query .= " GROUP_CONCAT(loj.{$sql_mappings['clause']} SEPARATOR ',') AS Related ";
+			$query .= " FROM {$sql_mappings['table']} loj ";
+			$query .= " WHERE loj.{$sql_mappings['clause']} = {$id} ";
+			$query .= " ) AS loj ON concepts.IdConcept = loj.Concept_IdConcept ";
+		} 
+				
+		/*
+		 * Finally run the call.
+		 */
+		$query .= "GROUP BY concepts.IdConcept, concepts.Ordering";
+		
+		$res = $this->db->query($query);
+		
+		if ($res->num_rows() > 0)
+		{
+			foreach($res->result_array() as $row)
+			{
+				$data[] = $row;
+			}
+		}		
+		
+		return $data;
 	}
 	
 	/**
@@ -65,31 +151,117 @@ class Gordian_concept_model extends CI_Model
 	 */
 	public function find($arg)
 	{
-		$query  ="SELECT IdWikiPage ";
+		/*
+		 * Baseline query results that have to return to be effective.
+		 */ 
+		$query  = "SELECT con.IdConcept, con.CreatedOn, con.ModifiedOn ";
 		$query .= "FROM Concept con ";
-		$query .= "INNER JOIN ConceptAlias cona ON cona.Concept_IdConcept = con.IdConcept ";
-		$query .= "LEFT OUTER JOIN TimelineConceptHasWikiPage tchw ON con.IdConcept = tchw.Concept_IdConcept ";
-		$query .= "LEFT OUTER JOIN WikiPage wp ON wp.IdWikiPage = tchw.WikiPage_IdWikiPage ";
-			
-		if (is_string($arg))
-		{
-			$query .= "WHERE cona.Content = ?";
-		}
-		else if (is_numeric($arg))
+
+		if (is_numeric($arg))
 		{
 			$query .= "WHERE con.IdConcept = ?";
-			var_dump($query);
-			var_dump($arg);
-			exit();			
+		}
+		else if (is_string($arg))
+		{
+			$query .= "INNER JOIN ConceptAlias cona ON cona.Concept_IdConcept = con.IdConcept ";
+			$query .= "WHERE cona.Content = ?";
 		}
 	
 		$res = $this->db->query($query,array($arg));
-		
+
 		if ($res->num_rows() == 0)
 		{
 				return FALSE;
 		}
 		
-		return $this->gordian_wiki->find($res->row());
+		/*
+		 * We have a successful core return.
+		 */
+		$ret = $res->row();
+		
+		$ret->aliases = array();
+		
+		/*
+		 * Load Aliases for the Concept
+		 */
+		$query_alias  = 'SELECT Content FROM ConceptAlias ';
+		$query_alias .= 'WHERE Concept_IdConcept = ? ';
+		$query_alias .=	'ORDER BY Ordering';
+		
+		$res = $this->db->query($query_alias, array($ret->IdConcept));
+		
+		if ($res->num_rows() == 0)
+		{
+			foreach($res->result() as $row)
+			{
+				$ret->aliases[] = $row->Content;
+			}
+		}
+		
+		/*
+		 * Return WikiPage information, if available.
+		 */
+		 $ret->wikidata = $this->gordian_wiki->referenced_by('concept', $ret->IdConcept);
+		
+		return $ret;
+	}
+	
+	/**
+	 * Removes a concept from a given timeline.
+	 * 
+	 * @param string The type of resource to remove from {'location', 'event', 'personality' }
+	 * @param numeric The Id of the concept to remove from the given timeline.
+	 */
+	public function detach($resource_type, $resource_id, $concept_id)
+	{
+		/*
+		 * SQL Mappings
+		 */
+		$sql_mappings = $this->mappings($resource_type);
+		
+		/*
+		 * If there is no mapping ...
+		 */
+		if (!is_array($sql_mappings))
+		{
+			return FALSE;
+		}		
+		
+		$fields = array(
+			$sql_mappings['clause'] => $resource_id, 
+			'Concept_IdConcept' => $concept_id,
+			'Timeline_IdTimeline' => 1
+		);
+
+		$this->db->delete($sql_mappings['table'], $fields);
+		
+		return TRUE;
+	}
+	
+	/**
+	 * Common mappings mechanism for the model.
+	 * 
+	 * @param string The kind of mapping to return.
+	 * 
+	 * @return mixed Either the mappings data or FALSE.
+	 */
+	private function mappings($type)
+	{
+		$mappings =  array(
+			'event' => array(
+				'table' => 'EventHasConcept',
+				'clause' => 'Event_IdEvent'
+			),
+			'location' => array(
+				'table' => 'LocationHasConcept',
+				'clause' => 'Location_IdLocation'
+			), 
+			'person' => array(
+				'table' => 'PersonHasConcept',
+				'clause' => 'Person_IdPerson'
+			)
+		);
+		
+		return (array_key_exists($type, $mappings)) ? $mappings[$type] : FALSE;
 	}
 }

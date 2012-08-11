@@ -261,7 +261,7 @@ class Gordian_wiki
 		$data['record_id'] = 0;
 		
 		/*
-		 * Tab details
+		 * Manage Displayed Tabs
 		 */
 		$data['display_tabs'][] = 'entry';
 		$data['display_tabs'][] = 'event';
@@ -270,15 +270,25 @@ class Gordian_wiki
 		$data['display_tabs'][] = 'concept';
 		$data['display_tabs'][] = 'manage';
 
-	 		// Remove the location tab.
-	 		for($i = 0; $i < count($data['display_tabs']); $i++)
-	 		{
-	 			if ($data['display_tabs'][$i] == $kind)
-	 			{
-	 				unset($data['display_tabs'][$i]);
-	 				break;
-	 			}
-	 		}
+		$revoke_template = array($kind);
+
+		$revoke_tabs['location'] = array('concept', 'personality');
+		$revoke_tabs['concept'] = array('location', 'personality');
+	 	 
+	 	 
+	 	 if (array_key_exists($kind, $revoke_tabs))
+	 	 {
+	 	 	$revoke_template = array_merge($revoke_template, $revoke_tabs[$kind]);
+	 	 }
+	 	 
+	 	 foreach($data['display_tabs'] as $k => $v)
+	 	 {
+	 	 	// Remove 
+ 			if (in_array($data['display_tabs'][$k], $revoke_template))
+ 			{
+ 				unset($data['display_tabs'][$k]);
+ 			}
+	 	 } 		
 		
 		return $data;
 	}
