@@ -273,7 +273,11 @@ function ui_location(evt)
 {
 	evt.preventDefault();
 	var tgt_url = evt.target.href;
-	
+	var url_frags = tgt_url.split('/');
+	var record_id = url_frags.pop();
+	url_frags.pop();
+	var type = url_frags.pop();	
+
 	var is_editing = (tgt_url.indexOf('add') == -1) ? true : false;
 	
 	var edit_id = tgt_url.substring(tgt_url.lastIndexOf('/'));
@@ -312,14 +316,7 @@ function ui_location(evt)
 				function(data) 
 				{
 					refreshMapData();
-					
-					// It's an edit screen. Reload the UI.
-					if(is_editing) 
-					{
-						edit_id = tgt_url.substring(tgt_url.lastIndexOf('/')+1);
-						//TODO: We have a bug re: Updating not loading wikipage automatically.
-						getWikiPane('location', edit_id);
-					}
+					getWikiPane('location', 'id'+record_id);
 				}
 			);
 				
