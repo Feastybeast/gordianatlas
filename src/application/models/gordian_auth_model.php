@@ -72,10 +72,14 @@ class Gordian_auth_model extends CI_Model
 	{
 		if (!$this->is_logged_in())
 		{
-			$this->db->select('IdUser')->from('User')->where('Email', $email)->where('Pass', $password)->limit(1);
-			$res = $this->db->get();
+			$qry_login = " SELECT IdUser FROM User ";
+			$qry_login .= "WHERE Email = '{$email}' ";
+			$qry_login .= "AND Pass = SHA2('{$password}', 256) ";
+			$qry_login .= "LIMIT 1";
 
-			if ($res->num_rows == 1)
+			$res = $this->db->query($qry_login);
+
+			if ($res->num_rows() == 1)
 			{
 				$user_id = $res->row()->IdUser;
 				
@@ -125,7 +129,7 @@ class Gordian_auth_model extends CI_Model
 			$inbound_data = array(
 				'Email' => $email,
 				'Nickname' => $nickname,
-				'Pass' => $password,
+				'Pass' => 'SHA2("'.$password.'", 256)',
 				'Salt' => strlen($password),
 				'IsAdministrator' => false
 			);

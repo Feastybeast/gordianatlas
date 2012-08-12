@@ -166,6 +166,8 @@ class Gordian_timeline
 				'start'=> $row->OccuredOn,
     			'title' => $row->Title,
 				'isDuration' => 0,
+				'color' => $this->random_color(),
+				'textColor' => 'black',
     			'classname'=> 'event id'.$row->IdEvent
 			);
 			
@@ -222,6 +224,15 @@ class Gordian_timeline
 	 public function get_errors()
 	 {
 	 	return $this->errors;
+	 }
+	 
+	 /**
+	  * Returns a random color to use for timeline durations.
+	  */
+	 private function random_color()
+	 {
+	 	$colors = array('red','orange','green', 'blue', 'purple');
+	 	return $colors[array_rand($colors)];
 	 }
 	 
 	 /**
