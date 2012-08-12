@@ -544,7 +544,7 @@ function updateWikiPane(url)
 					var url_frags = url.split('/');
 					var action = url_frags[url_frags.length-2];
 					var controller = url_frags[url_frags.length-3];
-					
+	
 					/*
 					 * What window needs to appear?
 					 */	

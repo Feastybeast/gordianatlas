@@ -48,7 +48,7 @@ echo '<div id="timelineRow" class="structuralRow">' . "\n";
 if ($this->gordian_auth->is_logged_in())
 {
   echo '	<div id="addEvent">';
-  echo '<a href="/timeline/add" id="btnAddEvent">';
+  echo '<a href="/event/add" id="btnAddEvent">';
   echo '<img src="/assets/img/add.png" width="16" height="16" alt="' . $add_button_event . '" />';
   echo $add_button_event; 
   echo '</a>';

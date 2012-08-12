@@ -35,6 +35,168 @@ class Gordian_event
 		$this->CI->lang->load('gordian_timeline');
 	}
 
+
+	public function add($occured_on, $occured_range, $occured_duration, $occured_unit, $initial_alias, $description)
+	{
+		/*
+		 * Prevent things that occured at the same time with the same name from being added.
+		 */
+		$this->reset_errors(); 
+		 
+		if (is_object($this->find($occured_on, $initial_alias)))
+		{
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_add_duplicate'));
+		}
+		
+		/*
+		 * Validation
+		 */
+		 
+		 // Must be a valid date.
+		 if (strlen($occured_on) != 10)
+		 {
+		 	$this->set_error($this->CI->lang->line('gordian_timeline_error_add_occured_on'));
+		 }
+		 
+		 // Range must be at least 0.
+		 if (!is_numeric($occured_range) || $occured_range < 0)
+		 {
+		 	$this->set_error($this->CI->lang->line('gordian_timeline_error_add_occured_range'));
+		 }
+		 
+		 // Duration must be at least 0.
+		 if (!is_numeric($occured_duration) || $occured_duration < 0)
+		 {
+		 	$this->set_error($this->CI->lang->line('gordian_timeline_error_add_occured_duration'));
+		 }
+		 
+		 // Is the initial Alias valid?
+		 if (!is_string($initial_alias) || strlen($initial_alias) < 1)
+		 {
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_add_alias_invalid'));	 	
+		 }
+
+		 // Is the initial Alias valid?
+		 if (!is_string($description))
+		 {
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_add_description_invalid'));
+		 }
+		 
+		 // Is the occurance interval understood?
+		 $occured_unit = strtoupper($occured_unit);
+		 
+		 if (!in_array($occured_unit, Gordian_event::$durations))
+		 {
+			$this->set_error($occured_unit + $this->CI->lang->line('gordian_timeline_error_add_occurance_unit'));			 	
+		 }
+
+		if (count($this->errors) > 0)
+		{
+			return FALSE;
+		}
+
+		/*
+		 * Begin writing data.
+		 */
+
+		// Add the event to the database.
+		$event_id = $this->CI->Gordian_event_model->add(
+			$occured_on, $occured_range, 
+			$occured_duration, $occured_unit
+		);
+		
+		// Then add its initial alias.
+		$alias_id = $this->CI->gordian_event->add_alias($event_id, $initial_alias);
+
+		// And attaching it to it's initial timeline.
+		// TODO: Timeline presently hardcoded to 1.
+		$is_attached = $this->attach_timeline($event_id, 1);
+		
+		// Then associate it to it's wikipage.
+		$this->CI->load->library("Gordian_wiki"); 
+		
+		$wiki_id = $this->CI->gordian_wiki->add($initial_alias, $description);
+
+		// TODO: Timeline presently hardcoded to 1.
+		if (is_numeric($wiki_id))
+		{
+			$this->CI->gordian_wiki->associate_event(1, $event_id, $wiki_id);		
+		}
+		
+		return TRUE;
+	}
+	
+	/**
+	 * Adds a new alias to a given event.
+	 * 
+	 * @param numeric The Id of the event to add to.
+	 * @param string The alias to associate to the event.
+	 * 
+	 * @return mixed The new ID if it was successfully added, or FALSE.
+	 */
+	public function add_alias($event_id, $alias)
+	{
+		/*
+		 * Prevent things that occured at the same time with the same name from being added.
+		 */
+		$this->reset_errors(); 
+				
+		// Duration must be at least 0.
+		if (!is_numeric($event_id) || $event_id < 1)
+		{
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_invalid_id'));
+		}
+		 
+		// Is the initial Alias valid?
+		if (!is_string($alias) || strlen($alias) < 1)
+		{
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_invalid_alias'));	 	
+		}
+		 
+ 		if (count($this->errors) > 0)
+		{
+			return FALSE;
+		}
+		
+		/*
+		 * We're fine. Add it.
+		 */
+		return $this->CI->Gordian_event_model->add_alias($event_id, $alias);
+	}
+	
+	public function attach_timeline($event_id, $timeline_id)
+	{
+		/*
+		 * Prevent things that occured at the same time with the same name from being added.
+		 */
+		$this->reset_errors(); 
+				
+		// Duration must be at least 0.
+		if (!is_numeric($event_id) || $event_id < 1)
+		{
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_invalid_id'));
+		}
+
+		// Duration must be at least 0.
+		if (!is_numeric($timeline_id) || $timeline_id < 1)
+		{
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_invalid_id'));
+		}
+		
+ 		if (count($this->errors) > 0)
+		{
+			return FALSE;
+		}
+		
+		/*
+		 * We're fine. Add it.
+		 */
+		return $this->CI->Gordian_event_model->attach_timeline($event_id, $timeline_id);		
+	}
+
+	/**
+	 * 
+	 */
 	public function add_concept($id, $concept_alias, $concept_content)
 	{
 		if (!$this->find($id))
@@ -46,6 +208,17 @@ class Gordian_event
 		$this->CI->gordian_concept->attach_event($id, $concept_id);
 	}
 
+	/**
+	 * Edits an event item.
+	 * 
+	 * @param string When the event now occured.
+	 * @param numeric The range of the occurance.
+	 * @param numeric the duration of the occurance.
+	 * @param enum the unit of reckoning for the range and duration
+	 * @param string The alias of the event
+	 * @param string The description of the event.
+	 * @param numeric the ID of the event to edit.
+	 */
 	public function edit($occured_on, $occured_range, $occured_duration, 
 					$occured_unit, $alias, $description, $id)
 	{

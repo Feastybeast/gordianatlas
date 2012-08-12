@@ -22,53 +22,6 @@ class Gordian_timeline_model extends CI_Model
 	}
 	
 	/**
-	 * Adds a new event record to the system.
-	 * 
-	 * @param string The day the event occured, as {YYYY-MM-DD}.
-	 * @param numeric The range of an event, given as +/- the given value.
-	 * @param numeric The duration of an event
-	 * @param enum The unit the duration and range is given in.
-	 */
-	public function add($occured_on, $occured_range, $occured_duration, $occured_unit)
-	{
-		/*
-		 * We'll need a boilerplate icon for the moment.
-		 */
-		$this->db->insert('Icon', array('Path' => '', 'Color' => ''));
-		$icon_id = $this->db->insert_id();
-
-		$data = array(
-			'Icon_IdIcon' => $icon_id,
-			'OccuredOn' => $occured_on,
-			'OccuredRange' => $occured_range,
-			'OccuredDuration' => $occured_duration,
-			'OccuredUnit' => $occured_unit
-		);
-		
-		$this->db->insert('Event', $data);
-		return $this->db->insert_id();
-	}
-	
-	/**
-	 * Adds an alias to a known event given its Id.
-	 * 
-	 * @param numeric The ID of the event in question.
-	 * @param string The alias to refer to the event as.
-	 * 
-	 * @return boolean if it was successfully added.
-	 */
-	public function add_alias($event_id, $alias)
-	{
-		$data = array(
-			'Event_IdEvent' => $event_id,
-			'Title' => $alias
-		);
-		
-		$this->db->insert('EventAlias', $data);
-		return $this->db->insert_id();		
-	}
-	
-	/**
 	 * Assigns a previously unassociated timeline to a group.
 	 * 
 	 * @param numeric ID of timeline to associate to a group.
@@ -86,33 +39,7 @@ class Gordian_timeline_model extends CI_Model
 		return ($this->db->affected_rows() == 1);
 	}
 	
-	/**
-	 * Attaches an event to a given timeline.
-	 * 
-	 * @param numeric The event ID to associate to a timeline.
-	 * @param numeric The timeline Id to associate to.
-	 * 
-	 * @return boolean If the event was attached correctly.
-	 */
-	public function attach_timeline($event_id, $timeline_id)
-	{
-		$data = array(
-				'Event_IdEvent' => $event_id, 
-				'Timeline_IdTimeline' => $timeline_id
-		);
 
-		// Is the data already present?
-		$query = $this->db->get_where('TimelineHasEvent', $data);
-		
-		if ($query->num_rows() > 0)
-		{
-			return FALSE;
-		}
-		
-		$this->db->insert('TimelineHasEvent', $data);
-
-		return TRUE;
-	}
 	
 	/**
 	 * Creates a timeline and associated view, then gives it to the indicated group.

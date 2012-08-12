@@ -89,9 +89,10 @@ class Gordian_wiki
 	 */
 	function associate_event($timeline_id, $event_id, $wiki_id)
 	{
+		$this->CI->load->library('Gordian_event');
 		$this->CI->load->library('Gordian_timeline');
 		
-		$event = $this->CI->gordian_timeline->find_event($event_id);
+		$event = $this->CI->gordian_event->find($event_id);
 		$timeline = $this->CI->gordian_timeline->find($timeline_id);
 		
 		if (!is_object($event))
