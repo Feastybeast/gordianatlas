@@ -141,24 +141,25 @@ class Gordian_concept
 	}
 	
 	/**
-	 * Returns the list of all known entries, additionally indicating associations to the provided record.
+	 * Updates the events associated to the provided concept.
 	 * 
-	 * @param string The kind of record to associate.
-	 * @param numeric The ID of record in question.
+	 * @param numeric The location Id to update.
+	 * @param array The related events to associate to the location.
 	 */
-	public function entries()
+	public function relate_events($concept_id, $new_relations)
 	{
-		$tot_args = func_num_args();
-		
-		if ($tot_args == 0)
-		{
-			return $this->CI->Gordian_concept_model->entries();	
-		} 
-		else if ($tot_args == 2)
-		{
-			return $this->CI->Gordian_concept_model->entries(func_get_arg(0), func_get_arg(1));
-		}
-		
-		return FALSE;		
+		$this->CI->Gordian_concept_model->relate_events($concept_id, $new_relations);
 	}
+	
+	/**
+	 * Returns a datastructure containing essential associated records.
+	 * 
+	 * @param numeric The ID of the location in question.
+	 * 
+	 * @return mixed Either the data in question, or FALSE.
+	 */
+	public function related_events($concept_id)
+	{
+		return $this->CI->Gordian_concept_model->related_events($concept_id);
+	}	
 }

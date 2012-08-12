@@ -86,14 +86,6 @@ class Concept extends GA_Controller
 	/**
 	 * Returns information associated to a given record type.
 	 */
-	public function entries()
-	{
-		exit(json_encode($this->gordian_concept->entries()));
-	}
-
-	/**
-	 * Returns information associated to a given record type.
-	 */
 	public function related_to()
 	{
 		$values = explode('/', uri_string());
@@ -111,6 +103,57 @@ class Concept extends GA_Controller
 		exit(json_encode($data));
 	}
 	
+/**
+	 * Returns and manages the list of related locations to this event.
+	 */
+	public function related_events()
+	{		
+		$post = $this->post_vars();
+
+		if (array_key_exists('related_updated', $post))
+		{
+			if ($this->gordian_auth->is_logged_in())
+			{
+				$related = (array_key_exists('related', $post)) ? $post['related'] : array();
+	
+				$this->gordian_concept->relate_events($this->record_id(), $related);
+	
+				echo "Updated";
+				exit();	
+			}			
+		}
+		else
+		{
+			$records = $this->gordian_concept->related_events($this->record_id());
+	
+			if ($records == FALSE)
+			{
+				$this->lang->load('gordian_wiki');
+				
+				$data['title'] = $this->lang->line('gordian_wiki_error_generic_title');
+				$data['error'] = $this->lang->line('gordian_wiki_error_generic_body');
+				
+				$this->load->view('wiki/error', $data);
+			}
+			else
+			{
+				$data['output'] = '';
+				
+				foreach($records as $k => $v)
+				{
+					$recs = explode(',', $v->Mapped);
+					$data['output'] .= form_checkbox('related', $v->IdEvent, (in_array($this->record_id(), $recs)) ? TRUE : FALSE);
+					$data['output'] .= ' ' . $v->Title . "<br />\n";
+				}
+
+					$data['output'] .= '<input type="hidden" id="related_updated" name="updated" value="1" />';
+
+				
+				exit($data['output']);
+			}			
+		}
+	}	
+	
 	public function wiki()
 	{
 		$id = $this->record_id();
@@ -127,8 +170,24 @@ class Concept extends GA_Controller
 		 * Fill out the standard component. 
 		 */
 		$data['title'] = $concept_data->wikidata->Title;
+		$data['record_id'] = $this->record_id();
 				
 		$data['block_content'] = $concept_data->wikidata->Content;
+		
+		/*
+		 * Deal with related events
+		 */
+		 if (count($concept_data->related_events) > 0)
+		 {
+		 	$data['block_events'] = "<ul>";
+		 
+		 	foreach($concept_data->related_events as $k => $v)
+		 	{
+		 		$data['block_events'] .= '<li><a href="/event/wiki/' . $v->IdEvent . '" class="wiki_btn">' . $v->Title . '</a></li>';
+		 	}
+		 	
+		 	$data['block_events'] .= "</ul>";
+		 }
 		
 		$this->load->view('wiki/template', $data);
 	}

@@ -257,7 +257,7 @@ class Gordian_wiki
 		$data['title'] = '';
 		$data['title_id'] = '';
 		
-		$data['record_type'] = '';
+		$data['record_type'] = $kind;
 		$data['record_id'] = 0;
 		
 		/*

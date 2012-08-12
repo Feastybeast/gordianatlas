@@ -75,76 +75,6 @@ class Gordian_concept_model extends CI_Model
 		
 		return $this->db->insert_id();
 	}	
-
-	/**
-	 * Returns the list of all known entries, additionally indicating associations to the provided record.
-	 * 
-	 * @param string The kind of record to associate.
-	 * @param numeric The ID of record in question.
-	 */	
-	public function entries()
-	{
-		/*
-		 * The initial query that must run.
-		 */
-		 
-		$query =  "SELECT concepts.IdConcept, concepts.Content, concepts.Ordering, IFNULL(loj.Related, 0) AS Related ";
-		$query .= "FROM ( "; 
-		$query .= "SELECT con.IdConcept, cona.Content, cona.Ordering ";
-		$query .= "FROM Concept con INNER JOIN ConceptAlias cona ON cona.Concept_IdConcept = con.IdConcept ";
-		$query .= ") AS concepts LEFT OUTER JOIN ( ";		 
-
-		/*
-		 * If necessary, associate records as required.
-		 */
-		if (func_num_args() != 2)
-		{
-			$query .= " SELECT 0 AS Related "; 
-			$query .= " ) AS loj ON 1 = 1";
-		}
-		else 
-		{
-			$kind = func_get_arg(0); 
-			$id = func_get_arg(1);
-			
-			/*
-		 	 * SQL Mappings
-		 	 */
-			$sql_mappings = $this->mappings($kind);
-			
-			// If there is no mapping ...
-			if (!is_array($sql_mappings))
-			{
-				return FALSE;
-			}
-			
-			/*
-			 * Mapping Query follows ...
-			 */
-			$query .= " SELECT loj.Concept_IdConcept, ";
-			$query .= " GROUP_CONCAT(loj.{$sql_mappings['clause']} SEPARATOR ',') AS Related ";
-			$query .= " FROM {$sql_mappings['table']} loj ";
-			$query .= " WHERE loj.{$sql_mappings['clause']} = {$id} ";
-			$query .= " ) AS loj ON concepts.IdConcept = loj.Concept_IdConcept ";
-		} 
-				
-		/*
-		 * Finally run the call.
-		 */
-		$query .= "GROUP BY concepts.IdConcept, concepts.Ordering";
-		
-		$res = $this->db->query($query);
-		
-		if ($res->num_rows() > 0)
-		{
-			foreach($res->result_array() as $row)
-			{
-				$data[] = $row;
-			}
-		}		
-		
-		return $data;
-	}
 	
 	/**
 	 * Find a concept via ID or Title.
@@ -202,6 +132,20 @@ class Gordian_concept_model extends CI_Model
 		 * Return WikiPage information, if available.
 		 */
 		 $ret->wikidata = $this->gordian_wiki->referenced_by('concept', $ret->IdConcept);
+		
+		/*
+		 * Find related events.
+		 */
+		 $ret->related_events = array();
+		 $events = $this->related_events();
+		 
+		 foreach($events as $k => $v)
+		 {
+			if (in_array($ret->IdConcept, explode(',', $v->Mapped)))
+			{
+				$ret->related_events[] = $v;
+			}
+		 }
 		
 		return $ret;
 	}
@@ -264,4 +208,54 @@ class Gordian_concept_model extends CI_Model
 		
 		return (array_key_exists($type, $mappings)) ? $mappings[$type] : FALSE;
 	}
+	
+	/**
+	 * Updates the events associated to the provided location.
+	 * 
+	 * @param numeric The location Id to update.
+	 * @param array The related events to associate to the location.
+	 */
+	public function relate_events($concept_id, $new_relations)
+	{
+		/*
+		 * Remove ALL existing location records.
+		 */
+		$qry_delete = "DELETE FROM EventHasConcept WHERE Concept_IdConcept = {$concept_id}";
+		$this->db->query($qry_delete);
+		
+		/*
+		 * Add records back in.
+		 */
+		 foreach ($new_relations as $k => $v)
+		 {
+		 	$this->db->insert('EventHasConcept', array(
+		 		'Concept_IdConcept' => $concept_id,
+		 		'Event_IdEvent' => $v
+		 	)); 
+		 }
+	}
+	
+	/**
+	 * Returns a list of all events, with further indication of current relations.
+	 */
+	public function related_events()
+	{
+		$qry_events  = "SELECT evt.IdEvent, ea.Title, IFNULL(ehc.Mapped, 0) AS Mapped ";
+		$qry_events .= "FROM Event evt ";
+		$qry_events .= "INNER JOIN ( ";
+		$qry_events .= "    SELECT Event_IdEvent, Title ";
+		$qry_events .= "    FROM EventAlias ";
+		$qry_events .= "    GROUP BY Event_IdEvent ";
+		$qry_events .= "    ORDER BY Ordering ";
+		$qry_events .= ") ea ON ea.Event_IdEvent = evt.IdEvent ";
+		$qry_events .= "LEFT OUTER JOIN ( ";
+		$qry_events .= "    SELECT Event_IdEvent, GROUP_CONCAT(Concept_IdConcept) AS Mapped ";
+		$qry_events .= "    FROM EventHasConcept ehc "; 
+		$qry_events .= "    GROUP BY Event_IdEvent ";
+		$qry_events .= ") ehc ON ehc.Event_IdEvent = evt.IdEvent ";
+		
+		$res = $this->db->query($qry_events);
+		
+		return ($res->num_rows() > 0) ? $res->result() : FALSE;
+	}	
 }
