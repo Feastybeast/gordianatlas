@@ -260,6 +260,17 @@ class Gordian_wiki
 		
 		$data['record_type'] = $kind;
 		$data['record_id'] = 0;
+
+		/*
+		 * Manage Button Configurations
+		 */
+		$data['display_buttons'][] = 'edit_entry';
+		
+		if ($kind != 'concept')
+		{
+			$data['display_buttons'][] = 'delete_entry';			
+		}
+		
 		
 		/*
 		 * Manage Displayed Tabs

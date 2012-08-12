@@ -115,10 +115,15 @@ if ($this->gordian_auth->is_logged_in() && in_array('manage', $display_tabs))
 	echo '				<img src="/assets/img/edit.png" width="32" height="32" alt="' . $edit_lbl . '" title="' . $edit_lbl . '"  />';
 	echo '&nbsp; <a href="/' . $record_type . '/edit/' . $record_id . '" class="edit_btn">' . $edit_lbl . '</a>';
 	echo '		</span>';
-	echo '		<span class="wiki_button">';
-	echo '				<img src="/assets/img/remove.png" width="32" height="32" alt="' . $remove_lbl . '" title="' . $remove_lbl . '"  />';
-	echo '&nbsp; <a href="/' . $record_type . '/remove/' . $record_id . '" class="remove_btn">' . $remove_lbl . '</a>';
-	echo '	</span>';
+	
+	if (in_array('delete_entry', $display_buttons))
+	{
+		echo '		<span class="wiki_button">';
+		echo '				<img src="/assets/img/remove.png" width="32" height="32" alt="' . $remove_lbl . '" title="' . $remove_lbl . '"  />';
+		echo '&nbsp; <a href="/' . $record_type . '/remove/' . $record_id . '" class="remove_btn">' . $remove_lbl . '</a>';
+		echo '	</span>';		
+	}
+	
 	echo '</div>';
 }
 

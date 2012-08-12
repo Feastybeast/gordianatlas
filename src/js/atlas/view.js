@@ -112,13 +112,21 @@ function ui_concept(evt)
 	var tgt_url = evt.target.href;
 	var url_frags = tgt_url.split('/');
 	var record_id = url_frags.pop();
-	url_frags.pop();
+	var action = url_frags.pop();
 	var type = url_frags.pop();	
+	
+	if (action == 'edit')
+	{
+		var name_val = $("#concept_name_val").text();
+		var dat_val = $("#concept_descript_val").html();
+	
+		con_name.val(name_val);
+		con_descript.val(dat_val);
+	}
 
 	var btns = {
-		"Add": function() {
-			evt.preventDefault();
-			
+		"Confirm": function() {
+			evt.preventDefault();	
 
 			var datum = {  
 				"title": con_name.val(),
@@ -453,8 +461,8 @@ function ui_wire()
  	$("#concept-form").dialog({
 	 	autoOpen: false,
 	 	modal: true,
-		height: 550,
-		width: 500,
+		height: 450,
+		width: 400,
 		buttons: { }
  	});
 
@@ -545,7 +553,11 @@ function updateWikiPane(url)
 					/*
 					 * What window needs to appear?
 					 */	
-					if (action.indexOf('add_concept') > -1)
+					if (controller.indexOf('concept') > -1 && action.indexOf('edit') > -1) 
+					{
+						ui_concept(evt);
+					}
+					else if (action.indexOf('add_concept') > -1)
 					{
 						ui_concept(evt);
 					}					

@@ -74,7 +74,7 @@ class Concept extends GA_Controller
 				return FALSE;
 			}
 		
-			$updated_concept = $this->input->post('');
+			$updated_concept = $this->input->post('content');
 				
 			if (strlen($updated_concept) > 0)
 			{
@@ -170,9 +170,10 @@ class Concept extends GA_Controller
 		 * Fill out the standard component. 
 		 */
 		$data['title'] = $concept_data->wikidata->Title;
+		$data['title_id'] = 'concept_name_val';
 		$data['record_id'] = $this->record_id();
 				
-		$data['block_content'] = $concept_data->wikidata->Content;
+		$data['block_content'] = '<span id="concept_descript_val">' . $concept_data->wikidata->Content . '</span>';
 		
 		/*
 		 * Deal with related events
