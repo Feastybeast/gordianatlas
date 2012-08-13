@@ -14,3 +14,4 @@ if (!defined('BASEPATH'))
  
 $lang['gordian_events_ajax_concepts_label'] = "Related Concepts:";
 $lang['gordian_events_ajax_locations_label'] = "Related Locations:";
+$lang['gordian_events_ajax_personalities_label'] = "Related Personalities:";

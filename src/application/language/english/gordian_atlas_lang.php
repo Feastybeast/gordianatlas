@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 }
 
-// Location Management strings
+// Event Management strings
 $lang['gordian_atlas_event_add_btn'] = "Add Event";
 $lang['gordian_atlas_event_title_lbl'] = "Manage Event Details";
 $lang['gordian_atlas_event_name_lbl'] = "Event Name:";
@@ -26,6 +26,16 @@ $lang['gordian_atlas_location_descript_lbl'] = "Brief Description:";
 $lang['gordian_atlas_concept_title_lbl'] = "Manage Concept Details";
 $lang['gordian_atlas_concept_descript_lbl'] = "Concept Entry:";
 $lang['gordian_atlas_concept_name_lbl'] = "Concept Title:";
+
+// Person Management strings
+$lang['gordian_atlas_person_title_lbl'] = 'Manage Historical Figure';
+$lang['gordian_atlas_person_name_lbl'] = 'Person\'s Name:';
+$lang['gordian_atlas_person_birth_lbl'] = 'DoB:';
+$lang['gordian_atlas_person_birth_loc_lbl'] = 'and it\'s location, ';
+$lang['gordian_atlas_person_death_lbl'] = 'DoD:';
+$lang['gordian_atlas_person_death_loc_lbl'] = 'and it\'s location, ';
+$lang['gordian_atlas_person_bio_lbl'] = 'Biographical Details:';
+$lang['gordian_atlas_person_loc_unknown'] = 'Location Unknown';
 
 // Related elements management strings
 $lang['gordian_atlas_relation_title_lbl'] = "Manage Related Entries";

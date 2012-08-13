@@ -91,6 +91,22 @@ class Event extends GA_Controller
 	}
 	
 	/**
+	 * Adds a new personality record to the given event.
+	 */
+	public function add_personality()
+	{
+		if ($this->gordian_auth->is_logged_in())
+		{
+			$post = $this->post_vars();
+			 
+			$this->gordian_event->add_personality($this->record_id(), $post);
+			 
+			echo "Updated";
+			exit();
+		}		
+	}
+	
+	/**
 	 * Edits information regarding the current event.
 	 */
 	public function edit()
@@ -217,6 +233,57 @@ class Event extends GA_Controller
 				{
 					$recs = explode(',', $v->Mapped);
 					$data['output'] .= form_checkbox('related', $v->IdLocation, (in_array($this->record_id(), $recs)) ? TRUE : FALSE);
+					$data['output'] .= ' ' . $v->Title . "<br />\n";
+				}
+
+					$data['output'] .= '<input type="hidden" id="related_updated" name="updated" value="1" />';
+
+				
+				exit($data['output']);
+			}			
+		}
+	}
+
+	/**
+	 * Returns and manages the list of related locations to this event.
+	 */
+	public function related_personalities()
+	{		
+		$post = $this->post_vars();
+
+		if (array_key_exists('related_updated', $post))
+		{
+			if ($this->gordian_auth->is_logged_in())
+			{
+				$related = (array_key_exists('related', $post)) ? $post['related'] : array();
+	
+				$this->gordian_event->relate_personalities($this->record_id(), $related);
+	
+				echo "Updated";
+				exit();	
+			}			
+		}
+		else
+		{
+			$records = $this->gordian_event->related_personalities($this->record_id());
+	
+			if ($records == FALSE)
+			{
+				$this->lang->load('gordian_wiki');
+				
+				$data['title'] = $this->lang->line('gordian_wiki_error_generic_title');
+				$data['error'] = $this->lang->line('gordian_wiki_error_generic_body');
+				
+				$this->load->view('wiki/error', $data);
+			}
+			else
+			{
+				$data['output'] = '';
+				
+				foreach($records as $k => $v)
+				{
+					$recs = explode(',', $v->Mapped);
+					$data['output'] .= form_checkbox('related', $v->IdPerson, (in_array($this->record_id(), $recs)) ? TRUE : FALSE);
 					$data['output'] .= ' ' . $v->Title . "<br />\n";
 				}
 
@@ -378,6 +445,23 @@ class Event extends GA_Controller
 				}
 
 				$data['block_concepts'] .= '</ul>';				
+			}
+			
+			/*
+			 * Load related personalities
+			 */
+			if (count($event_data->personalities) > 0)
+			{
+				$data['block_personalities'] = '<div><strong>' . $this->lang->line('gordian_events_ajax_personalities_label') . '</strong></div>';
+				
+				$data['block_personalities'] .= '<ul>';
+				
+				foreach($event_data->personalities as $k => $v)
+				{
+					$data['block_personalities'] .= '<li><a href="/person/wiki/' . $v["Id"] . '" class="wiki_btn">' . $v["Title"] . '</a></li>'; 
+				}
+
+				$data['block_personalities'] .= '</ul>';				
 			}
 
 			/*

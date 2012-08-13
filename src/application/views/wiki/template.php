@@ -51,12 +51,15 @@ echo $block_events;
 
 if ($this->gordian_auth->is_logged_in() && in_array('manage', $display_tabs))
 {
-	echo '<p>';
-	echo '	<span class="wiki_button">';
-	echo '	<img src="/assets/img/associate.png" width="32" height="32" alt="' . $edit_lbl . '" title="' . $edit_lbl . '"  />';
-	echo '&nbsp; <a href="/' . $record_type . '/related_events/' . $record_id . '" class="relate_btn">' . $events_relate_lbl . '</a>';
-	echo '</span>';	
-	echo '</p>';
+	if (in_array('associate_events', $display_buttons))
+	{
+		echo '<p>';
+		echo '	<span class="wiki_button">';
+		echo '	<img src="/assets/img/associate.png" width="32" height="32" alt="' . $edit_lbl . '" title="' . $edit_lbl . '"  />';
+		echo '&nbsp; <a href="/' . $record_type . '/related_events/' . $record_id . '" class="relate_btn">' . $events_relate_lbl . '</a>';
+		echo '</span>';	
+		echo '</p>';
+	}
 }
 
 echo '</div>';
@@ -82,7 +85,7 @@ echo '</div>';
 /*
  * Related content: Personalities
  */ 
-echo '<div class="wiki_pane" id="wiki_personalities">';
+echo '<div class="wiki_pane" id="wiki_person">';
 echo $block_personalities;
 
 if ($this->gordian_auth->is_logged_in() && in_array('manage', $display_tabs))
@@ -95,7 +98,7 @@ if ($this->gordian_auth->is_logged_in() && in_array('manage', $display_tabs))
 
 	echo '	<span class="wiki_button">';
 	echo '		<img src="/assets/img/add.png" width="32" height="32" alt="' . $add_lbl . '" title="' . $add_lbl . '"  />';
-	echo '&nbsp; <a href="/' . $record_type . '/add_personalities/' . $record_id . '" class="edit_btn">' . $personalities_add_lbl . '</a>';
+	echo '&nbsp; <a href="/' . $record_type . '/add_personality/' . $record_id . '" class="edit_btn">' . $personalities_add_lbl . '</a>';
 	echo '</span>';
 	
 	echo '</p>';
@@ -139,8 +142,8 @@ echo (in_array('event', $display_tabs))
 	? '<span class="wiki_tab"><a href="/'.$record_type.'/events/'.$record_id.'">' . $event_lbl . '</a></span>' : '';
 echo (in_array('location', $display_tabs)) 
 	? '<span class="wiki_tab"><a href="/'.$record_type.'/locations/'.$record_id.'">' . $location_lbl . '</a></span>' : '';
-echo (in_array('personality', $display_tabs)) 
-	? '<span class="wiki_tab"><a href="/'.$record_type.'/personalities/'.$record_id.'">' . $personality_lbl . '</a></span>' : '';
+echo (in_array('person', $display_tabs)) 
+	? '<span class="wiki_tab"><a href="/'.$record_type.'/person/'.$record_id.'">' . $personality_lbl . '</a></span>' : '';
 echo ($this->gordian_auth->is_logged_in() && in_array('manage', $display_tabs)) 
 	? '<span class="wiki_tab"><a href="/'.$record_type.'/manage/'.$record_id.'">' . $manage_lbl . '</a></span>' : '';
 echo '</div>';

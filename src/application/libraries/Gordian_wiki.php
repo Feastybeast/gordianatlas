@@ -129,6 +129,20 @@ class Gordian_wiki
 	}
 	
 	/**
+	 * Associates the given Wiki to the identified person.
+	 * 
+	 * @param numeric The Id of the timeline to associate to.
+	 * @param numeric The Id of the person to associate to.
+	 * @param numeric The Id of the Wikipage to associate.
+	 * 
+	 * @return boolean if the association was valid.
+	 */
+	function associate_person($timeline_id, $person_id, $wiki_id)
+	{
+		return $this->CI->Gordian_wiki_model->associate_person($timeline_id, $person_id, $wiki_id);		
+	}	
+	
+	/**
 	 * Attempts to find a WikiPage either by name or Id.
 	 * 
 	 * @param mixed The ID or name of the WikiPage to locate.
@@ -167,7 +181,11 @@ class Gordian_wiki
 			'event' => array(
 				'table' => 'TimelineEventHasWikiPage',
 				'clause' => 'Event_IdEvent'
-			)
+			),
+			'person' => array(
+				'table' => 'TimelinePersonHasWikiPage',
+				'clause' => 'Person_IdPerson'
+			)			
 		);
 		
 		// If there is no mapping ...
@@ -266,11 +284,15 @@ class Gordian_wiki
 		 */
 		$data['display_buttons'][] = 'edit_entry';
 		
-		if ($kind != 'concept')
+		if (!in_array($kind, array('concept', 'person')))
 		{
 			$data['display_buttons'][] = 'delete_entry';			
 		}
 		
+		if (!in_array($kind, array('person')))
+		{
+			$data['display_buttons'][] = 'associate_events';			
+		}
 		
 		/*
 		 * Manage Displayed Tabs
@@ -278,14 +300,15 @@ class Gordian_wiki
 		$data['display_tabs'][] = 'entry';
 		$data['display_tabs'][] = 'event';
 		$data['display_tabs'][] = 'location';
-		$data['display_tabs'][] = 'personality';
+		$data['display_tabs'][] = 'person';
 		$data['display_tabs'][] = 'concept';
 		$data['display_tabs'][] = 'manage';
 
 		$revoke_template = array($kind);
 
-		$revoke_tabs['location'] = array('concept', 'personality');
-		$revoke_tabs['concept'] = array('location', 'personality');
+		$revoke_tabs['location'] = array('concept', 'person');
+		$revoke_tabs['concept'] = array('location', 'person');
+		$revoke_tabs['person'] = array('location', 'concept');
 	 	 
 	 	 
 	 	 if (array_key_exists($kind, $revoke_tabs))

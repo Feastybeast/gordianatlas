@@ -126,15 +126,10 @@ class Gordian_auth_model extends CI_Model
 		}
 		else
 		{
-			$inbound_data = array(
-				'Email' => $email,
-				'Nickname' => $nickname,
-				'Pass' => 'SHA2("'.$password.'", 256)',
-				'Salt' => strlen($password),
-				'IsAdministrator' => false
-			);
-			
-			$this->db->insert('User', $inbound_data);
+			$qry_user  = "INSERT INTO User (Email, Nickname, Pass, Salt, IsAdministrator) ";
+			$qry_user .= "VALUES (?,?,SHA2(?, 256), LENGTH(?), ?)";
+						
+			$this->db->query($qry_user, array($email, $nickname, $password, $password, false));
 			
 			$this->db->select('IdUser')->from('User')->where('Email', $email)->limit(1);
 			$res = $this->db->get()->row();

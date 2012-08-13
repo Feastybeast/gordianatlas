@@ -30,8 +30,12 @@ class Gordian_event
 	{
 		$this->CI =& get_instance();
 		$this->CI->load->model('Gordian_event_model');
-		$this->CI->load->library('gordian_wiki');
+
 		$this->CI->load->library('gordian_concept');
+		$this->CI->load->library('gordian_location');
+		$this->CI->load->library('gordian_person');
+		$this->CI->load->library('gordian_wiki');
+
 		$this->CI->lang->load('gordian_timeline');
 	}
 
@@ -195,7 +199,11 @@ class Gordian_event
 	}
 
 	/**
+	 * Adds a concept to the current event.
 	 * 
+	 * @param numeric The id of the event to attach to.
+	 * @param string The name of the concept to attribute.
+	 * @param string The details of the concept to attribute.
 	 */
 	public function add_concept($id, $concept_alias, $concept_content)
 	{
@@ -206,6 +214,86 @@ class Gordian_event
 		
 		$concept_id = $this->CI->gordian_concept->add($concept_alias, $concept_content);
 		$this->CI->gordian_concept->attach_event($id, $concept_id);
+	}
+
+	public function add_personality($id, $details)
+	{
+		$this->reset_errors();
+
+		/*
+		 * Basic Error Checking
+		 */
+		foreach (array('dob', 'dod', 'lod', 'lob', 'biography', 'name') as $v)
+		{
+			if (!array_key_exists($v, $details))
+			{
+				$this->set_error('Missing ' . $v);
+			}
+		}
+		
+		/*
+		 * Fields required for further checking.
+		 */
+		$existing_event = $this->find($id);
+		
+		$birth_loc = ($details['lob'] == 0) 
+			? NULL 
+			: $this->CI->gordian_location->find($details['lob']);
+
+		$death_loc = ($details['lod'] == 0) 
+			? NULL
+			: $this->CI->gordian_location->find($details['lod']);
+
+		$date_of_birth = DateTime::createFromFormat('m/d/Y', $details['dob']);
+		$date_of_death = DateTime::createFromFormat('m/d/Y', $details['dod']);
+		
+		if ($date_of_birth > $date_of_death)
+		{
+			$this->set_error('Cannot die prior to birth.');
+		}
+
+		/*
+		 * Validation that the objects we're writing to are valid.
+		 */
+		if (!is_object($existing_event))
+		{
+			$this->set_error($this->CI->lang->line('gordian_timeline_error_edit_existence'));
+		}
+		
+		if (!(is_object($birth_loc) || $birth_loc == NULL) || !(is_object($death_loc) || $birth_loc == NULL))
+		{
+			$this->set_error('Life event locations invalid');
+		}
+		
+		if (strlen($details['name']) == 0)
+		{
+			$this->set_error("Name invalid");
+		}
+		
+		/*
+		 * And finally deal with the model if appropriate.
+		 */
+		$errors = $this->get_errors(); 
+
+		if (count($errors) > 0) 
+		{
+			return $errors;
+		}
+		
+		if ($details['lob'] == 0)
+		{
+			$details['lob'] = NULL;
+		}
+		
+		if ($details['lod'] == 0)
+		{
+			$details['lod'] = NULL;
+		}
+
+		$person_id = $this->CI->gordian_person->add($details);
+		$attached = $this->CI->gordian_person->attach_event($person_id, $id);
+
+		return TRUE;	 
 	}
 
 	/**
@@ -396,6 +484,29 @@ class Gordian_event
 	public function related_locations($event_id)
 	{
 		return $this->CI->Gordian_event_model->related_locations($event_id);
+	}
+
+	/**
+	 * Updates the personalities associated to the provided event.
+	 * 
+	 * @param numeric The event Id to update.
+	 * @param array The related concepts to associate to the event.
+	 */
+	public function relate_personalities($event_id, $new_relations)
+	{
+		$this->CI->Gordian_event_model->relate_personalities($event_id, $new_relations);
+	}
+	
+	/**
+	 * Returns a datastructure containing essential associated records.
+	 * 
+	 * @param numeric The ID of the event in question.
+	 * 
+	 * @return mixed Either the data in question, or FALSE.
+	 */
+	public function related_personalities($event_id)
+	{
+		return $this->CI->Gordian_event_model->related_personalities($event_id);
 	}
 	
 	/**

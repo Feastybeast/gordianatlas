@@ -97,6 +97,28 @@ class Gordian_wiki_model extends CI_Model
 				
 		$this->db->insert('TimelineLocationHasWikiPage', $data);
 	}
+
+	/**
+	 * Associates the given Wiki to the identified person.
+	 * 
+	 * @param numeric The Id of the timeline to make the association.
+	 * @param numeric The Id of the person to associate to for said timeline.
+	 * @param numeric The Id of the Wikipage to associate.
+	 * 
+	 * @return boolean if the association was valid.
+	 */
+	function associate_person($timeline_id, $person_id, $wiki_id)
+	{
+		$data = array(
+					'Timeline_IdTimeline' => $timeline_id,
+					'Person_IdPerson' => $person_id,
+					'WikiPage_IdWikiPage' => $wiki_id
+				); 
+				
+		$this->db->insert('TimelinePersonHasWikiPage', $data);
+		
+		return TRUE;
+	}
 	
 	/**
 	 * Returns information about a WikiPage given a name.

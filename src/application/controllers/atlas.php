@@ -85,10 +85,22 @@ class Atlas extends CI_Controller
 		
 		// Person Content
 		$data['label_person_title'] = $this->lang->line('gordian_atlas_person_title_lbl');
+		$data['label_person_name'] = $this->lang->line('gordian_atlas_person_name_lbl');
+		$data['label_person_birth'] = $this->lang->line('gordian_atlas_person_birth_lbl');
+		$data['label_person_birth_loc'] = $this->lang->line('gordian_atlas_person_birth_loc_lbl');
+		$data['label_person_death'] = $this->lang->line('gordian_atlas_person_death_lbl');
+		$data['label_person_death_loc'] = $this->lang->line('gordian_atlas_person_death_loc_lbl');
+		$data['label_person_description'] = $this->lang->line('gordian_atlas_person_bio_lbl');
+		
+		$data['label_person_loc_unknown'] = $this->lang->line('gordian_atlas_person_loc_unknown');
 		
 		// Relation Comment
 		$data['label_relation_title'] = $this->lang->line('gordian_atlas_relation_title_lbl');
-				
+						
+		// Deletion notices for logged in users.
+		$data['delete_title'] = $this->lang->line('gordian_atlas_delete_dialog_title');
+		$data['delete_content'] = $this->lang->line('gordian_atlas_delete_dialog_content');
+
 		/*
 		 * This is a reference to the current user model information.
 		 */
@@ -96,10 +108,6 @@ class Atlas extends CI_Controller
 		
 		// Identify the first timeline and output it's name.
 		$data['timeline_name'] = $this->gordian_timeline->find(1)->Title;
-		
-		// Deletion notices for logged in users.
-		$data['delete_title'] = $this->lang->line('gordian_atlas_delete_dialog_title');
-		$data['delete_content'] = $this->lang->line('gordian_atlas_delete_dialog_content');
 				
 		/*
 		 * Display Contents

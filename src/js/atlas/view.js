@@ -345,8 +345,83 @@ function ui_location(evt)
 // Called for editing personality
 function ui_personality(evt)
 {
+	var tgt_url = evt.target.href;
+
+	var url_frags = evt.target.href.split('/');
+	
+	var record_id = url_frags.pop();
+	url_frags.pop();
+	var type = url_frags.pop();
+	
+	// Load the possible locations for the dropdowns.
+	$.getJSON(
+		"/person/related_locations",
+		function(data)
+		{
+			$('#person_birth_loc').html('');
+			$('#person_death_loc').html('');
+		
+			// Wire up the tabs.
+			$.each(data, function(id, fields) {
+				$('#person_birth_loc')
+			   		.append($('<option>', { value : fields.IdLocation })
+					.text(fields.Title));
+
+			     $('#person_death_loc')
+			   		.append($('<option>', { value : fields.IdLocation })
+					.text(fields.Title));
+			});
+
+			// Wire up other UI components as necessary.
+			if (tgt_url.indexOf('add') == -1)
+			{
+				var blv = $('#person_birth_loc_val').val();
+				var dlv = $('#person_death_loc_val').val();
+			
+				$('#person_name').val($('#person_name_val').text());
+				$('#person_descript').val($('#person_descript_val').html());
+		
+				$('#person_birth').val($('#person_birth_val').val());
+				$('#person_death').val($('#person_death_val').val());
+				
+				$('#person_birth_loc option:eq(' + blv + ')').attr('selected', 'selected');
+				$('#person_death_loc option:eq(' + dlv + ')').attr('selected', 'selected');
+			}			
+		}
+	);	
+	
+	// Wire up the buttons.
 	var btns = {
-		"Add": function() {
+		"Update": function() {
+			// Setup the request.
+			var csrf = $("input[name=csrf_test_name]");
+		
+			var datum = { 
+				'lob' : $("#person_birth_loc option:selected").val(),
+				'dob' : $("#person_birth").val(),
+				'lod' : $("#person_death_loc option:selected").val(),
+				'dod' : $("#person_death").val(),
+				'name': $("#person_name").val(),
+				'biography': $("#person_descript").val(),
+				'csrf_test_name': csrf.val()
+			 };
+			
+			// Then make it.
+			$.post(
+				tgt_url,
+				datum,
+				function(data) {
+					$("#person_birth_loc").val('');
+					$("#person_birth").val('');
+					$("#person_death_loc").val('');
+					$("#person_death").val('');
+					$("#person_name").val('');
+					$("#person_descript").val('');
+				
+					getWikiPane(type, 'id'+record_id);
+				}
+			)
+		
 			$(this).dialog("close");			
 	 	},
 		"Cancel": function() {
@@ -354,7 +429,7 @@ function ui_personality(evt)
 		}
 	};
 
-	$("#person-form").dialog({ "buttons": btns });
+	$("#person-form").dialog({ "buttons": btns });	
 	$("#person-form").dialog("open");	
 }
 
@@ -491,13 +566,16 @@ function ui_wire()
 	/*
 	 * Personality Form
 	 */
- 	$("#personality-form").dialog({
+ 	$("#person-form").dialog({
 	 	autoOpen: false,
 	 	modal: true,
-		height: 550,
-		width: 500,
+		height: 500,
+		width: 750,
 		buttons: { }
  	});
+
+	$("#person-form #person_birth").datepicker();
+	$("#person-form #person_death").datepicker();
 
 	/*
 	 * And a generalized deletion notice.
@@ -553,7 +631,14 @@ function updateWikiPane(url)
 					/*
 					 * What window needs to appear?
 					 */	
-					if (controller.indexOf('concept') > -1 && action.indexOf('edit') > -1) 
+					if (controller.indexOf('person') > -1)
+					{
+						ui_personality(evt);
+					} else if (action.indexOf('add_personality') > -1)
+					{
+						ui_personality(evt);
+					}
+					else if (controller.indexOf('concept') > -1 && action.indexOf('edit') > -1) 
 					{
 						ui_concept(evt);
 					}
@@ -561,10 +646,6 @@ function updateWikiPane(url)
 					{
 						ui_concept(evt);
 					}					
-					else if (action.indexOf('add_personalities') > -1)
-					{
-						ui_personality(evt);
-					} 		
 					else if (controller.indexOf('location') > -1)
 					{
 						ui_location(evt);

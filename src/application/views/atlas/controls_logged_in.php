@@ -98,17 +98,30 @@ if (!defined('BASEPATH'))
 </div>
 <!-- //End the Add / Edit Location forms -->
 
-
-
-<!-- Begin Concept forms -->
+<!-- Begin Personality forms -->
 <div id="person-form" title="<?php echo $label_person_title; ?>">
-<?php echo form_open('/concept/add'); ?>
+<?php echo form_open(''); ?>
 		<p>
-			<label for="person_name"><?php echo $label_concept_name; ?></label><br />
+			<label for="person_name"><?php echo $label_person_name; ?></label><br /> 
 			&nbsp;&nbsp;<input type="text" name="person_name" id="person_name" class="text ui-widget-content ui-corner-all" size="30" />
 		</p>
-		<p><label for="person_descript"><?php echo $label_concept_description; ?></label>
-		&nbsp;&nbsp; <textarea rows="4" cols="30" name="person_descript" id="person_descript" class="text ui-widget-content ui-corner-all"></textarea>
+		<p>
+			<label for="person_birth"><?php echo $label_person_birth; ?></label>
+			&nbsp;<input type="text" name="person_birth" id="person_birth" class="text ui-widget-content ui-corner-all" size="15" /> 
+			<?php echo $label_person_birth_loc; ?>
+			<select name="person_birth_loc" id="person_birth_loc">
+			</select>
+		</p>
+		<p>
+			<label for="person_death"><?php echo $label_person_death; ?></label>
+			&nbsp;<input type="text" name="person_death" id="person_death" class="text ui-widget-content ui-corner-all" size="15" /> 
+			<?php echo $label_person_death_loc; ?>
+			<select name="person_death_loc"  id="person_death_loc">
+			</select>
+		</p>		
+		<p>
+			<label for="person_descript"><?php echo $label_person_description; ?></label><br />
+			&nbsp;&nbsp; <textarea rows="6" cols="50" name="person_descript" id="person_descript" class="text ui-widget-content ui-corner-all"></textarea>
 		</p>
 <?php 
 	echo form_hidden($this->security->get_csrf_token_name(), $this->security->get_csrf_hash());
@@ -128,5 +141,4 @@ if (!defined('BASEPATH'))
 ?>
 </div>
 <!-- //End Concept form -->
-
 <?php echo '<div class="dialog" id="deletion_notice" title="' . $delete_title . '">' . $delete_content . '</div>'; ?>

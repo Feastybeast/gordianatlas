@@ -186,6 +186,7 @@ class Gordian_event_model extends CI_Model
 			$ret->aliases = array();
 			$ret->locations = array();
 			$ret->concepts = array();
+			$ret->personalities = array();
 
 			$qry_alias = "SELECT Title FROM `EventAlias` ";
 			$qry_alias .= "WHERE Event_IdEvent = ? ";
@@ -239,6 +240,26 @@ class Gordian_event_model extends CI_Model
 			foreach($res->result() as $row)
 			{
 				$ret->concepts[] = array('Id' => $row->Concept_IdConcept, 'Title' => $row->Content);
+			}
+			
+			/*
+			 * Related Personalities
+			 */
+			$qry_personalities  = "SELECT ehp.Person_IdPerson, pa.Title ";
+			$qry_personalities .= "FROM EventHasPerson ehp ";
+			$qry_personalities .= "INNER JOIN ( ";
+			$qry_personalities .= "    SELECT Person_IdPerson, Title ";
+			$qry_personalities .= "    FROM PersonAlias ";
+			$qry_personalities .= "    GROUP BY Person_IdPerson ";
+			$qry_personalities .= "    ORDER BY Ordering ";
+			$qry_personalities .= ") pa ON pa.Person_IdPerson = ehp.Person_IdPerson ";
+			$qry_personalities .= "WHERE ehp.Event_IdEvent = {$ret->IdEvent}";
+			
+			$res = $this->db->query($qry_personalities);
+			
+			foreach($res->result() as $row)
+			{
+				$ret->personalities[] = array('Id' => $row->Person_IdPerson, 'Title' => $row->Title);
 			}			
 		}
 		
@@ -344,6 +365,56 @@ class Gordian_event_model extends CI_Model
 		$qry_locations .= ") ehl ON ehl.Location_IdLocation = loc.IdLocation";
 
 		$res = $this->db->query($qry_locations);
+		
+		return ($res->num_rows() > 0) ? $res->result() : FALSE;
+	}
+
+	/**
+	 * Updates the personalities associated to the provided location.
+	 * 
+	 * @param numeric The location Id to update.
+	 * @param array The related events to associate to the location.
+	 */
+	public function relate_personalities($event_id, $new_relations)
+	{
+		/*
+		 * Remove ALL existing location records.
+		 */
+		$qry_delete = "DELETE FROM EventHasPerson WHERE Event_IdEvent = {$event_id}";
+		$this->db->query($qry_delete);
+		
+		/*
+		 * Add records back in.
+		 */
+		 foreach ($new_relations as $k => $v)
+		 {
+		 	$this->db->insert('EventHasPerson', array(
+		 		'Person_IdPerson' => $v,
+		 		'Event_IdEvent' => $event_id
+		 	)); 
+		 }
+	}
+	
+	/**
+	 * Returns a list of all events, with further indication of current relations.
+	 */
+	public function related_personalities($event_id)
+	{
+		$qry_personalias  = "SELECT p.IdPerson, pa.Title, IFNULL(ehp.Mapped, 0) AS Mapped  ";
+		$qry_personalias .= "FROM Person p ";
+		$qry_personalias .= "INNER JOIN (  ";
+		$qry_personalias .= "    SELECT Person_IdPerson, Title  ";
+		$qry_personalias .= "    FROM PersonAlias  ";
+		$qry_personalias .= "    GROUP BY Person_IdPerson ";
+		$qry_personalias .= "    ORDER BY Ordering  ";
+		$qry_personalias .= ") pa ON pa.Person_IdPerson = p.IdPerson ";
+		$qry_personalias .= "LEFT OUTER JOIN (  ";
+		$qry_personalias .= "    SELECT Person_IdPerson, GROUP_CONCAT(Event_IdEvent) AS Mapped  ";
+		$qry_personalias .= "    FROM EventHasPerson ehp  ";
+		$qry_personalias .= "    GROUP BY Person_IdPerson  ";
+		$qry_personalias .= ") ehp ON ehp.Person_IdPerson = p.IdPerson ";
+
+		$res = $this->db->query($qry_personalias);
 		
 		return ($res->num_rows() > 0) ? $res->result() : FALSE;
 	}
