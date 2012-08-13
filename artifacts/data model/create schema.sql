@@ -15,7 +15,7 @@ CREATE  TABLE IF NOT EXISTS `gordianatlas`.`User` (
   `IdUser` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `Email` VARCHAR(255) NULL COMMENT 'A valid email address must be provided by users.' ,
   `Nickname` VARCHAR(45) NULL COMMENT 'The value to display if not for an email address for the user' ,
-  `Pass` CHAR(40) NULL COMMENT 'SHA1()\'ed cryptographically generated password.' ,
+  `Pass` CHAR(64) NULL COMMENT 'SHA1()\'ed cryptographically generated password.' ,
   `Salt` CHAR(64) NULL COMMENT 'The Length of the plaintext password initially generating the cryptographically generated password.' ,
   `LoginAttempts` TINYINT(1) NULL DEFAULT 0 ,
   `LastAttempt` TIMESTAMP NULL ,
@@ -191,14 +191,12 @@ DROP TABLE IF EXISTS `gordianatlas`.`Person` ;
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Person` (
   `IdPerson` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `BirthLocation` INT UNSIGNED NULL ,
-  `BirthEvent` INT UNSIGNED NULL ,
+  `BirthEvent` DATE NULL ,
   `DeathLocation` INT UNSIGNED NULL ,
-  `DeathEvent` INT UNSIGNED NULL ,
+  `DeathEvent` DATE NULL ,
   PRIMARY KEY (`IdPerson`) ,
   INDEX `fk_Person_Location_01` (`BirthLocation` ASC) ,
   INDEX `fk_Person_Location_02` (`DeathLocation` ASC) ,
-  INDEX `fk_Person_Event_01` (`BirthEvent` ASC) ,
-  INDEX `fk_Person_Event_02` (`DeathEvent` ASC) ,
   CONSTRAINT `fk_Person_Location_fk1`
     FOREIGN KEY (`BirthLocation` )
     REFERENCES `gordianatlas`.`Location` (`IdLocation` )
@@ -207,16 +205,6 @@ CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Person` (
   CONSTRAINT `fk_Person_Location_fk2`
     FOREIGN KEY (`DeathLocation` )
     REFERENCES `gordianatlas`.`Location` (`IdLocation` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Person_Event_fk1`
-    FOREIGN KEY (`BirthEvent` )
-    REFERENCES `gordianatlas`.`Event` (`IdEvent` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Person_Event_fk2`
-    FOREIGN KEY (`DeathEvent` )
-    REFERENCES `gordianatlas`.`Event` (`IdEvent` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -228,7 +216,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `gordianatlas`.`PersonAlias` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`PersonAlias` (
-  `IdPersonAlias` INT NOT NULL ,
+  `IdPersonAlias` INT NOT NULL AUTO_INCREMENT ,
   `Person_IdPerson` INT UNSIGNED NOT NULL ,
   `Title` VARCHAR(255) NULL ,
   `Ordering` TINYINT UNSIGNED NULL ,
@@ -402,6 +390,8 @@ DROP TABLE IF EXISTS `gordianatlas`.`Concept` ;
 
 CREATE  TABLE IF NOT EXISTS `gordianatlas`.`Concept` (
   `IdConcept` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `CreatedOn` DATETIME NULL ,
+  `ModifiedOn` TIMESTAMP NULL ,
   PRIMARY KEY (`IdConcept`) )
 ENGINE = InnoDB;
 
@@ -1207,6 +1197,30 @@ CREATE  TABLE IF NOT EXISTS `gordianatlas`.`TimelineHasLocation` (
   CONSTRAINT `fk_Timeline_has_Location_Location1`
     FOREIGN KEY (`Location_IdLocation` )
     REFERENCES `gordianatlas`.`Location` (`IdLocation` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `gordianatlas`.`EventHasPerson`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gordianatlas`.`EventHasPerson` ;
+
+CREATE  TABLE IF NOT EXISTS `gordianatlas`.`EventHasPerson` (
+  `Event_IdEvent` INT UNSIGNED NOT NULL ,
+  `Person_IdPerson` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`Event_IdEvent`, `Person_IdPerson`) ,
+  INDEX `fk_Event_has_Person_Person1` (`Person_IdPerson` ASC) ,
+  INDEX `fk_Event_has_Person_Event1` (`Event_IdEvent` ASC) ,
+  CONSTRAINT `fk_Event_has_Person_Event1`
+    FOREIGN KEY (`Event_IdEvent` )
+    REFERENCES `gordianatlas`.`Event` (`IdEvent` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Event_has_Person_Person1`
+    FOREIGN KEY (`Person_IdPerson` )
+    REFERENCES `gordianatlas`.`Person` (`IdPerson` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
